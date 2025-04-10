@@ -210,7 +210,7 @@ BoldFont=FZCukai.ttf]
 \newcommand{\FooterFont}{\sffamily\bfseries\FontSizeSet{13pt}{16.9pt}}%页脚字体
 \newcommand{\PageNumberFont}{\sffamily\bfseries\FontSizeSet{16pt}{19.2pt}}%页码字体
 \newcommand{\ThumbFont}{\sffamily\bfseries\FontSizeSet{14pt}{18.2pt}}%侧标字体
-\newcommand{\CaptionFont}{\sffamily\bfseries\FontSizeSet{12pt}{14.4pt}}%图表标签字体
+\newcommand{\CaptionFont}{\sffamily\FontSizeSet{13pt}{19.5pt}}%图表标签字体
 \newcommand{\TocPartFont}{\sffamily\bfseries\FontSizeSet{14.5pt}{18.85pt}}%目录部分字体
 \newcommand{\TocChapterFont}{\sffamily\bfseries\FontSizeSet{14pt}{18.2pt}}%目录章字体
 \newcommand{\TocSectionFont}{\sffamily\FontSizeSet{14pt}{15.6pt}}%目录节字体
@@ -233,7 +233,8 @@ BoldFont=FZCukai.ttf]
 \newcommand{\BoxSublogoFont}{\sffamily\bfseries\FontSizeSet{14pt}{15.6pt}}%盒子小logo字体
 \newcommand{\MarginFont}{\itshape\kaiti\FontSizeSet{13pt}{16.9pt}}%边注字体
 \newcommand{\FootNoteFont}{\itshape\kaiti\FontSizeSet{13pt}{16.9pt}}%脚注字体
-\newcommand{\MainFont}{\FontSizeSet{14.5pt}{17.4pt}}%正文字体
+\newcommand{\ItemFont}{\itshape\kaiti}%列表字体
+\newcommand{\MainFont}{\FontSizeSet{14pt}{21pt}}%正文字体
 
 %%%%%%%%%%%%%%%%%%%% 页面布局设定宏包 %%%%%%%%%%%%%%%%%%%%
 \makeatletter
@@ -753,9 +754,14 @@ shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,deco
 
 %%%%%%%%%%%%%%%%%%%% 列表环境 %%%%%%%%%%%%%%%%%%%%%%
 %%设置题号%%
-\newcommand*\cir[1]{\tikz[baseline=-0.1em]{\node[circle,fill=ListColor,draw=ListColor,anchor=base,minimum size=5.0mm,align=center,inner sep=0mm,outer sep=0mm,font=\ListNumFont,text=white]{\maxsizebox{4.5mm}{!}{#1}};}}
+\newcommand*\cir[1]{%
+\tikz[baseline=-0.1em]{%
+\node[circle,fill=ListColor,draw=ListColor,anchor=base,minimum size=5.0mm,align=center,inner sep=0mm,outer sep=0mm,font=\ListNumFont,text=white]{\maxsizebox{4.5mm}{!}{#1}};}}
 %%概念列表环境%%
-\newenvironment{Concept}{\begin{multicols}{2}\itshape\kaiti\begin{itemize}[label=\color{ListColor}\bfseries\faGenderless]}{\end{itemize}\end{multicols}\global\colorlet{ListColor}{ColorA}}
+\newenvironment{Concept}{%
+\begin{multicols}{2}%
+\ItemFont%
+\begin{itemize}[label=\color{ListColor}\bfseries\faGenderless]}{\end{itemize}\end{multicols}\global\colorlet{ListColor}{ColorA}}
 %%题目列表环境%%
 \newenvironment{QsNum}{\begin{enumerate}[label=\protect\cir{\arabic*}]}
 {\end{enumerate}\global\colorlet{ListColor}{ColorA}}
@@ -796,7 +802,6 @@ shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,deco
 %%%%
 \makeatletter
 %%绘制页面框架%%
-
 \newlength{\@ThumbMinimumHeight}
 \setlength{\@ThumbMinimumHeight}{1.2cm}
 \newlength{\@FrameWidth}
@@ -813,13 +818,13 @@ shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,deco
 \newcommand{\subsectionlabelfront}{课时}
 \newcommand{\subsectionlabelback}{}
 \renewcommand{\headrulewidth}{0pt}
-\renewcommand{\chaptermark}[1]{
+\RenewDocumentCommand{\chaptermark}{ +m }{
 \if@mainmatter
 \markboth{\chapterlabelfront~\thechapter~\chapterlabelback\quad#1}{\chapterlabelfront~\thechapter~\chapterlabelback\quad#1}
 \else
 \markboth{#1}{#1}
 \fi}
-\renewcommand{\sectionmark}[1]{\markright{\sectionlabelfront~\thesection~\sectionlabelback\quad#1}}
+\RenewDocumentCommand{\sectionmark}{+m}{\markright{\sectionlabelfront~\thesection~\sectionlabelback\quad#1}}
 %%%%
 %%绘制主页面样式%%
 \newcommand{\@Main@PageStyle}{
@@ -903,7 +908,7 @@ shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,deco
 \newcommand*{\partimage}[1]{\def\@partimage{#1}}
 %%
 %%奇数页布局%%
-\newcommand{\@Part@OddPage@Style}[2]{
+\NewDocumentCommand{\@Part@OddPage@Style}{ +m +m }{
 \begin{pgfonlayer}{@Part@Top}
 %%右上角色块坐标%%
 \coordinate(A)at(current page.north east);
@@ -982,7 +987,7 @@ shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,deco
 \end{pgfonlayer}}
 %%
 %%偶数页布局%%
-\newcommand{\@Part@EvenPage@Style}[2]{
+\NewDocumentCommand{\@Part@EvenPage@Style}{ +m +m }{
 \begin{pgfonlayer}{@Part@Top}
 %%右上角色块坐标%%
 \coordinate(A)at(current page.north west);
@@ -1061,7 +1066,7 @@ shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,deco
 \end{varwidth}};
 \end{pgfonlayer}}
 %%
-\newcommand{\@PartStyle}[2]{
+\NewDocumentCommand{\@PartStyle}{ +m +m }{
 \begin{tikzpicture}[remember picture,overlay]
 \pgfdeclarelayer{@Part@Top}
 \pgfdeclarelayer{@Part@Bottom}
@@ -1081,7 +1086,7 @@ shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,deco
 \tikz{\draw[#1,fill=#1,sharp corners](0,0)arc(90:-90:#2)--cycle;}}
 %%
 %%奇数页布局%%
-\newcommand{\@Part@Star@OddPage@Style}[1]{
+\NewDocumentCommand{\@Part@Star@OddPage@Style}{ +m }{
 \begin{pgfonlayer}{@Part@Star@Top}
 %%右上角色块坐标%%
 \coordinate(A)at(current page.north east);
@@ -1167,7 +1172,7 @@ shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,deco
 \end{pgfonlayer}}
 %%
 %%偶数页布局%%
-\newcommand{\@Part@Star@EvenPage@Style}[1]{
+\NewDocumentCommand{\@Part@Star@EvenPage@Style}{ +m }{
 \begin{pgfonlayer}{@Part@Star@Top}
 %%右上角色块坐标%%
 \coordinate(A)at(current page.north west);
@@ -1255,7 +1260,7 @@ shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,deco
 \end{pgfonlayer}}
 %%
 %%不编号部分页样式%%
-\newcommand{\@PartStarStyle}[1]{
+\NewDocumentCommand{\@PartStarStyle}{ +m }{
 \begin{tikzpicture}[remember picture,overlay]
 \pgfdeclarelayer{@Part@Star@Top}
 \pgfdeclarelayer{@Part@Star@Bottom}
@@ -1297,7 +1302,7 @@ shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,deco
 
 %%为\part*添加短页眉%%
 \NewCommandCopy{\OriginPart}{\part}
-\RenewDocumentCommand{\part}{s O{#3} m}{
+\RenewDocumentCommand{\part}{s +O{#3} +m}{
 \IfBooleanTF{#1}
 {\OriginPart*{#3\@mkboth{#2}{#2}}
 \extramarks{#2}{#2}}
@@ -1334,7 +1339,7 @@ shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,deco
 \chaptersubtitle{}
 \chapterimage{}
 %%编号章节页样式%%
-\newcommand{\@ChapterStyle}[2]{
+\NewDocumentCommand{\@ChapterStyle}{ +m +m }{
 \begin{tikzpicture}[remember picture,overlay]
 \pgfdeclarelayer{@Chapter@Top}
 \pgfdeclarelayer{@Chapter@Bottom}
@@ -1449,7 +1454,7 @@ shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,deco
 \newlength{\@Chapter@Star@LabelYShift@Up}
 \setlength{\@Chapter@Star@LabelNameXSep}{4.0mm}
 \setlength{\@Chapter@Star@LabelYShift@Up}{5.0mm}
-\newcommand{\@ChapterStarStyle}[2]{
+\NewDocumentCommand{\@ChapterStarStyle}{ +m +m }{
 \begin{tikzpicture}[remember picture,overlay]
 \pgfdeclarelayer{@Chapter@Star@Top}
 \pgfdeclarelayer{@Chapter@Star@Bottom}
@@ -1596,7 +1601,7 @@ shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,deco
 \titlespacing*{\chapter}{0pt}{0pt}{0pt}
 %%为\chapter*添加短页眉%%
 \NewCommandCopy{\OriginChapter}{\chapter}
-\RenewDocumentCommand{\chapter}{s O{#3} m}{
+\RenewDocumentCommand{\chapter}{s +O{#3} +m}{
 \IfBooleanTF{#1}
 {\OriginChapter*{#3\@mkboth{#2}{#2}}
 \ifnum\totvalue{@Total@PartNumber}=0%若文档中到当前章时还没有部分层次
@@ -1644,13 +1649,13 @@ shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,deco
 \titlespacing*{\section}{0pt}{0pt}{2.0cm}
 %%修改章节断页方式，使\section另起一页，而\section*不换页，并且为\section*添加短页眉%%
 \NewCommandCopy{\OriginSection}{\section}
-\RenewDocumentCommand{\section}{s O{#3} m}{
+\RenewDocumentCommand{\section}{s +O{#3} +m}{%
 \IfBooleanTF{#1}
 {\OriginSection*{#3\markright{#2}}}
-{\if@mainmatter
-\clearpage\OriginSection[#2]{#3}
-\else
-\OriginSection*{#3\markright{#2}\addcontentsline{toc}{section}{#2}}
+{\if@mainmatter%
+\clearpage\OriginSection[#2]{#3}%
+\else%
+\OriginSection*{#3\markright{#2}\addcontentsline{toc}{section}{#2}}%
 \fi}}
 
 %%小节标题样式%%
@@ -1661,13 +1666,14 @@ shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,deco
 \setlength{\@Subsection@LabelCriticWidth}{4.0cm}
 \setlength{\@Subsection@LabelHSkip}{1.6em}
 %%%%
-\newcommand{\@SubsectionStyle}[3]{
-\begin{flushleft}
-\begin{tikzpicture}
-\SubsectionFont
+\NewDocumentCommand{\@SubsectionStyle}{ +m +m +m }{%
+\begingroup%
+\raggedright%
+\begin{tikzpicture}%
+\SubsectionFont%
 \def\@Subsection@Radius{\dimexpr\baselineskip/2\relax}%0.9
-\pgfdeclarelayer{@Subsection@Bottom}
-\pgfsetlayers{@Subsection@Bottom,main}
+\pgfdeclarelayer{@Subsection@Bottom}%
+\pgfsetlayers{@Subsection@Bottom,main}%
 \node[text=white,inner xsep=\@Subsection@Radius,inner ysep=0mm,outer sep=0mm](L){%
 \begin{varwidth}{\@Subsection@LabelCriticWidth}
 %\AdjustStrut{0.9}%
@@ -1694,9 +1700,8 @@ shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,deco
 \draw[ColorA,line width=4.0pt,fill=white]([yshift=-\@Subsection@Radius]L.north east)circle(\@Subsection@Radius);
 \node[circle,text=ColorA,inner sep=0mm,outer sep=0mm](Num)at([yshift=-\@Subsection@Radius]L.north east){\maxsizebox{2\@Subsection@Radius}{!}{#3}};
 \end{pgfonlayer}
-\end{tikzpicture}
-\end{flushleft}
-}
+\end{tikzpicture}%
+\endgroup}
 %%%%
 %%不编号小节标题样式%%
 %%不编号小节副标题%%
@@ -1708,8 +1713,9 @@ shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,deco
 \setlength{\@Subsection@Star@LabelCriticWidth}{4.0cm}
 \setlength{\@Subsection@Star@LabelHSkip}{2.8em}
 %%%%
-\newcommand{\@SubsectionStarStyle}[2]{
-\begin{flushleft}
+\NewDocumentCommand{\@SubsectionStarStyle}{ +m +m }{%
+\begingroup%
+\raggedright%
 \tikz{%
 \node[inner sep=0mm,outer sep=0mm]{%
 \hspace*{-6.75pt}%
@@ -1749,32 +1755,31 @@ shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,deco
 \draw[ColorA,line width=4.0pt,fill=white]([xshift=\@Subsection@Star@Radius,yshift=-\@Subsection@Star@Radius]L.north west)circle(\@Subsection@Star@Radius);
 \draw[ColorA,fill=ColorA]([xshift=\@Subsection@Star@Radius,yshift=-\@Subsection@Star@Radius]L.north west)circle(\@Subsection@Star@Radius/2);
 \end{pgfonlayer}
-\end{tikzpicture}};
-}
-\end{flushleft}
-}
+\end{tikzpicture}};}
+\vspace*{-5.0mm}
+\endgroup}
 
 %%%%
 %%编号小节样式%%
 \titleformat{\subsection}
-{\vspace*{-5.0mm}}{}{0mm}
+{}{}{0mm}
 {\@SubsectionStyle{\subsectionlabelfront}{#1}{\thesubsection}}
 %%不编号小节样式%%
 \titleformat{name=\subsection,numberless}
-{\vspace*{-5.0mm}}{}{0mm}
-{\@SubsectionStarStyle{#1}{}}
+{}{}{0mm}
+{\@SubsectionStarStyle{#1}{\@subsectionsubtitle}}
 [\global\subsectionsubtitle{}]%清空\subsectionsubtitle
 %%间距设置%%
-\titlespacing*{\subsection}{0pt}{0pt}{-8.0mm}
+\titlespacing*{\subsection}{0pt}{1.5ex plus 0.5ex minus 0.2ex}{1ex plus 0.1ex}
 %%%%
 \NewCommandCopy{\OriginSubsection}{\subsection}
-\RenewDocumentCommand{\subsection}{s O{#3} m}{
+\RenewDocumentCommand{\subsection}{s +O{#3} +m}{%
 \IfBooleanTF{#1}
 {\OriginSubsection*{#3}}
-{\if@mainmatter
-\OriginSubsection[#2]{#3}
-\else
-\OriginSubsection*{#3\addcontentsline{toc}{subsection}{#2}}
+{\if@mainmatter%
+\OriginSubsection[#2]{#3}%
+\else%
+\OriginSubsection*{#3\addcontentsline{toc}{subsection}{#2}}%
 \fi}}
 %%%%
 %%点样式%%
@@ -1803,14 +1808,14 @@ shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,deco
 {\ParagraphNameFont\color{ColorA}}}
 %%%%
 %%练习题面板标题%%
-\newcommand{\ExerciseTitle}[1]{
+\NewDocumentCommand{\ExerciseTitle}{ +m }{
 \begin{center}
-\begin{tikzpicture}
-\ExerciseTitleFont
-\def\@ExerciseTitle@Radius{\dimexpr\baselineskip/2\relax}
-\pgfdeclarelayer{@Exercise@Bottom}
-\pgfsetlayers{@Exercise@Bottom,main}
-\node[draw=ColorB,fill=ColorB,ultra thick,rounded corners,text=white,outer sep=0mm,inner xsep=0.5em,inner ysep=0mm,align=center](E){
+\begin{tikzpicture}%
+\ExerciseTitleFont%
+\def\@ExerciseTitle@Radius{\dimexpr\baselineskip/2\relax}%
+\pgfdeclarelayer{@Exercise@Bottom}%
+\pgfsetlayers{@Exercise@Bottom,main}%
+\node[draw=ColorB,fill=ColorB,ultra thick,rounded corners,text=white,outer sep=0mm,inner xsep=0.5em,inner ysep=0mm,align=center](E){%
 \begin{varwidth}{\linewidth/2}
 \strut#1\strut
 \end{varwidth}};
@@ -1830,12 +1835,12 @@ shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,deco
 \newlength{\@PartToc@LabelCriticWidth}
 \setlength{\@PartToc@LabelCriticWidth}{6.0cm}
 %%%%
-\newcommand{\@PartTocStyle}[2]{%
-\begin{tikzpicture}
-\TocPartFont
+\NewDocumentCommand{\@PartTocStyle}{ +m +m }{%
+\begin{tikzpicture}%
+\TocPartFont%
 \def\@PartToc@Radius{\dimexpr\baselineskip/2\relax}%0.9
-\pgfdeclarelayer{@PartToc@Bottom}
-\pgfsetlayers{@PartToc@Bottom,main}
+\pgfdeclarelayer{@PartToc@Bottom}%
+\pgfsetlayers{@PartToc@Bottom,main}%
 \node[text=white,inner xsep=\@PartToc@Radius,inner ysep=0mm,outer sep=0mm](L){%
 \begin{varwidth}{\@PartToc@LabelCriticWidth}
 %\AdjustStrut{0.9}%
@@ -1867,10 +1872,10 @@ shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,deco
 
 %%
 %%编号部分目录样式%%
-\newcommand{\@Toc@Part@Numbered}[1]{\contentslabel[\@PartTocStyle{\partlabelfront~\thecontentslabel~\partlabelback}{#1\hfill\thecontentspage}]{1.25cm}}
+\NewDocumentCommand{\@Toc@Part@Numbered}{+m}{\contentslabel[\@PartTocStyle{\partlabelfront~\thecontentslabel~\partlabelback}{#1\hfill\thecontentspage}]{1.25cm}}
 %%
 %%不编号部分目录样式%%
-\newcommand{\@Toc@Part@Unnumbered}[1]{\contentslabel[\@PartTocStyle{#1}{\hfill\thecontentspage}]{1.25cm}}
+\NewDocumentCommand{\@Toc@Part@Unnumbered}{+m}{\contentslabel[\@PartTocStyle{#1}{\hfill\thecontentspage}]{1.25cm}}
 %%
 %%部分目录样式%%
 \titlecontents{part}[1.25cm]
@@ -1999,13 +2004,14 @@ shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,deco
 \setlength{\@Example@LabelCriticWidth}{3.0cm}
 \setlength{\@Example@NameCriticWidth}{2.0cm}
 %%%%
-\newcommand{\@ExampleStyle}[3]{
-\tikz[baseline=-0.4em]{\node[inner sep=0mm,outer sep=0mm]{
+\NewDocumentCommand{\@ExampleStyle}{ +m +m m }{%
+\noindent%
+\tikz[baseline=-0.4em]{\node[inner sep=0mm,outer sep=0mm]{%
 \begin{tikzpicture}
-\EgLabelFont
+\EgLabelFont%
 \def\@Example@Radius{\dimexpr\baselineskip/2\relax}%0.75
-\pgfdeclarelayer{@Example@Bottom}
-\pgfsetlayers{@Example@Bottom,main}
+\pgfdeclarelayer{@Example@Bottom}%
+\pgfsetlayers{@Example@Bottom,main}%
 \node[text=white,inner sep=0mm,outer sep=0mm](L){%
 \hspace*{\@Example@Radius}%
 \begin{varwidth}{\@Example@LabelCriticWidth}
@@ -2041,9 +2047,10 @@ shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,deco
 \newlength{\@Answer@CriticWidth}
 \setlength{\@Answer@CriticWidth}{3.0cm}
 %%%%
-\newcommand{\@AnswerStyle}[2]{
-\tikz[baseline=-0.4em]{
-\EgLabelFont
+\NewDocumentCommand{\@AnswerStyle}{ +m m }{%
+\noindent%
+\tikz[baseline=-0.4em]{%
+\EgLabelFont%
 \def\@Example@Radius{\dimexpr\baselineskip/2\relax}%0.75
 \node[draw=#2,fill=#2,rounded corners=\@Example@Radius,text=white,inner xsep=\@Example@Radius,inner ysep=0mm,outer sep=0mm](L){%
 \begin{varwidth}{\@Answer@CriticWidth}
@@ -2054,63 +2061,60 @@ shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,deco
 }
 %%%%
 %%解答%%
-\NewExpandableDocumentCommand{\Answer}{sm}{
-\begin{FlushLeft}
-\justifying
-\IfBooleanTF{#1}
-{\@AnswerStyle{解析}{ColorF}%
+\newenvironment{Answer}{%
+\medskip%
+\@AnswerStyle{解答}{ColorG}%
 \hspace*{1.0em}\vspace*{0.5em}%
-#2}%带星号*
-{\@AnswerStyle{解答}{ColorG}%
+}{\medskip}
+%%%%
+\newenvironment{Answer*}{%
+\medskip%
+\@AnswerStyle{解析}{ColorF}%
 \hspace*{1.0em}\vspace*{0.5em}%
-#2}
-\end{FlushLeft}}
+}{\medskip}
+
 %%%%
 %%例题%%
 \def\@Example@Name{例题}
 \def\@Example@Label{\the@prenumber.\the@egnum}
 %%%%
-\NewDocumentCommand{\Example}{sm}{
-\begin{FlushLeft}
-\justifying
-\if@mainmatter
-\IfBooleanTF{#1}
-{\@ExampleStyle{\@Example@Name}{\@Example@Label}{ColorA}%
-\hspace*{1.0em}\vspace*{0.5em}%
-#2}%带星号*
-{\stepcounter{@egnum}%
+\newenvironment{Example}{%
+\medskip%
+\if@mainmatter%
+\stepcounter{@egnum}%
 \@ExampleStyle{\@Example@Name}{\@Example@Label}{ColorA}%
+\else%
+\@AnswerStyle{\@Example@Name}{ColorA}%
+\fi%
 \hspace*{1.0em}\vspace*{0.5em}%
-#2}
-\else
+}{\medskip}
+%%%%
+\newenvironment{Example*}{%
+\medskip%
 \@AnswerStyle{\@Example@Name}{ColorA}%
 \hspace*{1.0em}\vspace*{0.5em}%
-#2
-\fi
-\end{FlushLeft}}
+}{\medskip}
 
 %%变式%%
 \def\@Variant@Name{变式}
 \def\@Variant@Label{\the@prenumber.\the@varnum}
 %%%%
-\NewDocumentCommand{\Variant}{sm}{
-\begin{FlushLeft}
-\justifying
-\if@mainmatter
-\IfBooleanTF{#1}
-{\@ExampleStyle{\@Variant@Name}{ColorB}%
-\hspace*{1.0em}\vspace*{0.5em}%
-#2}%带星号*
-{\stepcounter{@varnum}%
+\newenvironment{Variant}{%
+\medskip%
+\if@mainmatter%
+\stepcounter{@varnum}%
 \@ExampleStyle{\@Variant@Name}{\@Variant@Label}{ColorB}%
+\else%
+\@AnswerStyle{\@Variant@Name}{ColorB}%
+\fi%
 \hspace*{1.0em}\vspace*{0.5em}%
-#2}
-\else
+}{\medskip}
+%%%%
+\newenvironment{Variant*}{%
+\medskip%
 \@AnswerStyle{\@Variant@Name}{ColorB}%
 \hspace*{1.0em}\vspace*{0.5em}%
-#2
-\fi
-\end{FlushLeft}}
+}{\medskip}
 
 %%%%
 %%以下为本文档类内置栏目，请谨慎修改%%
@@ -2618,38 +2622,9 @@ shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,deco
 
 %%%%%%%%%%%%%%%%%% 盒子定义 %%%%%%%%%%%%%%%%%%%%%%%%
 \makeatletter
-
-%%判断标题长度并决定其放置位置%%
-\def\@BoxTitle{}
-\newlength{\@Box@TitleHeight}
+%%%%
 \newlength{\@Box@CriticTitleWidth}
 \setlength{\@Box@CriticTitleWidth}{2\linewidth/3}
-\newlength{\@Box@CriticTitleHeight}
-\setlength{\@Box@CriticTitleHeight}{4.7mm}
-\newlength{\@Box@BaseTitleYSep}
-\setlength{\@Box@BaseTitleYSep}{1.5mm}
-\newlength{\@Box@TitleYSep}
-\newlength{\@Box@TitleRadius}
-%%%%
-\newcommand{\@Box@Title@Set}[2]{
-\settototalheight{\@Box@TitleHeight}{\BoxTitleFont#1#2}
-\ifdim\@Box@TitleHeight>\@Box@CriticTitleHeight
-\setlength{\@Box@TitleYSep}{\@Box@BaseTitleYSep}
-\else
-\setlength{\@Box@TitleYSep}{\@Box@CriticTitleHeight/2-\@Box@TitleHeight/2+\@Box@BaseTitleYSep}
-\fi
-%%%%
-\ifblank{#1}{
-\ifblank{#2}{\def\@BoxTitle{#1#2}}{\def\@BoxTitle{#2}}
-}{\ifblank{#2}{\def\@BoxTitle{#1}}{\def\@BoxTitle{#1:~#2}}
-}
-%%%%
-\ifblank{#1#2}{
-\setlength{\@Box@TitleRadius}{\@Box@CriticTitleHeight/2+\@Box@BaseTitleYSep}
-}{\setlength{\@Box@TitleRadius}{\@Box@TitleHeight/2+\@Box@TitleYSep}}
-}
-%%%%
-
 %%设置彩色盒子样式%%
 %%设置习题盒子样式%%
 \tcbset{Question/.style={
@@ -2657,381 +2632,67 @@ enhanced standard,breakable,empty,
 pad before break=3.0mm,pad after break=5.0mm,
 top=3.0mm,bottom=3.0mm,
 right=0mm,left=0mm,boxsep=0mm,
+parbox=false,
 after=\par\medskip,
-parbox=false,before upper={\hspace*{2.0em}},before lower={\hspace*{2.0em}},
 fonttitle=\BoxTitleFont,coltitle=white,
 lowerbox=ignored,
 code={\colorlet{ListColor}{ColorA}},
 subtitle style={empty,fontupper=\BoxSubtitleFont\centering,colupper=ColorA}
 }}
 
-\tcbset{ColorfulBox/.style args={#1/#2/#3}{
+\tcbset{ColorfulBox/.style args={#1/#2/#3/#4}{
 enhanced standard,breakable,
 pad before break=3.0mm,pad after break=4.5mm,
 rounded corners,arc=5.0pt,boxrule=2.25pt,
 colback=white,colframe=white,
-frame style={left color=#3!50,right color=#3!50,middle color=#3},
+frame style={left color=#4!50,right color=#4!50,middle color=#4},
 top=3.0mm,bottom=2.5mm,
 varwidth boxed title=\@Box@CriticTitleWidth,
-before=\par\medskip,after=\par\medskip,
+before=\par\bigskip,after=\par\bigskip,
 fonttitle=\BoxTitleFont,coltitle=white,
 title={\strut#1\strut},
+IfBlankTF={#2}{}{after title={\strut~:~~#2\strut}},
 attach boxed title to top left={yshift*=-\tcboxedtitleheight+1.5mm},
 boxed title style={size=minimal,empty,valign=center,left=2.5em,right=1.0em},
 parbox=false,
-IfBlankTF={#2}{before upper={\hspace*{2.0em}}
-}{before upper={\noindent{\BoxTitleFont\color{#3}#2}\hspace*{1.0em}}
+IfBlankTF={#3}{before upper={\hspace*{2.0em}}
+}{before upper={\noindent{\BoxTitleFont\color{#4}#3}\hspace*{1.0em}}
 },
-before upper={\hspace*{2.0em}},
-subtitle style={empty,fontupper=\BoxSubtitleFont,colupper=#3}
+before lower={\hspace*{2.0em}},
+subtitle style={empty,fontupper=\BoxSubtitleFont,colupper=#4}
 }}
 
-\tcbset{ItemBox/.style args={#1/#2/#3}{
+\tcbset{ItemBox/.style args={#1/#2}{
 enhanced standard,breakable,empty,
 pad before break=3.0mm,pad after break=5.0mm,
 top=5.0mm,bottom=3.0mm,right=0mm,boxsep=0mm,
-parbox=false,
-IfBlankTF={#2}{before upper={\hspace*{2.0em}}
-}{before upper={\noindent{\BoxTitleFont\color{#3}#2}\hspace*{1.0em}}
-},
-before lower={\hspace*{2.0em}},
 varwidth boxed title=\@Box@CriticTitleWidth,
 before=\par\medskip,after=\par,
+fontupper=\ItemFont,fontlower=\ItemFont,
 fonttitle=\BoxTitleFont,coltitle=white,
-code={\colorlet{ListColor}{#3}},
+code={\colorlet{ListColor}{#2}},
 title={%
 %\AdjustStrut{0.85}%
 \strut#1\strut%
 },
 attach boxed title to top left={yshift*=-\tcboxedtitleheight},
 boxed title style={size=minimal,empty,valign=center,left=2.5em,right=1.0em},
-subtitle style={empty,fontupper=\BoxSubtitleFont,colupper=#3}
-}
-}
-
-%%设置节前盒子%%
-\DeclareTColorBox{box0}{O{} m O{} O{ColorB}}{
-ItemBox=#2/#3/#4,
+subtitle style={empty,fontupper=\BoxSubtitleFont,colupper=#2},
 %%%%
 underlay boxed title={
 \BoxTitleFont
 \def\@BoxTitle@Radius{\dimexpr\baselineskip/2\relax}%0.85
-\draw[#4,fill=#4,ultra thick,rounded corners=\@BoxTitle@Radius](title.north west)rectangle(title.south east);
+\draw[#2,fill=#2,ultra thick,rounded corners=\@BoxTitle@Radius](title.north west)rectangle(title.south east);
 \draw[white,fill=white,line width=12.0pt]([xshift=\@BoxTitle@Radius,yshift=-\@BoxTitle@Radius]title.north west)circle(\@BoxTitle@Radius);
-\draw[#4,fill=white,line width=3.75pt]([xshift=\@BoxTitle@Radius,yshift=-\@BoxTitle@Radius]title.north west)circle(\@BoxTitle@Radius);
-\draw[#4,fill=#4]([xshift=\@BoxTitle@Radius,yshift=-\@BoxTitle@Radius]title.north west)circle({\@BoxTitle@Radius/2});
+\draw[#2,fill=white,line width=3.75pt]([xshift=\@BoxTitle@Radius,yshift=-\@BoxTitle@Radius]title.north west)circle(\@BoxTitle@Radius);
+\draw[#2,fill=#2]([xshift=\@BoxTitle@Radius,yshift=-\@BoxTitle@Radius]title.north west)circle({\@BoxTitle@Radius/2});
 %%%%
-\draw[#4,fill=#4,ultra thin]([xshift=-\@BoxTitle@Radius,yshift=-\@BoxTitle@Radius]frame.north east)circle({2*\@BoxTitle@Radius/3});
-\draw[#4!90,fill=#4!90,ultra thin]([xshift=-3*\@BoxTitle@Radius,yshift=-\@BoxTitle@Radius]frame.north east)circle({2*\@BoxTitle@Radius/3});
-\draw[#4!80,fill=#4!80,ultra thin]([xshift=-5*\@BoxTitle@Radius,yshift=-\@BoxTitle@Radius]frame.north east)circle({2*\@BoxTitle@Radius/3});},
-#1}
+\draw[#2,fill=#2,ultra thin]([xshift=-\@BoxTitle@Radius,yshift=-\@BoxTitle@Radius]frame.north east)circle({2*\@BoxTitle@Radius/3});
+\draw[#2!90,fill=#2!90,ultra thin]([xshift=-3*\@BoxTitle@Radius,yshift=-\@BoxTitle@Radius]frame.north east)circle({2*\@BoxTitle@Radius/3});
+\draw[#2!80,fill=#2!80,ultra thin]([xshift=-5*\@BoxTitle@Radius,yshift=-\@BoxTitle@Radius]frame.north east)circle({2*\@BoxTitle@Radius/3});}
+}}
 
-\newenvironment{Point}{\begin{box0}[left=0mm]{本章要点}[][ColorA]}{\end{box0}}
-\newenvironment{Point*}{\begin{box0}[left=0mm]{本节导言}[][ColorA]}{\end{box0}}
-
-\newenvironment{Case}{\begin{box0}{基础概念、公式和定理}[][ColorB]\begin{Concept}}{\end{Concept}\end{box0}}
-\newenvironment{Case*}{\begin{box0}{本节提要}[][ColorB]\begin{Concept}}{\end{Concept}\end{box0}}
-%%%%
-
-%%设置易错点盒子%%
-\DeclareTColorBox{box1}{O{} m O{} O{ColorA} O{\faQuestion}}{
-ColorfulBox=#2/#3/#4,
-%%%%
-underlay boxed title={
-\BoxTitleFont
-\def\@BoxTitle@Radius{\dimexpr\baselineskip/2\relax}%0.85
-\draw[white,fill=white,rounded corners=\@BoxTitle@Radius,line width=10.0pt](title.north west)rectangle(title.south east);
-\draw[#4,fill=#4,ultra thick,rounded corners=\@BoxTitle@Radius](title.north west)rectangle(title.south east);
-%%%%
-\draw[white,fill=white,line width=10.0pt]([xshift=\@BoxTitle@Radius,yshift=-\@BoxTitle@Radius]title.north west)circle(\@BoxTitle@Radius);
-\draw[#4,fill=#4,line width=2.75pt]([xshift=\@BoxTitle@Radius,yshift=-\@BoxTitle@Radius]title.north west)circle(\@BoxTitle@Radius);
-%%%%
-\node[circle,align=center,inner sep=0mm,font=\BoxLogoFont,text=white](P)at([xshift=\@BoxTitle@Radius,yshift=-\@BoxTitle@Radius]title.north west){#5};
-},
-#1}
-
-%%%%
-\DeclareDocumentEnvironment{Warning}{ O{} }{\begin{box1}{易错点警示}[#1][ColorF][\faExclamation]}{\end{box1}}
-\DeclareDocumentEnvironment{Discussion}{ O{} }{\begin{box1}{思考与讨论}[#1][ColorC][\faQuestion]}
-{\end{box1}}
-\DeclareDocumentEnvironment{Practice}{ O{} }{\begin{box1}{随堂练习}[#1][ColorI][\faCheck]}
-{\end{box1}}
-
-%%设置演示盒子%%
-\DeclareTColorBox{box2}{O{} m O{} O{ColorA} O{\faLayerGroup}}{
-ColorfulBox=#2/#3/#4,
-%%%%
-underlay boxed title={
-\BoxTitleFont
-\def\@BoxTitle@Radius{\dimexpr\baselineskip/2\relax}%0.85
-\draw[white,fill=white,line width=10.0pt,rounded corners=\@BoxTitle@Radius](title.north east)rectangle(title.south west);
-%%%%
-\fill[white,draw=white]([xshift=\@BoxTitle@Radius,yshift=-\@BoxTitle@Radius]title.north west)circle({5*\@BoxTitle@Radius/3});
-\draw[#4,fill=#4!90,line width=2.0pt]([xshift=\@BoxTitle@Radius,yshift=-\@BoxTitle@Radius]title.north west)circle({8*\@BoxTitle@Radius/7});
-%%%%
-\pgfgetnodeheight(title)\@BoxTitle@Height
-\ifdim\@BoxTitle@Height>2\@BoxTitle@Radius
-\draw[#4,fill=#4!90,line width=2.0pt]
-(title.north east)[sharp corners]--
-([xshift={7*\@BoxTitle@Radius/3}]title.north west)arc(asin(3/5):{-asin(3/5)-90}:{5*\@BoxTitle@Radius/3})[rounded corners=\@BoxTitle@Radius]--
-(title.south west)[rounded corners=\@BoxTitle@Radius]--
-(title.south east)[rounded corners=\@BoxTitle@Radius]--cycle;
-\else
-%%%%
-\draw[#4,fill=#4!90,line width=2.0pt]
-(title.north east)[sharp corners]--
-([xshift={7*\@BoxTitle@Radius/3}]title.north west)arc(asin(3/5):-asin(3/5):{5*\@BoxTitle@Radius/3})[rounded corners=\@BoxTitle@Radius]--
-(title.south east)[rounded corners=\@BoxTitle@Radius]--cycle;
-\fi
-%%%%
-\node[circle,align=center,inner sep=0mm,font=\BoxLogoFont,text=white](T)at([xshift=\@BoxTitle@Radius,yshift=-\@BoxTitle@Radius]title.north west){#5};
-},
-#1}
-
-%%%%
-\DeclareDocumentEnvironment{Display}{ O{} }{\begin{box2}{演示与实验}[#1][ColorB][\faLayerGroup]}{\end{box2}}
-\DeclareDocumentEnvironment{Method}{ O{} }{\begin{box2}{方法与技巧}[#1][ColorD][\faPodcast]}{\end{box2}}
-\DeclareDocumentEnvironment{Mind}{ O{} }{\begin{box2}{科学思维}[#1][ColorC][\faAtom]}{\end{box2}}
-
-%%简化序号命令%%
-\newcommand{\the@prenumber}{\thechapter.\thesection}
-%%设置定义定理盒子%%
-\DeclareTColorBox{box3}{O{} m O{} O{ColorA} O{\faCodepen}}{
-ColorfulBox=#2/#3/#4,
-%%%%
-underlay boxed title={
-\BoxTitleFont
-\def\@BoxTitle@Radius{\dimexpr\baselineskip/2\relax}%0.85
-\pgfgetnodeheight(title)\@BoxTitle@Height
-\ifdim\@BoxTitle@Height>2\@BoxTitle@Radius
-\draw[white,fill=white,line width=10.0pt](title.north east)--([xshift={sqrt(15)*\@BoxTitle@Radius/7+\@BoxTitle@Radius}]title.north west)arc(asin(7/8):{270-asin(7/8)}:{8*\@BoxTitle@Radius/7})[rounded corners=\@BoxTitle@Radius]--(title.south west)--(title.south east)--cycle;
-\draw[#4,fill=#4!90,line width=2.0pt](title.north east)--([xshift={sqrt(15)*\@BoxTitle@Radius/7+\@BoxTitle@Radius}]title.north west)arc(asin(7/8):{270-asin(7/8)}:{8*\@BoxTitle@Radius/7})[rounded corners=\@BoxTitle@Radius]--(title.south west)--(title.south east)--cycle;
-\else
-\draw[white,fill=white,line width=10.0pt](title.north east)--([xshift={sqrt(15)*\@BoxTitle@Radius/7+\@BoxTitle@Radius}]title.north west)arc(asin(7/8):{360-asin(7/8)}:{8*\@BoxTitle@Radius/7})[rounded corners=\@BoxTitle@Radius]--(title.south east)--cycle;
-\draw[#4,fill=#4!90,line width=2.0pt](title.north east)--([xshift={sqrt(15)*\@BoxTitle@Radius/7+\@BoxTitle@Radius}]title.north west)arc(asin(7/8):{360-asin(7/8)}:{8*\@BoxTitle@Radius/7})[rounded corners=\@BoxTitle@Radius]--(title.south east)--cycle;
-\fi
-\node[circle,align=center,inner sep=0mm,font=\BoxLogoFont,text=white](P)at([xshift=\@BoxTitle@Radius,yshift=-\@BoxTitle@Radius]title.north west){#5};
-},
-#1}
-
-%%%%
-\def\@Definiton@Title{定义}
-\def\@Definiton@Label{Def.\the@prenumber.\the@def}
-%%%%
-\def\@Theorem@Title{定理}
-\def\@Theorem@Label{Thm.\the@prenumber.\the@thm}
-%%%%
-\def\@Axiom@Title{公理}
-\def\@Axiom@Label{Axm.\the@prenumber.\the@axm}
-
-%%编号定义盒子%%
-\DeclareDocumentEnvironment{Definition}{ O{} O{} }{\begin{box3}[code={
-\if@mainmatter
-\stepcounter{@def}
-\label{\@Definiton@Label}
-\fi}]{%
-\@Definiton@Title%
-\if@mainmatter%
-~\the@prenumber.\the@def%
-\fi%
-~~#1}
-[#2][ColorA][\faCrosshairs]}{\end{box3}}
-%%%%
-\DeclareDocumentEnvironment{Theorem}{ O{} O{} }{\begin{box3}[code={
-\if@mainmatter
-\stepcounter{@thm}
-\label{\@Theorem@Label}
-\fi}]{%
-\@Theorem@Title%
-\if@mainmatter%
-~\the@prenumber.\the@thm%
-\fi%
-~~#1}
-[#2][ColorB][\faCrosshairs]}{\end{box3}}
-%%%%%
-\DeclareDocumentEnvironment{Axiom}{ O{} O{} }{\begin{box3}[code={
-\if@mainmatter
-\stepcounter{@axm}
-\label{\@Axiom@Label}
-\fi}]{%
-\@Axiom@Title%
-\if@mainmatter%
-~\the@prenumber.\the@axm%
-\fi%
-~~#1}
-[#2][ColorI][\faCompactDisc]}{\end{box3}}
-%%%%
-
-%%不编号定义盒子%%
-\DeclareDocumentEnvironment{Definition*}{ O{} O{} }{\begin{box3}{\@Theorem@Title~~#1}[#2][ColorA][\faCrosshairs]}{\end{box3}}
-\DeclareDocumentEnvironment{Theorem*}{ O{} O{} }{\begin{box3}{\@Theorem@Title~~#1}[#2][ColorB][\faCrosshairs]}{\end{box3}}
-\DeclareDocumentEnvironment{Axiom*}{ O{} O{} }{\begin{box3}{\@Axiom@Title~~#1}[#2][ColorI][\faCompactDisc]}{\end{box3}}
-%%%%
-%%设置引理盒子%%
-\DeclareTColorBox{box4}{O{} m O{} O{ColorA} O{\faDiceD20}}{
-ColorfulBox=#2/#3/#4,
-%%%%
-underlay boxed title={
-\BoxTitleFont
-\def\@BoxTitle@Radius{\dimexpr\baselineskip/2\relax}%0.85
-\draw[white,fill=white,line width=10.0pt]([xshift=\@BoxTitle@Radius,yshift=-\@BoxTitle@Radius]title.north west)circle({8*\@BoxTitle@Radius/7});
-\draw[white,fill=white,rounded corners=\@BoxTitle@Radius,line width=10.0pt](title.north west)rectangle(title.south east);
-\draw[#4,fill=#4,rounded corners=\@BoxTitle@Radius,ultra thick](title.north west)rectangle(title.south east);
-\draw[#4,fill=white,line width=2.75pt]([xshift=\@BoxTitle@Radius,yshift=-\@BoxTitle@Radius]title.north west)circle({8*\@BoxTitle@Radius/7});
-\node[circle,align=center,inner sep=0mm,font=\BoxLogoFont,text=#4](P)at([xshift=\@BoxTitle@Radius,yshift=-\@BoxTitle@Radius]title.north west){#5};},
-#1}
-
-%%%%
-\def\@Lemma@Title{引理}
-\def\@Lemma@Label{Lem.\the@prenumber.\the@lem}
-%%%%
-\def\@Corollary@Title{推论}
-\def\@Corollary@Label{Colry.\the@prenumber.\the@colry}
-%%%%
-\def\@Propostion@Title{命题}
-\def\@Proposition@Label{Prop.\the@prenumber.\the@prop}
-
-%%编号引理盒子%%
-\DeclareDocumentEnvironment{Lemma}{ O{} O{} }{\begin{box4}[code={
-\if@mainmatter
-\stepcounter{@lem}
-\label{\@Lemma@Label}
-\fi}]{%
-\@Lemma@Title%
-\if@mainmatter%
-~\the@prenumber.\the@lem%
-\fi%
-~~#1}
-[#2][ColorE][\faGlobe]}{\end{box4}}
-%%%%
-\DeclareDocumentEnvironment{Corollary}{ O{} O{} }{\begin{box4}[code={
-\if@mainmatter
-\stepcounter{@colry}
-\label{\@Corollary@Label}
-\fi
-}]{%
-\@Corollary@Title%
-\if@mainmatter%
-~\the@prenumber.\the@colry%
-\fi%
-~~#1}
-[#2][ColorG][\faCompactDisc]}{\end{box4}}
-%%%%
-\DeclareDocumentEnvironment{Proposition}{ O{} O{} }{\begin{box4}[code={
-\if@mainmatter
-\stepcounter{@prop}
-\label{\@Proposition@Label}
-\fi
-}]{%
-\@Propostion@Title%
-\if@mainmatter%
-~\the@prenumber.\the@prop%
-\fi%
-~~#1}
-[#2][ColorH][\faGlobe]}{\end{box4}}
-%%%%
-%%不编号引理盒子%%
-\DeclareDocumentEnvironment{Lemma*}{ O{} O{} }{\begin{box4}{\@Lemma@Title~~#1}[#2][ColorE][\faGlobe]}{\end{box4}}
-\DeclareDocumentEnvironment{Corollary*}{ O{} O{} }{\begin{box4}{\@Corollary@Title~~#1}[#2][ColorG][\faCompactDisc]}{\end{box4}}
-\DeclareDocumentEnvironment{Proposition*}{ O{} O{} }{\begin{box4}{\@Propostion@Title~~#1}[#2][ColorH][\faGlobe]}{\end{box4}}
-%%%%
-%%设置拓展盒子%%
-\DeclareTColorBox{box5}{O{} m O{} O{ColorA} O{\faLink}}{
-ColorfulBox=#2/#3/#4,
-%%%%
-underlay boxed title={
-\BoxTitleFont
-\def\@BoxTitle@Radius{\dimexpr\baselineskip/2\relax}%0.85
-\draw[white,fill=white,rounded corners=\@BoxTitle@Radius,line width=10.0pt](title.north west)rectangle(title.south east);
-\draw[#4,fill=#4,rounded corners=\@BoxTitle@Radius,ultra thick](title.north west)rectangle(title.south east);
-\fill[white,draw=white,line width=10.0pt]([xshift=\@BoxTitle@Radius,yshift=-\@BoxTitle@Radius]title.north west)circle({8*\@BoxTitle@Radius/7});
-\fill[white,draw=#4,line width=2.75pt]([xshift=\@BoxTitle@Radius,yshift=-\@BoxTitle@Radius]title.north west)circle({8*\@BoxTitle@Radius/7});
-\node[circle,align=center,inner sep=0mm,font=\BoxLogoFont,text=#4] at([xshift=\@BoxTitle@Radius,yshift=-\@BoxTitle@Radius]title.north west){#5};},
-#1}
-
-\DeclareDocumentEnvironment{Link}{ O{} }{\begin{box5}{拓展链接}[#1][ColorE][\faLink]}{\end{box5}}
-\DeclareDocumentEnvironment{History}{ O{} }{\begin{box5}{科学发展史}[#1][ColorC][\faCalendar*]}
-{\end{box5}}
-\DeclareDocumentEnvironment{STS}{ O{} }{\begin{box5}{科学·技术·社会}[#1][ColorH][\faCog]}
-{\end{box5}}
-
-%%设置案例盒子%%
-\DeclareTColorBox{box6}{O{} m O{} O{ColorA} O{\faFile*}}{
-ColorfulBox=#2/#3/#4,
-%%%%
-underlay boxed title={
-\BoxTitleFont
-\def\@BoxTitle@Radius{\dimexpr\baselineskip/2\relax}%0.85
-\draw[white,fill=white,line width=10.0pt,rounded corners=\@BoxTitle@Radius](title.north east)rectangle(title.south west);
-\draw[#4!90,fill=#4!90,line width=2.0pt,rounded corners=\@BoxTitle@Radius](title.north east)rectangle(title.south west);
-%%%%
-\fill[white,draw=white]([xshift=\@BoxTitle@Radius,yshift=-\@BoxTitle@Radius]title.north west)circle({5*\@BoxTitle@Radius/3});
-\draw[#4,fill=white,line width=2.75pt]([xshift=\@BoxTitle@Radius,yshift=-\@BoxTitle@Radius]title.north west)circle({8*\@BoxTitle@Radius/7});
-%%%%
-\pgfgetnodeheight(title)\@BoxTitle@Height
-\ifdim\@BoxTitle@Height>2\@BoxTitle@Radius
-\draw[#4,line width=2.0pt]
-(title.north east)[sharp corners]--
-([xshift={7*\@BoxTitle@Radius/3}]title.north west)arc(asin(3/5):{-asin(3/5)-90}:{5*\@BoxTitle@Radius/3})[rounded corners=\@BoxTitle@Radius]--
-(title.south west)[rounded corners=\@BoxTitle@Radius]--
-(title.south east)[rounded corners=\@BoxTitle@Radius]--cycle;
-\else
-%%%%
-\draw[#4,line width=2.0pt]
-(title.north east)[sharp corners]--
-([xshift={7*\@BoxTitle@Radius/3}]title.north west)arc(asin(3/5):-asin(3/5):{5*\@BoxTitle@Radius/3})[rounded corners=\@BoxTitle@Radius]--
-(title.south east)[rounded corners=\@BoxTitle@Radius]--cycle;
-\fi
-%%%%
-\node[circle,align=center,inner sep=0mm,font=\BoxLogoFont,text=#4](T)at([xshift=\@BoxTitle@Radius,yshift=-\@BoxTitle@Radius]title.north west){#5};},
-#1}
-
-\DeclareDocumentEnvironment{Information}{ O{} }{\begin{box6}{资料卡片}[#1][ColorI][\faFile*]}{\end{box6}}
-\DeclareDocumentEnvironment{Application}{ O{} }{\begin{box6}{案例分析}[#1][ColorA][\faTools]}{\end{box6}}
-\DeclareDocumentEnvironment{Review}{ O{} }{\begin{box6}{知识回顾}[#1][ColorC][\faFan]}{\end{box6}}
-
-%%设置边注命令%%
-\newcommand{\@Margin@Note}[4]{\bigskip\noindent
-\begin{varwidth}{3\linewidth/4}
-\BoxSubtitleFont\color{#1}#2\hspace{0.5em}#3
-\end{varwidth}\par\vspace{0.5em}
-{\noindent\MarginFont\color{#1}#4}\bigskip}
-
-\DeclareDocumentCommand{\RelaInfo}{sm}
-{\IfBooleanTF{#1}
-{\marginpar{\@Margin@Note{ColorH}{\faCommentDots}{相关信息}{#2}}}
-{\@Margin@Note{ColorH}{\faCommentDots}{相关信息}{#2}}}
-%%
-\DeclareDocumentCommand{\DeepThink}{sm}
-{\IfBooleanTF{#1}
-{\marginpar{\@Margin@Note{ColorB!90!black}{\faTh}{深入思考}{#2}}}
-{\@Margin@Note{ColorB!90!black}{\faTh}{深入思考}{#2}}}
-%%
-\DeclareDocumentCommand{\Remark}{sm}
-{\IfBooleanTF{#1}
-{\marginpar{\@Margin@Note{ColorF}{\faChrome}{重点注释}{#2}}}
-{\@Margin@Note{ColorF}{\faChrome}{重点注释}{#2}}}
-
-%%%%
-\DeclareTColorBox{box7}{O{}O{}}{
-enhanced standard,breakable,
-pad before break=3.0mm,pad after break=5.0mm,
-top=3.5mm,bottom=3.0mm,toptitle=4.0mm,bottomtitle=-2.5mm,
-colframe=ColorB!7.5,colback=ColorB!7.5,colbacktitle=ColorB!7.5,rounded corners,arc=7.5pt,
-before=\par\medskip,after=\par\medskip,
-parbox=false,before upper={\hspace*{2.0em}},before lower={\hspace*{2.0em}},
-fonttitle=\BoxTitleFont,coltitle=ColorA,
-subtitle style={empty,fontupper=\BoxSubtitleFont,colupper=ColorA},
-title={#1},#2}
-
-\newenvironment{Proof}{\begin{box7}[\faBars~~证明]}{\end{box7}}
-%%
-\newenvironment{Solution}{\begin{box7}[\faBars~~参考答案]}{\end{box7}}
-%%
-\DeclareDocumentEnvironment{Block}{O{}}{\begin{box7}[#1]}{\end{box7}}
-
-%%%%
-\DeclareTColorBox{box8}{O{} m O{} O{ColorA} O{}}{
+\tcbset{CodeBox/.style args={#1/#2/#3/#4/#5}{
 enhanced standard,breakable,
 code={\colorlet{ListColor}{#4}},
 pad before break=3.0mm,pad after break=4.5mm,
@@ -3039,7 +2700,7 @@ rounded corners,arc=5.0pt,boxrule=2.25pt,
 colback=white,colframe=white,
 frame style={left color=#4!50,right color=#4!50,middle color=#4},
 top=3.0mm,bottom=2.5mm,
-before=\par\medskip,after=\par\medskip,
+before=\par\bigskip,after=\par\bigskip,
 parbox=false,
 IfEmptyTF={#3}{
 before upper={\hspace*{2.0em}}
@@ -3047,10 +2708,12 @@ before upper={\hspace*{2.0em}}
 before lower={\hspace*{2.0em}},
 fonttitle=\BoxTitleFont,coltitle=white,
 varwidth boxed title=\@Box@CriticTitleWidth,
-title={\strut#2\strut},
+title={\strut#1\strut},
+IfBlankTF={#2}{}{after title={\strut~:~~#2\strut}},
 boxed title style={size=minimal,empty,left=1.2em,right=1.2em,top=0.3em,bottom=0.1em},
 left=2.0em,
 attach boxed title to top left={yshift*=-\tcboxedtitleheight},
+subtitle style={empty,fontupper=\BoxSubtitleFont,colupper=#4},
 %%%%
 underlay boxed title={
 \BoxTitleFont
@@ -3067,14 +2730,326 @@ underlay boxed title={
 overlay middle and last={
 \begin{tcbclipinterior}
 \fill[#4!7.5,draw=#4!7.5](frame.south west)rectangle([xshift=1.9em]frame.north west);
-\end{tcbclipinterior}},
-subtitle style={empty,fontupper=\BoxSubtitleFont,colupper=#4},
+\end{tcbclipinterior}}
+}}
+
+%%设置节前盒子%%
+\DeclareTColorBox{box0}{O{} +m O{ColorB}}{ItemBox=#2/#3,#1}
+
+\newenvironment{Point}{\begin{box0}[before upper={\hspace*{2.0em}},before lower={\hspace*{2.0em}},left=0mm]{本章要点}[ColorA]}{\end{box0}}
+\newenvironment{Point*}{\begin{box0}[before upper={\hspace*{2.0em}},before lower={\hspace*{2.0em}},left=0mm]{本节导言}[ColorA]}{\end{box0}}
+
+\newenvironment{Case}{\begin{box0}{基础概念、公式和定理}[ColorB]\begin{Concept}}{\end{Concept}\end{box0}}
+\newenvironment{Case*}{\begin{box0}{本节提要}[ColorB]\begin{Concept}}{\end{Concept}\end{box0}}
+%%%%
+
+%%设置易错点盒子%%
+\DeclareTColorBox{box1}{O{} +m +O{} +O{} O{ColorA} O{\faQuestion}}{
+ColorfulBox=#2/#3/#4/#5,
+%%%%
+underlay boxed title={
+\BoxTitleFont
+\def\@BoxTitle@Radius{\dimexpr\baselineskip/2\relax}%0.85
+\draw[white,fill=white,rounded corners=\@BoxTitle@Radius,line width=10.0pt](title.north west)rectangle(title.south east);
+\draw[#5,fill=#5,ultra thick,rounded corners=\@BoxTitle@Radius](title.north west)rectangle(title.south east);
+%%%%
+\draw[white,fill=white,line width=10.0pt]([xshift=\@BoxTitle@Radius,yshift=-\@BoxTitle@Radius]title.north west)circle(\@BoxTitle@Radius);
+\draw[#5,fill=#5,line width=2.75pt]([xshift=\@BoxTitle@Radius,yshift=-\@BoxTitle@Radius]title.north west)circle(\@BoxTitle@Radius);
+%%%%
+\node[circle,align=center,inner sep=0mm,font=\BoxLogoFont,text=white](P)at([xshift=\@BoxTitle@Radius,yshift=-\@BoxTitle@Radius]title.north west){#6};
+},
 #1}
 
-\NewDocumentEnvironment{Reading}{O{}mm}{\begin{box8}{阅读理解}[#1][ColorB][\score{#2}{#3}[ColorB]]}{\end{box8}}
-\NewDocumentEnvironment{Cloze}{O{}mm}{\begin{box8}{完形填空}[#1][ColorA][\score{#2}{#3}[ColorA]]}{\end{box8}}
-\NewDocumentEnvironment{Article}{O{}mm}{\begin{box8}{文本解读}[#1][ColorC][\score{#2}{#3}[ColorC]]}{\end{box8}}
-\NewDocumentEnvironment{Vocabulary}{O{}}{\begin{box8}{词汇解析}[#1][ColorE]}{\end{box8}}
+%%%%
+\DeclareDocumentEnvironment{Warning}{ +O{} +D<>{} }{\begin{box1}{易错点警示}[#1][#2][ColorF][\faExclamation]}{\end{box1}}
+\DeclareDocumentEnvironment{Discussion}{ +O{} +D<>{}}{\begin{box1}{思考与讨论}[#1][#2][ColorC][\faQuestion]}
+{\end{box1}}
+\DeclareDocumentEnvironment{Practice}{ +O{} +D<>{} }{\begin{box1}{随堂练习}[#1][#2][ColorI][\faCheck]}
+{\end{box1}}
+
+%%设置演示盒子%%
+\DeclareTColorBox{box2}{O{} +m +O{} +O{} O{ColorA} O{\faLayerGroup}}{
+ColorfulBox=#2/#3/#4/#5,
+%%%%
+underlay boxed title={
+\BoxTitleFont
+\def\@BoxTitle@Radius{\dimexpr\baselineskip/2\relax}%0.85
+\draw[white,fill=white,line width=10.0pt,rounded corners=\@BoxTitle@Radius](title.north east)rectangle(title.south west);
+%%%%
+\fill[white,draw=white]([xshift=\@BoxTitle@Radius,yshift=-\@BoxTitle@Radius]title.north west)circle({5*\@BoxTitle@Radius/3});
+\draw[#5,fill=#5!90,line width=2.0pt]([xshift=\@BoxTitle@Radius,yshift=-\@BoxTitle@Radius]title.north west)circle({8*\@BoxTitle@Radius/7});
+%%%%
+\pgfgetnodeheight(title)\@BoxTitle@Height
+\ifdim\@BoxTitle@Height>2\@BoxTitle@Radius
+\draw[#5,fill=#5!90,line width=2.0pt]
+(title.north east)[sharp corners]--
+([xshift={7*\@BoxTitle@Radius/3}]title.north west)arc(asin(3/5):{-asin(3/5)-90}:{5*\@BoxTitle@Radius/3})[rounded corners=\@BoxTitle@Radius]--
+(title.south west)[rounded corners=\@BoxTitle@Radius]--
+(title.south east)[rounded corners=\@BoxTitle@Radius]--cycle;
+\else
+%%%%
+\draw[#5,fill=#5!90,line width=2.0pt]
+(title.north east)[sharp corners]--
+([xshift={7*\@BoxTitle@Radius/3}]title.north west)arc(asin(3/5):-asin(3/5):{5*\@BoxTitle@Radius/3})[rounded corners=\@BoxTitle@Radius]--
+(title.south east)[rounded corners=\@BoxTitle@Radius]--cycle;
+\fi
+%%%%
+\node[circle,align=center,inner sep=0mm,font=\BoxLogoFont,text=white](T)at([xshift=\@BoxTitle@Radius,yshift=-\@BoxTitle@Radius]title.north west){#6};
+},
+#1}
+
+%%%%
+\DeclareDocumentEnvironment{Display}{ +O{} +D<>{} }{\begin{box2}{演示与实验}[#1][#2][ColorB][\faLayerGroup]}{\end{box2}}
+\DeclareDocumentEnvironment{Method}{ +O{} +D<>{} }{\begin{box2}{方法与技巧}[#1][#2][ColorD][\faPodcast]}{\end{box2}}
+\DeclareDocumentEnvironment{Mind}{ +O{} +D<>{} }{\begin{box2}{科学思维}[#1][#2][ColorC][\faAtom]}{\end{box2}}
+
+%%简化序号命令%%
+\newcommand{\the@prenumber}{\thechapter.\thesection}
+%%设置定义定理盒子%%
+\DeclareTColorBox{box3}{O{} +m +O{} +O{} O{ColorA} O{\faCodepen}}{
+ColorfulBox=#2/#3/#4/#5,
+%%%%
+underlay boxed title={
+\BoxTitleFont
+\def\@BoxTitle@Radius{\dimexpr\baselineskip/2\relax}%0.85
+\pgfgetnodeheight(title)\@BoxTitle@Height
+\ifdim\@BoxTitle@Height>2\@BoxTitle@Radius
+\draw[white,fill=white,line width=10.0pt](title.north east)--([xshift={sqrt(15)*\@BoxTitle@Radius/7+\@BoxTitle@Radius}]title.north west)arc(asin(7/8):{270-asin(7/8)}:{8*\@BoxTitle@Radius/7})[rounded corners=\@BoxTitle@Radius]--(title.south west)--(title.south east)--cycle;
+\draw[#5,fill=#5!90,line width=2.0pt](title.north east)--([xshift={sqrt(15)*\@BoxTitle@Radius/7+\@BoxTitle@Radius}]title.north west)arc(asin(7/8):{270-asin(7/8)}:{8*\@BoxTitle@Radius/7})[rounded corners=\@BoxTitle@Radius]--(title.south west)--(title.south east)--cycle;
+\else
+\draw[white,fill=white,line width=10.0pt](title.north east)--([xshift={sqrt(15)*\@BoxTitle@Radius/7+\@BoxTitle@Radius}]title.north west)arc(asin(7/8):{360-asin(7/8)}:{8*\@BoxTitle@Radius/7})[rounded corners=\@BoxTitle@Radius]--(title.south east)--cycle;
+\draw[#5,fill=#5!90,line width=2.0pt](title.north east)--([xshift={sqrt(15)*\@BoxTitle@Radius/7+\@BoxTitle@Radius}]title.north west)arc(asin(7/8):{360-asin(7/8)}:{8*\@BoxTitle@Radius/7})[rounded corners=\@BoxTitle@Radius]--(title.south east)--cycle;
+\fi
+\node[circle,align=center,inner sep=0mm,font=\BoxLogoFont,text=white](P)at([xshift=\@BoxTitle@Radius,yshift=-\@BoxTitle@Radius]title.north west){#6};
+},
+#1}
+
+%%%%
+\def\@Definiton@Title{定义}
+\def\@Definiton@Label{Def.\the@prenumber.\the@def}
+%%%%
+\def\@Theorem@Title{定理}
+\def\@Theorem@Label{Thm.\the@prenumber.\the@thm}
+%%%%
+\def\@Axiom@Title{公理}
+\def\@Axiom@Label{Axm.\the@prenumber.\the@axm}
+
+%%编号定义盒子%%
+\DeclareDocumentEnvironment{Definition}{ +O{} +D<>{} }{\begin{box3}[code={
+\if@mainmatter
+\stepcounter{@def}
+\label{\@Definiton@Label}
+\fi}]{%
+\@Definiton@Title%
+\if@mainmatter%
+~\the@prenumber.\the@def%
+\fi}
+[#1][#2][ColorA][\faCrosshairs]}{\end{box3}}
+%%%%
+\DeclareDocumentEnvironment{Theorem}{ +O{} +D<>{} }{\begin{box3}[code={
+\if@mainmatter
+\stepcounter{@thm}
+\label{\@Theorem@Label}
+\fi}]{%
+\@Theorem@Title%
+\if@mainmatter%
+~\the@prenumber.\the@thm%
+\fi}
+[#1][#2][ColorB][\faCrosshairs]}{\end{box3}}
+%%%%
+\DeclareDocumentEnvironment{Axiom}{ +O{} +D<>{} }{\begin{box3}[code={
+\if@mainmatter
+\stepcounter{@axm}
+\label{\@Axiom@Label}
+\fi}]{%
+\@Axiom@Title%
+\if@mainmatter%
+~\the@prenumber.\the@axm%
+\fi}
+[#1][#2][ColorI][\faCompactDisc]}{\end{box3}}
+%%%%
+
+%%不编号定义盒子%%
+\DeclareDocumentEnvironment{Definition*}{ +O{} +D<>{} }{\begin{box3}{\@Theorem@Title}[#1][#2][ColorA][\faCrosshairs]}{\end{box3}}
+\DeclareDocumentEnvironment{Theorem*}{ +O{} +D<>{} }{\begin{box3}{\@Theorem@Title}[#1][#2][ColorB][\faCrosshairs]}{\end{box3}}
+\DeclareDocumentEnvironment{Axiom*}{ +O{} +D<>{} }{\begin{box3}{\@Axiom@Title}[#1][#2][ColorI][\faCompactDisc]}{\end{box3}}
+%%%%
+%%设置引理盒子%%
+\DeclareTColorBox{box4}{O{} +m +O{} +O{} O{ColorA} O{\faDiceD20}}{
+ColorfulBox=#2/#3/#4/#5,
+%%%%
+underlay boxed title={
+\BoxTitleFont
+\def\@BoxTitle@Radius{\dimexpr\baselineskip/2\relax}%0.85
+\draw[white,fill=white,line width=10.0pt]([xshift=\@BoxTitle@Radius,yshift=-\@BoxTitle@Radius]title.north west)circle({8*\@BoxTitle@Radius/7});
+\draw[white,fill=white,rounded corners=\@BoxTitle@Radius,line width=10.0pt](title.north west)rectangle(title.south east);
+\draw[#5,fill=#5,rounded corners=\@BoxTitle@Radius,ultra thick](title.north west)rectangle(title.south east);
+\draw[#5,fill=white,line width=2.75pt]([xshift=\@BoxTitle@Radius,yshift=-\@BoxTitle@Radius]title.north west)circle({8*\@BoxTitle@Radius/7});
+\node[circle,align=center,inner sep=0mm,font=\BoxLogoFont,text=#5](P)at([xshift=\@BoxTitle@Radius,yshift=-\@BoxTitle@Radius]title.north west){#6};},
+#1}
+
+%%%%
+\def\@Lemma@Title{引理}
+\def\@Lemma@Label{Lem.\the@prenumber.\the@lem}
+%%%%
+\def\@Corollary@Title{推论}
+\def\@Corollary@Label{Colry.\the@prenumber.\the@colry}
+%%%%
+\def\@Propostion@Title{命题}
+\def\@Proposition@Label{Prop.\the@prenumber.\the@prop}
+
+%%编号引理盒子%%
+\DeclareDocumentEnvironment{Lemma}{ +O{} +D<>{} }{\begin{box4}[code={
+\if@mainmatter
+\stepcounter{@lem}
+\label{\@Lemma@Label}
+\fi}]{%
+\@Lemma@Title%
+\if@mainmatter%
+~\the@prenumber.\the@lem%
+\fi}
+[#1][#2][ColorE][\faGlobe]}{\end{box4}}
+%%%%
+\DeclareDocumentEnvironment{Corollary}{ +O{} +D<>{} }{\begin{box4}[code={
+\if@mainmatter
+\stepcounter{@colry}
+\label{\@Corollary@Label}
+\fi
+}]{%
+\@Corollary@Title%
+\if@mainmatter%
+~\the@prenumber.\the@colry%
+\fi}
+[#1][#2][ColorG][\faCompactDisc]}{\end{box4}}
+%%%%
+\DeclareDocumentEnvironment{Proposition}{ +O{} +D<>{} }{\begin{box4}[code={
+\if@mainmatter
+\stepcounter{@prop}
+\label{\@Proposition@Label}
+\fi
+}]{%
+\@Propostion@Title%
+\if@mainmatter%
+~\the@prenumber.\the@prop%
+\fi}
+[#1][#2][ColorH][\faGlobe]}{\end{box4}}
+%%%%
+%%不编号引理盒子%%
+\DeclareDocumentEnvironment{Lemma*}{ +O{} +D<>{} }{\begin{box4}{\@Lemma@Title}[#1][#2][ColorE][\faGlobe]}{\end{box4}}
+\DeclareDocumentEnvironment{Corollary*}{ +O{} +D<>{} }{\begin{box4}{\@Corollary@Title}[#1][#2][ColorG][\faCompactDisc]}{\end{box4}}
+\DeclareDocumentEnvironment{Proposition*}{ +O{} +D<>{} }{\begin{box4}{\@Propostion@Title}[#1][#2][ColorH][\faGlobe]}{\end{box4}}
+%%%%
+%设置拓展盒子%%
+\DeclareTColorBox{box5}{O{} +m +O{} +O{} O{ColorA} O{\faLink}}{
+ColorfulBox=#2/#3/#4/#5,
+%%%%
+underlay boxed title={
+\BoxTitleFont
+\def\@BoxTitle@Radius{\dimexpr\baselineskip/2\relax}%0.85
+\draw[white,fill=white,rounded corners=\@BoxTitle@Radius,line width=10.0pt](title.north west)rectangle(title.south east);
+\draw[#5,fill=#5,rounded corners=\@BoxTitle@Radius,ultra thick](title.north west)rectangle(title.south east);
+\fill[white,draw=white,line width=10.0pt]([xshift=\@BoxTitle@Radius,yshift=-\@BoxTitle@Radius]title.north west)circle({8*\@BoxTitle@Radius/7});
+\fill[white,draw=#5,line width=2.75pt]([xshift=\@BoxTitle@Radius,yshift=-\@BoxTitle@Radius]title.north west)circle({8*\@BoxTitle@Radius/7});
+\node[circle,align=center,inner sep=0mm,font=\BoxLogoFont,text=#5] at([xshift=\@BoxTitle@Radius,yshift=-\@BoxTitle@Radius]title.north west){#6};},
+#1}
+
+\DeclareDocumentEnvironment{Link}{ +O{} +D<>{} }{\begin{box5}{拓展链接}[#1][#2][ColorE][\faLink]}{\end{box5}}
+\DeclareDocumentEnvironment{History}{ +O{} +D<>{} }{\begin{box5}{科学发展史}[#1][#2][ColorC][\faCalendar*]}
+{\end{box5}}
+\DeclareDocumentEnvironment{STS}{ +O{} +D<>{} }{\begin{box5}{科学·技术·社会}[#1][#2][ColorH][\faCog]}
+{\end{box5}}
+
+%%设置案例盒子%%
+\DeclareTColorBox{box6}{O{} +m +O{} +O{} O{ColorA} O{\faFile*}}{
+ColorfulBox=#2/#3/#4/#5,
+%%%%
+underlay boxed title={
+\BoxTitleFont
+\def\@BoxTitle@Radius{\dimexpr\baselineskip/2\relax}%0.85
+\draw[white,fill=white,line width=10.0pt,rounded corners=\@BoxTitle@Radius](title.north east)rectangle(title.south west);
+\draw[#5!90,fill=#5!90,line width=2.0pt,rounded corners=\@BoxTitle@Radius](title.north east)rectangle(title.south west);
+%%%%
+\fill[white,draw=white]([xshift=\@BoxTitle@Radius,yshift=-\@BoxTitle@Radius]title.north west)circle({5*\@BoxTitle@Radius/3});
+\draw[#5,fill=white,line width=2.75pt]([xshift=\@BoxTitle@Radius,yshift=-\@BoxTitle@Radius]title.north west)circle({8*\@BoxTitle@Radius/7});
+%%%%
+\pgfgetnodeheight(title)\@BoxTitle@Height
+\ifdim\@BoxTitle@Height>2\@BoxTitle@Radius
+\draw[#5,line width=2.0pt]
+(title.north east)[sharp corners]--
+([xshift={7*\@BoxTitle@Radius/3}]title.north west)arc(asin(3/5):{-asin(3/5)-90}:{5*\@BoxTitle@Radius/3})[rounded corners=\@BoxTitle@Radius]--
+(title.south west)[rounded corners=\@BoxTitle@Radius]--
+(title.south east)[rounded corners=\@BoxTitle@Radius]--cycle;
+\else
+%%%%
+\draw[#5,line width=2.0pt]
+(title.north east)[sharp corners]--
+([xshift={7*\@BoxTitle@Radius/3}]title.north west)arc(asin(3/5):-asin(3/5):{5*\@BoxTitle@Radius/3})[rounded corners=\@BoxTitle@Radius]--
+(title.south east)[rounded corners=\@BoxTitle@Radius]--cycle;
+\fi
+%%%%
+\node[circle,align=center,inner sep=0mm,font=\BoxLogoFont,text=#5](T)at([xshift=\@BoxTitle@Radius,yshift=-\@BoxTitle@Radius]title.north west){#6};},
+#1}
+
+\DeclareDocumentEnvironment{Information}{ +O{} +D<>{} }{\begin{box6}{资料卡片}[#1][#2][ColorI][\faFile*]}{\end{box6}}
+\DeclareDocumentEnvironment{Application}{ +O{} +D<>{} }{\begin{box6}{案例分析}[#1][#2][ColorA][\faTools]}{\end{box6}}
+\DeclareDocumentEnvironment{Review}{ +O{} +D<>{} }{\begin{box6}{知识回顾}[#1][#2][ColorC][\faFan]}{\end{box6}}
+
+%%%%
+\DeclareTColorBox{box7}{ +O{} +O{} }{
+enhanced standard,breakable,
+pad before break=3.0mm,pad after break=5.0mm,
+top=3.5mm,bottom=3.0mm,toptitle=4.0mm,bottomtitle=-2.5mm,
+colframe=ColorB!7.5,colback=ColorB!7.5,colbacktitle=ColorB!7.5,rounded corners,arc=7.5pt,
+before=\par\medskip,after=\par\medskip,
+parbox=false,before upper={\hspace*{2.0em}},before lower={\hspace*{2.0em}},
+fonttitle=\BoxTitleFont,coltitle=ColorA,
+subtitle style={empty,fontupper=\BoxSubtitleFont,colupper=ColorA},
+title={#1},#2}
+
+\newenvironment{Proof}{\begin{box7}[\faBars~~证明]}{\end{box7}}
+%%
+\newenvironment{Solution}{\begin{box7}[\faBars~~参考答案]}{\end{box7}}
+%%
+\DeclareDocumentEnvironment{Block}{ +O{} }{\begin{box7}[#1]}{\end{box7}}
+
+%%%%
+\DeclareTColorBox{box8}{O{} +m +O{} +O{} O{ColorA} O{}}{CodeBox=#2/#3/#4/#5/#6,#1}
+
+\NewDocumentEnvironment{Reading}{ +O{} +D<>{} +m +m }{\begin{box8}{阅读理解}[#1][#2][ColorB][\score{#3}{#4}[ColorB]]}{\end{box8}}
+\NewDocumentEnvironment{Cloze}{ +O{} +D<>{} +m +m }{\begin{box8}{完形填空}[#1][#2][ColorA][\score{#3}{#4}[ColorA]]}{\end{box8}}
+\NewDocumentEnvironment{Article}{ +O{} +D<>{} +m +m }{\begin{box8}{文本解读}[#1][#2][ColorC][\score{#3}{#4}[ColorC]]}{\end{box8}}
+\NewDocumentEnvironment{Vocabulary}{ +O{} +D<>{} }{\begin{box8}{词汇解析}[#1][#2][ColorE]}{\end{box8}}
+%%%%
+%%修改代码盒子左侧行数样式%%
+\renewcommand{\theFancyVerbLine}{\LineNumFont\color{ColorA}{\arabic{FancyVerbLine}}}
+%%%%
+\newtcblisting{PythonBox}[1][]{
+CodeBox={代码示例}/#1/{}/ColorA/{\uppercase{python}},
+before upper={},before lower={},
+minted options={breaklines,autogobble,linenos,numbersep=5.5mm},
+listing only,listing engine=minted,
+minted language=python}
+
+\newtcblisting{CppBox}[1][]{
+CodeBox={代码示例}/#1/{}/ColorB/{\uppercase{cpp}},
+before upper={},before lower={},
+minted options={breaklines,autogobble,linenos,numbersep=5.5mm},
+listing only,listing engine=minted,
+minted language=cpp}
+
+\newtcblisting{JavaBox}[1][]{
+CodeBox={代码示例}/#1/{}/ColorC/{\uppercase{java}},
+before upper={},before lower={},
+minted options={breaklines,autogobble,linenos,numbersep=5.5mm},
+listing only,listing engine=minted,
+minted language=java}
+
+\newtcblisting{CodeBox}[3][]{
+CodeBox={代码示例}/#1/{}/#3/{\uppercase{#2}},
+before upper={},before lower={},
+minted options={breaklines,autogobble,linenos,numbersep=5.5mm},
+listing only,listing engine=minted,
+minted language=#2}
 
 \def\@Exercise@Label@Numbered{课后习题~\the@prenumber}
 \def\@Exercise@Label@Unnumbered{课后习题}
@@ -3085,83 +3060,81 @@ subtitle style={empty,fontupper=\BoxSubtitleFont,colupper=#4},
 %%%%
 \DeclareTColorBox{box9}{ O{} O{} }{Question,code={#2},#1}
 %%%%
-\newenvironment{Exercise}{\begin{box9}[][
-\if@mainmatter
-\subsection*{\@Exercise@Label@Numbered}
-\else
-\subsection*{\@Exercise@Label@Unnumbered}
+\newenvironment{Exercise}{\begin{box9}[][%
+\if@mainmatter%
+\subsection*{\@Exercise@Label@Numbered}%
+\else%
+\subsection*{\@Exercise@Label@Unnumbered}%
 \fi]}{\end{box9}}
 %%
 \newenvironment{Exercise*}{\begin{box9}[][\subsection*{\@Exercise@Label@Unnumbered}]}{\end{box9}}
 %%%%
-\newenvironment{Thinking}{\begin{box9}[][
-\if@mainmatter
-\subsection*{\@Thinking@Label@Numbered}
-\else
-\subsection*{\@Thinking@Label@Unnumbered}
+\newenvironment{Thinking}{\begin{box9}[][%
+\if@mainmatter%
+\subsection*{\@Thinking@Label@Numbered}%
+\else%
+\subsection*{\@Thinking@Label@Unnumbered}%
 \fi]}{\end{box9}}
 %%
 \newenvironment{Thinking*}{\begin{box9}[][\subsection*{\@Thinking@Label@Unnumbered}]}{\end{box9}}
 %%%%
-\newenvironment{Improve}{\begin{box9}[][
-\if@mainmatter
-\subsection*{\@Improve@Label@Numbered}
-\else
-\subsection*{\@Improve@Label@Unnumbered}
+\newenvironment{Improve}{\begin{box9}[][%
+\if@mainmatter%
+\subsection*{\@Improve@Label@Numbered}%
+\else%
+\subsection*{\@Improve@Label@Unnumbered}%
 \fi]}{\end{box9}}
 %%
 \newenvironment{Improve*}{\begin{box9}[][\subsection*{\@Improve@Label@Unnumbered}]}{\end{box9}}
 
-%%修改代码盒子左侧行数样式%%
-\renewcommand{\theFancyVerbLine}{\LineNumFont\color{ColorA}{\arabic{FancyVerbLine}}}
-%%定义代码盒子基本样式%%
-\tcbset{CodeBox/.style={
-Box,
-varwidth boxed title=\@Box@CriticTitleWidth,
-frame style={left color=ColorA!50,right color=ColorA!50,middle color=ColorA},
-code={\@Box@Title@Set{代码示例}{#1}},
-left=5\@Box@TitleRadius/2,
-attach boxed title to top left={yshift*=-\tcboxedtitleheight},
+%%设置边注命令%%
+\newenvironment{@MarginNote}[3]{%
+\bigskip%
+\noindent%
+\begin{varwidth}{3\linewidth/4}
+\BoxSubtitleFont\color{#1}#2\hspace{0.5em}#3
+\end{varwidth}\par%
+\vspace*{0.5em}%
+\begingroup%
+\MarginFont\color{#1}%
+}{\endgroup}
 %%%%
-IfBlankTF={代码示例#1}{
-boxed title style={size=minimal,empty,left=3\@Box@TitleRadius/2,right=3\@Box@TitleRadius/2,height=2\@Box@TitleRadius}
-}{boxed title style={size=minimal,empty,left=3\@Box@TitleRadius/2,right=3\@Box@TitleRadius/2,top=2\@Box@TitleYSep,bottom=4\@Box@TitleYSep/3}},
-%%%%
-underlay boxed title={
-\begin{tcbclipinterior}
-\fill[ColorB!7.5,draw=ColorB!7.5](frame.south west)rectangle([xshift=2\@Box@TitleRadius]frame.north west);
-\draw[ColorB!7.5,fill=ColorB!7.5](frame.north east)rectangle(title.south west);
-\draw[ColorA,fill=ColorA](title.north west)--(title.north east)[rounded corners=5.0pt]--(title.south east)[sharp corners]--(title.south west)--cycle;
-\end{tcbclipinterior}},
-overlay middle and last={
-\begin{tcbclipinterior}
-\fill[ColorB!7.5,draw=ColorB!7.5](frame.south west)rectangle([xshift=2\@Box@TitleRadius]frame.north west);
-\end{tcbclipinterior}},
-subtitle style={empty,fontupper=\BoxSubtitleFont,colupper=ColorA},
-title={\@BoxTitle},
-minted options={breaklines,autogobble,linenos,numbersep=5.5mm},
-listing only,listing engine=minted}}
-%%%%
-\newcommand{\CodeSubtitle}[1]{
-\node[font=\BoxTitleFont,text=ColorA,anchor=east,outer sep=0mm,inner sep=0mm](ST)at([xshift=-\@Box@TitleRadius,yshift={-\tcboxedtitleheight/2}]interior.north east){\begin{varwidth}{\linewidth-\@Box@CriticTitleWidth}#1\end{varwidth}};}
-
-%%%%
-\newtcblisting{PythonBox}[1]{
-CodeBox={#1},minted language=python,
-overlay unbroken and first={\CodeSubtitle{Python}}
+%%+m表示允许换行、空行的参数%%
+\DeclareDocumentCommand{\RelaInfo}{ s +m }
+{\IfBooleanTF{#1}
+{\marginpar{%
+\begin{@MarginNote}{ColorH}{\faCommentDots}{相关信息}
+#2
+\end{@MarginNote}}
+}{%
+\begin{@MarginNote}{ColorH}{\faCommentDots}{相关信息}
+#2
+\end{@MarginNote}}
 }
-
-\newtcblisting{CppBox}[1]{
-CodeBox={#1},minted language=cpp,
-overlay unbroken and first={\CodeSubtitle{Cpp}}}
-
-\newtcblisting{JavaBox}[1]{
-CodeBox={#1},minted language=java,
-overlay unbroken and first={\CodeSubtitle{Java}}}
-
-\newtcblisting{CodeBox}[2]{
-CodeBox={#1},minted language={#2},
-overlay unbroken and first={\CodeSubtitle{\uppercase{#2}}}}
+%%
+\DeclareDocumentCommand{\DeepThink}{ s +m }
+{\IfBooleanTF{#1}
+{\marginpar{%
+\begin{@MarginNote}{ColorB!90!black}{\faTh}{深入思考}
+#2
+\end{@MarginNote}}
+}{%
+\begin{@MarginNote}{ColorB!90!black}{\faTh}{深入思考}
+#2
+\end{@MarginNote}}
+}
+%%
+\DeclareDocumentCommand{\Remark}{ s +m }
+{\IfBooleanTF{#1}
+{\marginpar{%
+\begin{@MarginNote}{ColorF}{\faChrome}{重点注释}
+#2
+\end{@MarginNote}}
+}{%
+\begin{@MarginNote}{ColorF}{\faChrome}{重点注释}
+#2
+\end{@MarginNote}}
+}
 
 %%数学公式小盒子%%
 \newtcbox{\Formula}[1][]{nobeforeafter,math upper,tcbox raise base,
