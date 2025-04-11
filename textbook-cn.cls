@@ -309,13 +309,13 @@ marginparsep=\@marginparseplen,marginparwidth=\@marginparwidthlen,reversemarginp
 \newcommand{\tabcaption}{\setcaptiontype{table}\caption}
 %%设置边注中的图片和表格%%
 \makeatletter
-\newcommand{\marginpic}[2]{
-\marginpar{
+\newcommand{\marginpic}[2]{%
+\marginpar{%
 \centering\includegraphics[width=\@marginparwidthlen-0.5em]{#1}
 \centering\figcaption{#2}}}
-\newcommand{\margintab}[2]{
-\marginpar{
-\centering{#1}
+\newcommand{\margintab}[2]{%
+\marginpar{%
+\centering{#1}%
 \centering\tabcaption{#2}}}
 \makeatother
 
@@ -1710,22 +1710,26 @@ shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,deco
 %%%%
 \newlength{\@Subsection@Star@LabelCriticWidth}
 \newlength{\@Subsection@Star@LabelHSkip}
+\newlength{\@BigLabelCircle@LineWidth}
+\newlength{\@SmallLabelCircle@LineWidth}
 \setlength{\@Subsection@Star@LabelCriticWidth}{4.0cm}
 \setlength{\@Subsection@Star@LabelHSkip}{2.8em}
+\setlength{\@BigLabelCircle@LineWidth}{13.5pt}
+\setlength{\@SmallLabelCircle@LineWidth}{4.0pt}
 %%%%
 \NewDocumentCommand{\@SubsectionStarStyle}{ +m +m }{%
 \begingroup%
 \raggedright%
 \tikz{%
 \node[inner sep=0mm,outer sep=0mm]{%
-\hspace*{-6.75pt}%
+\hspace*{-\@BigLabelCircle@LineWidth/2+\@SmallLabelCircle@LineWidth/2}%
 \begin{tikzpicture}
 \SubsectionFont
 \def\@Subsection@Star@Radius{\dimexpr\baselineskip/2\relax}%0.9
 \pgfdeclarelayer{@Subsection@Star@Bottom}
 \pgfsetlayers{@Subsection@Star@Bottom,main}
 \node[text=white,inner xsep=\@Subsection@Star@Radius,inner ysep=0mm,outer sep=0mm](L){%
-\hspace*{\@Subsection@Star@LabelHSkip}%
+\hspace*{\@Subsection@Star@LabelHSkip+2.0pt}%
 \begin{varwidth}{\@Subsection@Star@LabelCriticWidth}
 %\AdjustStrut{0.9}%
 \strut#1\strut
@@ -1751,9 +1755,9 @@ shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,deco
 \draw[ColorA,line width=0.1pt,fill=ColorA,rounded corners=\@Subsection@Star@Radius](L.south west)rectangle(N.north west);
 \fi
 %%
-\draw[white,line width=13.5pt,fill=white]([xshift=\@Subsection@Star@Radius,yshift=-\@Subsection@Star@Radius]L.north west)circle(\@Subsection@Star@Radius);
-\draw[ColorA,line width=4.0pt,fill=white]([xshift=\@Subsection@Star@Radius,yshift=-\@Subsection@Star@Radius]L.north west)circle(\@Subsection@Star@Radius);
-\draw[ColorA,fill=ColorA]([xshift=\@Subsection@Star@Radius,yshift=-\@Subsection@Star@Radius]L.north west)circle(\@Subsection@Star@Radius/2);
+\draw[white,line width=\@BigLabelCircle@LineWidth,fill=white]([xshift=\@Subsection@Star@Radius+\@SmallLabelCircle@LineWidth/2,yshift=-\@Subsection@Star@Radius]L.north west)circle(\@Subsection@Star@Radius);
+\draw[ColorA,line width=\@SmallLabelCircle@LineWidth,fill=white]([xshift=\@Subsection@Star@Radius+\@SmallLabelCircle@LineWidth/2,yshift=-\@Subsection@Star@Radius]L.north west)circle(\@Subsection@Star@Radius);
+\draw[ColorA,fill=ColorA]([xshift=\@Subsection@Star@Radius+\@SmallLabelCircle@LineWidth/2,yshift=-\@Subsection@Star@Radius]L.north west)circle(\@Subsection@Star@Radius/2);
 \end{pgfonlayer}
 \end{tikzpicture}};}
 \vspace*{-5.0mm}
@@ -2173,9 +2177,9 @@ shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,deco
 {}{}{0em}
 {\@SubsectionStarStyle{\subsectionlabelfront~\thesubsection~\subsectionlabelback}{##1}}
 %%%%
-\def\@Example@Name{例题（附录）}
+\def\@Example@Name{附录~例题}
 \def\@Example@Label{\the@prenumber.\the@egnum}
-\def\@Variant@Name{变式（附录）}
+\def\@Variant@Name{附录~变式}
 \def\@Variant@Label{\the@prenumber.\the@varnum}
 %%%%
 \def\@Exercise@Label@Numbered{拓展练习~\the@prenumber}
@@ -2183,22 +2187,22 @@ shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,deco
 \def\@Thinking@Label@Numbered{深入思考~\the@prenumber}
 \def\@Thinking@Label@Unnumbered{深入思考}
 %%%%
-\def\@Definiton@Title{定义（附录）}
+\def\@Definiton@Title{附录~定义}
 \def\@Definiton@Label{Def(Appendix).\the@prenumber.\the@def}
 %%%%
-\def\@Theorem@Title{定理（附录）}
+\def\@Theorem@Title{附录~定理}
 \def\@Theorem@Label{Thm(Appendix).\the@prenumber.\the@thm}
 %%%%
-\def\@Axiom@Title{公理（附录）}
+\def\@Axiom@Title{附录~公理}
 \def\@Axiom@Label{Axm(Appendix).\the@prenumber.\the@axm}
 %%%%
-\def\@Lemma@Title{引理（附录）}
+\def\@Lemma@Title{附录~引理}
 \def\@Lemma@Label{Lem(Appendix).\the@prenumber.\the@lem}
 %%%%
-\def\@Corollary@Title{推论（附录）}
+\def\@Corollary@Title{附录~推论}
 \def\@Corollary@Label{Colry(Appendix).\the@prenumber.\the@colry}
 %%%%
-\def\@Propostion@Title{命题（附录）}
+\def\@Propostion@Title{附录~命题}
 \def\@Proposition@Label{Prop(Appendix).\the@prenumber.\the@prop}
 %%%%
 %将环境前的章计数器值储存在beforecounter中
@@ -2262,9 +2266,9 @@ shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,deco
 {}{}{0em}
 {\@SubsectionStarStyle{\subsectionlabelfront~\thesubsection~\subsectionlabelback}{##1}}
 %%%%
-\def\@Example@Name{例题（试题）}
+\def\@Example@Name{试题~例题}
 \def\@Example@Label{\the@prenumber.\the@egnum}
-\def\@Variant@Name{变式（试题）}
+\def\@Variant@Name{试题~变式}
 \def\@Variant@Label{\the@prenumber.\the@varnum}
 %%%%
 \def\@Exercise@Label@Numbered{补充习题~\the@prenumber}
@@ -2272,22 +2276,22 @@ shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,deco
 \def\@Thinking@Label@Numbered{错题总结~\the@prenumber}
 \def\@Thinking@Label@Unnumbered{错题总结}
 %%%%
-\def\@Definiton@Title{定义（试题）}
+\def\@Definiton@Title{试题~定义}
 \def\@Definiton@Label{Def(Test).\the@prenumber.\the@def}
 %%%%
-\def\@Theorem@Title{定理（试题）}
+\def\@Theorem@Title{试题~定理}
 \def\@Theorem@Label{Thm(Test).\the@prenumber.\the@thm}
 %%%%
-\def\@Axiom@Title{公理（试题）}
+\def\@Axiom@Title{试题~公理}
 \def\@Axiom@Label{Axm(Test).\the@prenumber.\the@axm}
 %%%%
-\def\@Lemma@Title{引理（试题）}
+\def\@Lemma@Title{试题~引理}
 \def\@Lemma@Label{Lem(Test).\the@prenumber.\the@lem}
 %%%%
-\def\@Corollary@Title{推论（试题）}
+\def\@Corollary@Title{试题~推论}
 \def\@Corollary@Label{Colry(Test).\the@prenumber.\the@colry}
 %%%%
-\def\@Propostion@Title{命题（试题）}
+\def\@Propostion@Title{试题~命题}
 \def\@Proposition@Label{Prop(Test).\the@prenumber.\the@prop}
 %%%%
 %将环境前的章计数器值储存在beforecounter中
@@ -2341,22 +2345,22 @@ shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,deco
 %%简化序号命令%%
 \renewcommand{\the@prenumber}{\thesection}
 %%%%
-\def\@Definiton@Title{定义（测试）}
+\def\@Definiton@Title{测试~定义}
 \def\@Definiton@Label{Def(Quiz).\the@prenumber.\the@def}
 %%%%
-\def\@Theorem@Title{定理（测试）}
+\def\@Theorem@Title{测试~定理}
 \def\@Theorem@Label{Thm(Quiz).\the@prenumber.\the@thm}
 %%%%
-\def\@Axiom@Title{公理（测试）}
+\def\@Axiom@Title{测试~公理}
 \def\@Axiom@Label{Axm(Quiz).\the@prenumber.\the@axm}
 %%%%
-\def\@Lemma@Title{引理（测试）}
+\def\@Lemma@Title{测试~引理}
 \def\@Lemma@Label{Lem(Quiz).\the@prenumber.\the@lem}
 %%%%
-\def\@Corollary@Title{推论（测试）}
+\def\@Corollary@Title{测试~推论}
 \def\@Corollary@Label{Colry(Quiz).\the@prenumber.\the@colry}
 %%%%
-\def\@Propostion@Title{命题（测试）}
+\def\@Propostion@Title{测试~命题}
 \def\@Proposition@Label{Prop(Quiz).\the@prenumber.\the@prop}
 %%%%
 \def\@Example@Name{范例}
@@ -2442,22 +2446,22 @@ shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,deco
 %%简化序号命令%%
 \renewcommand{\the@prenumber}{\thesection}
 %%%%
-\def\@Definiton@Title{定义（专题）}
+\def\@Definiton@Title{专题~定义}
 \def\@Definiton@Label{Def(Topic).\the@prenumber.\the@def}
 %%%%
-\def\@Theorem@Title{定理（专题）}
+\def\@Theorem@Title{专题~定理}
 \def\@Theorem@Label{Thm(Topic).\the@prenumber.\the@thm}
 %%%%
-\def\@Axiom@Title{公理（专题）}
+\def\@Axiom@Title{专题~公理}
 \def\@Axiom@Label{Axm(Topic).\the@prenumber.\the@axm}
 %%%%
-\def\@Lemma@Title{引理（专题）}
+\def\@Lemma@Title{专题~引理}
 \def\@Lemma@Label{Lem(Topic).\the@prenumber.\the@lem}
 %%%%
-\def\@Corollary@Title{推论（专题）}
+\def\@Corollary@Title{专题~推论}
 \def\@Corollary@Label{Colry(Topic).\the@prenumber.\the@colry}
 %%%%
-\def\@Propostion@Title{命题（专题）}
+\def\@Propostion@Title{专题~命题}
 \def\@Proposition@Label{Prop(Topic).\the@prenumber.\the@prop}
 %%%%
 \def\@Example@Name{典例}
@@ -2542,22 +2546,22 @@ shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,deco
 %%简化序号命令%%
 \renewcommand{\the@prenumber}{\thesection}
 %%%%
-\def\@Definiton@Title{定义（课题）}
+\def\@Definiton@Title{课题~定义}
 \def\@Definiton@Label{Def(Project).\the@prenumber.\the@def}
 %%%%
-\def\@Theorem@Title{定理（课题）}
+\def\@Theorem@Title{课题~定理}
 \def\@Theorem@Label{Thm(Project).\the@prenumber.\the@thm}
 %%%%
-\def\@Axiom@Title{公理（课题）}
+\def\@Axiom@Title{课题~公理}
 \def\@Axiom@Label{Axm(Project).\the@prenumber.\the@axm}
 %%%%
-\def\@Lemma@Title{引理（课题）}
+\def\@Lemma@Title{课题~引理}
 \def\@Lemma@Label{Lem(Project).\the@prenumber.\the@lem}
 %%%%
-\def\@Corollary@Title{推论（课题）}
+\def\@Corollary@Title{课题~推论}
 \def\@Corollary@Label{Colry(Project).\the@prenumber.\the@colry}
 %%%%
-\def\@Propostion@Title{命题（课题）}
+\def\@Propostion@Title{课题~命题}
 \def\@Proposition@Label{Prop(Project).\the@prenumber.\the@prop}
 %%%%
 \def\@Example@Name{示例}
@@ -2625,7 +2629,6 @@ shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,deco
 %%%%
 \newlength{\@Box@CriticTitleWidth}
 \setlength{\@Box@CriticTitleWidth}{2\linewidth/3}
-%%设置彩色盒子样式%%
 %%设置习题盒子样式%%
 \tcbset{Question/.style={
 enhanced standard,breakable,empty,
@@ -2640,9 +2643,11 @@ code={\colorlet{ListColor}{ColorA}},
 subtitle style={empty,fontupper=\BoxSubtitleFont\centering,colupper=ColorA}
 }}
 
+%%设置彩色盒子样式%%
 \tcbset{ColorfulBox/.style args={#1/#2/#3/#4}{
 enhanced standard,breakable,
 pad before break=3.0mm,pad after break=4.5mm,
+grow to left by=-2.0pt,
 rounded corners,arc=5.0pt,boxrule=2.25pt,
 colback=white,colframe=white,
 frame style={left color=#4!50,right color=#4!50,middle color=#4},
@@ -2661,7 +2666,12 @@ IfBlankTF={#3}{before upper={\hspace*{2.0em}}
 before lower={\hspace*{2.0em}},
 subtitle style={empty,fontupper=\BoxSubtitleFont,colupper=#4}
 }}
-
+%%%%
+\newlength{\@ItemBox@BigCircle@LineWidth}
+\newlength{\@ItemBox@SmallCircle@LineWidth}
+\setlength{\@ItemBox@BigCircle@LineWidth}{12.0pt}
+\setlength{\@ItemBox@SmallCircle@LineWidth}{3.5pt}
+%%
 \tcbset{ItemBox/.style args={#1/#2}{
 enhanced standard,breakable,empty,
 pad before break=3.0mm,pad after break=5.0mm,
@@ -2675,7 +2685,7 @@ title={%
 %\AdjustStrut{0.85}%
 \strut#1\strut%
 },
-attach boxed title to top left={yshift*=-\tcboxedtitleheight},
+attach boxed title to top left={xshift=\@ItemBox@SmallCircle@LineWidth/2,yshift*=-\tcboxedtitleheight},
 boxed title style={size=minimal,empty,valign=center,left=2.5em,right=1.0em},
 subtitle style={empty,fontupper=\BoxSubtitleFont,colupper=#2},
 %%%%
@@ -2683,8 +2693,8 @@ underlay boxed title={
 \BoxTitleFont
 \def\@BoxTitle@Radius{\dimexpr\baselineskip/2\relax}%0.85
 \draw[#2,fill=#2,ultra thick,rounded corners=\@BoxTitle@Radius](title.north west)rectangle(title.south east);
-\draw[white,fill=white,line width=12.0pt]([xshift=\@BoxTitle@Radius,yshift=-\@BoxTitle@Radius]title.north west)circle(\@BoxTitle@Radius);
-\draw[#2,fill=white,line width=3.75pt]([xshift=\@BoxTitle@Radius,yshift=-\@BoxTitle@Radius]title.north west)circle(\@BoxTitle@Radius);
+\draw[white,fill=white,line width=\@ItemBox@BigCircle@LineWidth]([xshift=\@BoxTitle@Radius,yshift=-\@BoxTitle@Radius]title.north west)circle(\@BoxTitle@Radius);
+\draw[#2,fill=white,line width=\@ItemBox@SmallCircle@LineWidth]([xshift=\@BoxTitle@Radius,yshift=-\@BoxTitle@Radius]title.north west)circle(\@BoxTitle@Radius);
 \draw[#2,fill=#2]([xshift=\@BoxTitle@Radius,yshift=-\@BoxTitle@Radius]title.north west)circle({\@BoxTitle@Radius/2});
 %%%%
 \draw[#2,fill=#2,ultra thin]([xshift=-\@BoxTitle@Radius,yshift=-\@BoxTitle@Radius]frame.north east)circle({2*\@BoxTitle@Radius/3});
@@ -3143,8 +3153,8 @@ rounded corners,arc=5.0pt,#1}
 
 
 %%重定义标题页%%
-\renewcommand{\maketitle}{
-\begin{titlepage}
+\renewcommand{\maketitle}{%
+\begin{titlepage}%
 \begin{tikzpicture}[remember picture,overlay]
 \coordinate(A)at(current page.north west);
 \coordinate(B)at(current page.north east);
@@ -3158,36 +3168,37 @@ rounded corners,arc=5.0pt,#1}
 \draw[ColorB!5,fill=ColorB!5,sharp corners](D)rectangle(B);
 \draw[ColorA!25,fill=ColorA!25](A)--(B)--(C)--(D)--(H)[rounded corners=5.0mm]--(G)[rounded corners=5.0mm]--(F)[sharp corners]--(E)--cycle;
 \end{tikzpicture}
-\begin{center}
-\color{ColorA}\bfseries\sffamily
+\vspace*{-1.5cm}
+\begin{center}%
+\centering\color{ColorA}\bfseries\sffamily%
 %%书籍系列%%
-\ifdefvoid{\@series}{}{
-{\FontSizeSet{15pt}{18pt}\@series\par}}
-\vskip1.75cm
+\ifdefvoid{\@series}{}{%
+{\FontSizeSet{15pt}{18pt}\@series\par}}%
+\vskip1.75cm%
 %%标题%%
-{\FontSizeSet{55pt}{66pt}\@title\par}
+{\FontSizeSet{55pt}{66pt}\@title\par}%
 %%英文标题%%
-\ifdefvoid{\@englishtitle}{}{
-\vskip0.75cm
+\ifdefvoid{\@englishtitle}{}{%
+\vskip0.75cm%
 {\FontSizeSet{20pt}{24pt}\@englishtitle\par}}
 %%副标题%%
-\ifdefvoid{\@subtitle}{}{
-\vskip1.0cm
-{\FontSizeSet{30pt}{36pt}\@subtitle\par}}
+\ifdefvoid{\@subtitle}{}{%
+\vskip1.0cm%
+{\FontSizeSet{30pt}{36pt}\@subtitle\par}}%
 %%英文副标题%%
-\ifdefvoid{\@englishsubtitle}{}{
-\vskip0.25cm
-{\FontSizeSet{17.5pt}{21pt}\@englishsubtitle\par}}
+\ifdefvoid{\@englishsubtitle}{}{%
+\vskip0.25cm%
+{\FontSizeSet{17.5pt}{21pt}\@englishsubtitle\par}}%
 %%版本号%%
-\ifdefvoid{\@version}{}{
-\vskip0.75cm
-{\FontSizeSet{15pt}{18pt}第{\@version}版\par}}
-\vskip0.75cm
+\ifdefvoid{\@version}{}{%
+\vskip0.75cm%
+{\FontSizeSet{15pt}{18pt}第{\@version}版\par}}%
+\vskip0.5cm%
 %%作者%%
-{\FontSizeSet{15pt}{18pt}主编\quad\@author\par}
-\vfill
+{\FontSizeSet{15pt}{18pt}主编\quad\@author\par}%
+\vfill%
 %%出版社%%
-{\FontSizeSet{15pt}{18pt}\ifdefvoid{\@presslogo}{}{\raisebox{-0.2cm}{\mbox{\includegraphics[width=0.75cm]{\@presslogo}}}}\hskip0.25cm\@pressname\par}
+{\FontSizeSet{15pt}{18pt}\ifdefvoid{\@presslogo}{}{\raisebox{-0.2cm}{\mbox{\includegraphics[width=0.75cm]{\@presslogo}}}}\hskip0.25cm\@pressname\par}%
 \end{center}
 \end{titlepage}}
 \makeatother
