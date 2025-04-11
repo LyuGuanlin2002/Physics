@@ -2639,6 +2639,7 @@ parbox=false,
 after=\par\medskip,
 fonttitle=\BoxTitleFont,coltitle=white,
 lowerbox=ignored,
+before upper={\hspace*{2.0em}},
 code={\colorlet{ListColor}{ColorA}},
 subtitle style={empty,fontupper=\BoxSubtitleFont\centering,colupper=ColorA}
 }}
