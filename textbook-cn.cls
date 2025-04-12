@@ -2212,12 +2212,21 @@ shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,deco
 \setcounter{@Outer@Appendix@Counter}{\value{chapter}}
 %将章计数器置为环境中章计数器值
 \setcounter{chapter}{\value{@Inner@Appendix@Counter}}
+%%%%
+%确保hyperref知道计数器变化
+\hypersetup{pageanchor=true}
+%修改超链接的唯一标识
+\renewcommand{\theHchapter}{\chapterlabelfront\thechapter\chapterlabelback}
+\renewcommand{\theHsection}{\sectionlabelfront\thesection\sectionlabelback}
+\renewcommand{\theHsubsection}{\subsectionlabelfront\thesubsection\subsectionlabelback}
 }{\@appendixfalse
 \addtocontents{toc}{\protect\@appendixfalse}
 %将环境中的章计数器值储存在innercounter中
 \setcounter{@Inner@Appendix@Counter}{\value{chapter}}
 %将章计数器值恢复为环境前的值
 \setcounter{chapter}{\value{@Outer@Appendix@Counter}}
+%恢复原始超链接设置
+\hypersetup{pageanchor=false}
 }
 %%
 %%设置试题环境%%
@@ -2301,12 +2310,21 @@ shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,deco
 \setcounter{@Outer@Test@Counter}{\value{chapter}}
 %将章计数器置为环境中章计数器值
 \setcounter{chapter}{\value{@Inner@Test@Counter}}
+%%%%
+%确保hyperref知道计数器变化
+\hypersetup{pageanchor=true}
+%修改超链接的唯一标识
+\renewcommand{\theHchapter}{\chapterlabelfront\thechapter\chapterlabelback}
+\renewcommand{\theHsection}{\sectionlabelfront\thesection\sectionlabelback}
+\renewcommand{\theHsubsection}{\subsectionlabelfront\thesubsection\subsectionlabelback}
 }{\@testfalse
 \addtocontents{toc}{\protect\@testfalse}
 %将环境中的章计数器值储存在innercounter中
 \setcounter{@Inner@Test@Counter}{\value{chapter}}
 %将章计数器值恢复为环境前的值
 \setcounter{chapter}{\value{@Outer@Test@Counter}}
+%恢复原始超链接设置
+\hypersetup{pageanchor=false}
 }
 %%
 %%设置测试环境%%
@@ -2391,6 +2409,11 @@ shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,deco
 %将变式计数器置为环境中节计数器值
 \setcounter{@varnum}{\value{@Inner@Quiz@Var@Counter}}
 %%%%
+%确保hyperref知道计数器变化
+\hypersetup{pageanchor=true}
+%修改超链接的唯一标识
+\renewcommand{\theHsection}{\sectionlabelfront\thesection\sectionlabelback}
+\renewcommand{\theHsubsection}{\subsectionlabelfront\thesubsection\subsectionlabelback}
 }{\@quizfalse
 \addtocontents{toc}{\protect\@quizfalse}
 %将环境中的节计数器值储存在innercounter中
@@ -2407,6 +2430,8 @@ shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,deco
 \setcounter{@Inner@Quiz@Var@Counter}{\value{@varnum}}
 %将变式计数器值恢复为环境前的值
 \setcounter{@varnum}{\value{@Outer@Quiz@Var@Counter}}
+%恢复原始超链接设置
+\hypersetup{pageanchor=false}
 }
 %%%%
 
@@ -2492,6 +2517,11 @@ shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,deco
 %将变式计数器置为环境中节计数器值
 \setcounter{@varnum}{\value{@Inner@Topic@Var@Counter}}
 %%%%
+%确保hyperref知道计数器变化
+\hypersetup{pageanchor=true}
+%修改超链接的唯一标识
+\renewcommand{\theHsection}{\sectionlabelfront\thesection\sectionlabelback}
+\renewcommand{\theHsubsection}{\subsectionlabelfront\thesubsection\subsectionlabelback}
 }{\@topicfalse
 \addtocontents{toc}{\protect\@topicfalse}
 %将环境中的节计数器值储存在innercounter中
@@ -2508,6 +2538,8 @@ shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,deco
 \setcounter{@Inner@Topic@Var@Counter}{\value{@varnum}}
 %将变式计数器值恢复为环境前的值
 \setcounter{@varnum}{\value{@Outer@Topic@Var@Counter}}
+%恢复原始超链接设置
+\hypersetup{pageanchor=false}
 }
 %%%%
 %%设置实验环境%%
@@ -2592,6 +2624,11 @@ shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,deco
 %将变式计数器置为环境中节计数器值
 \setcounter{@varnum}{\value{@Inner@Project@Var@Counter}}
 %%%%
+%确保hyperref知道计数器变化
+\hypersetup{pageanchor=true}
+%修改超链接的唯一标识
+\renewcommand{\theHsection}{\sectionlabelfront\thesection\sectionlabelback}
+\renewcommand{\theHsubsection}{\subsectionlabelfront\thesubsection\subsectionlabelback}
 }{\@projectfalse
 \addtocontents{toc}{\protect\@projectfalse}
 %将环境中的节计数器值储存在innercounter中
@@ -2608,6 +2645,8 @@ shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,deco
 \setcounter{@Inner@Project@Var@Counter}{\value{@varnum}}
 %将变式计数器值恢复为环境前的值
 \setcounter{@varnum}{\value{@Outer@Project@Var@Counter}}
+%恢复原始超链接设置
+\hypersetup{pageanchor=false}
 }
 
 %%重定义\frontmatter%%
@@ -3172,7 +3211,7 @@ rounded corners,arc=5.0pt,#1}
 \draw[ColorB!5,fill=ColorB!5,sharp corners](D)rectangle(B);
 \draw[ColorA!25,fill=ColorA!25](A)--(B)--(C)--(D)--(H)[rounded corners=5.0mm]--(G)[rounded corners=5.0mm]--(F)[sharp corners]--(E)--cycle;
 \end{tikzpicture}
-\vspace*{-1.5cm}
+\vspace*{-1.0cm}
 \begin{center}%
 \centering\color{ColorA}\bfseries\sffamily%
 %%书籍系列%%
