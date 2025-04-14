@@ -279,7 +279,6 @@ marginparsep=\@marginparseplen,marginparwidth=\@marginparwidthlen,reversemarginp
 \RequirePackage{extramarks}%创建额外的标记，使用方法类似于\markboth和\markright
 \RequirePackage[strict]{changepage}%换页
 \RequirePackage[noadjust]{marginnote}%边注
-\RequirePackage{sidenotes}%边注
 %%脚注格式%%
 \gdef\footnoterule{}
 \gdef\footnotesize{\color{ColorA}\FootNoteFont}
@@ -333,7 +332,7 @@ marginparsep=\@marginparseplen,marginparwidth=\@marginparwidthlen,reversemarginp
 %\setcounter{tocdepth}{2}
 \makeatletter
 %%重定义\tableofcontents%%
-\RenewDocumentCommand{\tableofcontents}{s O{1} O{}}{
+\RenewDocumentCommand{\tableofcontents}{s D<>{1} +O{}}{
 \begingroup%确保计数器值只在局部生效
 \chapter*{\contentsname}
 \c@tocdepth=#2%预设目录深度为1
@@ -346,7 +345,7 @@ marginparsep=\@marginparseplen,marginparwidth=\@marginparwidthlen,reversemarginp
 {\@starttoc{toc}}
 \endgroup}
 %%重定义\listoffigures%%
-\RenewDocumentCommand{\listoffigures}{s O{}}{
+\RenewDocumentCommand{\listoffigures}{s +O{}}{
 \chapter*{\listfigurename}
 \IfBooleanTF{#1}{
 \begin{paracol}{2}
@@ -357,7 +356,7 @@ marginparsep=\@marginparseplen,marginparwidth=\@marginparwidthlen,reversemarginp
 {\@starttoc{lof}}
 }
 %%重定义\listoftables%%
-\RenewDocumentCommand{\listoftables}{s O{}}{
+\RenewDocumentCommand{\listoftables}{s +O{}}{
 \chapter*{\listtablename}
 \IfBooleanTF{#1}{
 \begin{paracol}{2}
@@ -368,7 +367,7 @@ marginparsep=\@marginparseplen,marginparwidth=\@marginparwidthlen,reversemarginp
 {\@starttoc{lot}}
 }
 %%重定义\shorttableofcontents%%
-\RenewDocumentCommand{\shorttableofcontents}{s O{0} O{}}{
+\RenewDocumentCommand{\shorttableofcontents}{s D<>{0} +O{}}{
 \begingroup%确保计数器值只在局部生效
 \chapter*{\shorttocname}
 \c@tocdepth=#2%预设目录深度为0
@@ -664,6 +663,11 @@ columns=2,columnsep=2.0em,notintoc,notocbasic,nocolumnseprule}
 
 %%%%%%%%%%%%%%%%%%%% 数学符号宏包 %%%%%%%%%%%%%%%%%%%%
 \RequirePackage{amsmath,amsfonts,amssymb,mathrsfs,array,bm,upgreek}%数学宏包
+%%定义罗马数字%%
+\makeatletter
+\newcommand{\rmnum}[1]{\romannumeral #1}
+\newcommand{\Rmnum}[1]{\expandafter\@slowromancap\romannumeral #1@}
+\makeatother
 
 %%%%%%%%%%%%%%%%%%%% 盒子和列表宏包 %%%%%%%%%%%%%%%%%%%%
 \RequirePackage[most]{tcolorbox}%彩色盒子
@@ -1760,7 +1764,7 @@ shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,deco
 \draw[ColorA,fill=ColorA]([xshift=\@Subsection@Star@Radius+\@SmallLabelCircle@LineWidth/2,yshift=-\@Subsection@Star@Radius]L.north west)circle(\@Subsection@Star@Radius/2);
 \end{pgfonlayer}
 \end{tikzpicture}};}
-\vspace*{-5.0mm}
+\vspace*{-5.0mm}%
 \endgroup}
 
 %%%%
@@ -2675,13 +2679,13 @@ shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,deco
 \tcbset{Question/.style={
 enhanced standard,breakable,empty,
 pad before break=3.0mm,pad after break=5.0mm,
-top=3.0mm,bottom=3.0mm,
+top=0mm,bottom=3.0mm,
 right=0mm,left=0mm,boxsep=0mm,
 parbox=false,
 after=\par\medskip,
 fonttitle=\BoxTitleFont,coltitle=white,
 lowerbox=ignored,
-before upper={\hspace*{2.0em}},
+before upper={\hspace{2.0em}},
 code={\colorlet{ListColor}{ColorA}},
 subtitle style={empty,fontupper=\BoxSubtitleFont\centering,colupper=ColorA}
 }}
@@ -2703,10 +2707,10 @@ IfBlankTF={#2}{}{after title={\strut~:~~#2\strut}},
 attach boxed title to top left={yshift*=-\tcboxedtitleheight+1.5mm},
 boxed title style={size=minimal,empty,valign=center,left=2.5em,right=1.0em},
 parbox=false,
-IfBlankTF={#3}{before upper={\hspace*{2.0em}}
-}{before upper={\noindent{\BoxTitleFont\color{#4}#3}\hspace*{1.0em}}
+IfBlankTF={#3}{before upper={\hspace{2.0em}}
+}{before upper={\noindent{\BoxTitleFont\color{#4}#3}\hspace{1.0em}}
 },
-before lower={\hspace*{2.0em}},
+before lower={\hspace{2.0em}},
 subtitle style={empty,fontupper=\BoxSubtitleFont,colupper=#4}
 }}
 %%%%
@@ -2720,6 +2724,9 @@ enhanced standard,breakable,empty,
 pad before break=3.0mm,pad after break=5.0mm,
 top=5.0mm,bottom=3.0mm,right=0mm,boxsep=0mm,
 varwidth boxed title=\@Box@CriticTitleWidth,
+parbox=false,
+before upper={\hspace{2.0em}},
+before lower={\hspace{2.0em}},
 before=\par\medskip,after=\par,
 fontupper=\ItemFont,fontlower=\ItemFont,
 fonttitle=\BoxTitleFont,coltitle=white,
@@ -2756,9 +2763,9 @@ top=3.0mm,bottom=2.5mm,
 before=\par\bigskip,after=\par\bigskip,
 parbox=false,
 IfEmptyTF={#3}{
-before upper={\hspace*{2.0em}}
-}{before upper={{\BoxTitleFont\color{#4}#3}\hspace*{1.0em}}},
-before lower={\hspace*{2.0em}},
+before upper={\hspace{2.0em}}
+}{before upper={{\BoxTitleFont\color{#4}#3}\hspace{1.0em}}},
+before lower={\hspace{2.0em}},
 fonttitle=\BoxTitleFont,coltitle=white,
 varwidth boxed title=\@Box@CriticTitleWidth,
 title={\strut#1\strut},
@@ -2789,8 +2796,8 @@ overlay middle and last={
 %%设置节前盒子%%
 \DeclareTColorBox{box0}{O{} +m O{ColorB}}{ItemBox=#2/#3,#1}
 
-\newenvironment{Point}{\begin{box0}[before upper={\hspace*{2.0em}},before lower={\hspace*{2.0em}},left=0mm]{本章要点}[ColorA]}{\end{box0}}
-\newenvironment{Point*}{\begin{box0}[before upper={\hspace*{2.0em}},before lower={\hspace*{2.0em}},left=0mm]{本节导言}[ColorA]}{\end{box0}}
+\newenvironment{Point}{\begin{box0}[left=0mm]{本章要点}[ColorA]}{\end{box0}}
+\newenvironment{Point*}{\begin{box0}[left=0mm]{本节导言}[ColorA]}{\end{box0}}
 
 \newenvironment{Case}{\begin{box0}{基础概念、公式和定理}[ColorB]\begin{Concept}}{\end{Concept}\end{box0}}
 \newenvironment{Case*}{\begin{box0}{本节提要}[ColorB]\begin{Concept}}{\end{Concept}\end{box0}}
@@ -3054,7 +3061,9 @@ pad before break=3.0mm,pad after break=5.0mm,
 top=3.5mm,bottom=3.0mm,toptitle=4.0mm,bottomtitle=-2.5mm,
 colframe=ColorB!7.5,colback=ColorB!7.5,colbacktitle=ColorB!7.5,rounded corners,arc=7.5pt,
 before=\par\medskip,after=\par\medskip,
-parbox=false,before upper={\hspace*{2.0em}},before lower={\hspace*{2.0em}},
+parbox=false,
+before upper={\hspace{2.0em}},
+before lower={\hspace{2.0em}},
 fonttitle=\BoxTitleFont,coltitle=ColorA,
 subtitle style={empty,fontupper=\BoxSubtitleFont,colupper=ColorA},
 title={#1},#2}
@@ -3190,9 +3199,12 @@ minted language=#2}
 }
 
 %%数学公式小盒子%%
-\newtcbox{\Formula}[1][]{nobeforeafter,math upper,tcbox raise base,
-enhanced standard,breakable,colframe=ColorB!7.5,colback=ColorB!7.5,
-rounded corners,arc=5.0pt,#1}
+\newtcbox{\Formula}[1][]{%
+nobeforeafter,math upper,tcbox raise base,
+enhanced standard,breakable,
+before={\begin{center}},after={\end{center}},
+colframe=ColorB!7.5,colback=ColorB!7.5,
+rounded corners,arc=5.0pt,colupper=ColorA,#1}
 
 
 %%重定义标题页%%
