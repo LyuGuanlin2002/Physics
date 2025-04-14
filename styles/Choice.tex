@@ -1,0 +1,49 @@
+\makeatletter
+
+%%选择题的4个选项，根据选项内容长度自动排版%%
+\colorlet{ListColor}{ColorA}
+\newlength{\la}
+\newlength{\lb}
+\newlength{\lc}
+\newlength{\ld}
+\newlength{\lhalf}
+\newlength{\lquarter}
+\newlength{\lmax}
+\newcommand{\choice}[4]{
+\settowidth{\la}{A.~#1~~~}
+\settowidth{\lb}{B.~#2~~~}
+\settowidth{\lc}{C.~#3~~~}
+\settowidth{\ld}{D.~#4~~~}
+\ifthenelse{\lengthtest{\la>\lb}}
+{\setlength{\lmax}{\la}}{\setlength{\lmax}{\lb}}
+\ifthenelse{\lengthtest{\lmax<\lc}}
+{\setlength{\lmax}{\lc}}{\relax}
+\ifthenelse{\lengthtest{\lmax<\ld}}
+{\setlength{\lmax}{\ld}}{\relax}
+\setlength{\lhalf}{0.5\linewidth}
+\setlength{\lquarter}{0.25\linewidth}
+\ifthenelse{\lengthtest{\lmax>\lhalf}}
+{\begin{hlist}[pre skip=0pt,item skip=0pt,item offset={1.5em},label={\textbf{\color{ListColor}{\Alpha{hlisti}.}}},pre label={}]1
+\hitem #1
+\hitem #2
+\hitem #3
+\hitem #4
+\end{hlist}}
+{\ifthenelse{\lengthtest{\lmax>\lquarter}}
+{\begin{hlist}[pre skip=0pt,item skip=0pt,item offset={1.5em},label={\textbf{\color{ListColor}{\Alpha{hlisti}.}}},pre label={}]2
+\hitem #1
+\hitem #2
+\hitem #3
+\hitem #4
+\end{hlist}}
+{\begin{hlist}[\parskip=0pt,pre skip=0pt,item skip=0pt,item offset={1.5em}, label={\textbf{\color{ListColor}{\Alpha{hlisti}.}}},pre label={}]4
+\hitem #1
+\hitem #2
+\hitem #3
+\hitem #4
+\end{hlist}}
+}}
+
+
+\makeatother
+

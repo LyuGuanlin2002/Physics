@@ -3201,11 +3201,10 @@ minted language=#2}
 %%数学公式小盒子%%
 \newtcbox{\Formula}[1][]{%
 nobeforeafter,math upper,tcbox raise base,
-enhanced standard,breakable,
+enhanced standard,
 before={\begin{center}},after={\end{center}},
 colframe=ColorB!7.5,colback=ColorB!7.5,
 rounded corners,arc=5.0pt,colupper=ColorA,#1}
-
 
 %%重定义标题页%%
 \renewcommand{\maketitle}{%

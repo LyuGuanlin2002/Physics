@@ -1,10 +1,11 @@
 \documentclass[color=red,openany]{textbook-cn}%,splitbib
 \graphicspath{{./figure/}{./figures/}{./image/}{./images/}{./graphics/}{./graphic/}{./pictures/}{./picture/}}%提供多种图片路径
-\input{./styles/Cover.tex}
+\input{./styles/Cover-cn.tex}
 \input{./styles/Logo.tex}
+\input{./styles/Choice.tex}
 \usepackage{zhlipsum,lipsum}%乱数假文（测试文字）
 \usepackage{physics}%物理符号包
-\usepackage{siunitx}
+\usepackage{siunitx}%物理符号包
 \usetikzlibrary{patterns,3d}
 
 %%设置符号表样式%%
@@ -19,12 +20,6 @@
 %%设置参考文献样式%%
 \bibsetup{intoc}
 
-%%定义罗马数字%%
-\makeatletter
-\newcommand{\rmnum}[1]{\romannumeral #1}
-\newcommand{\Rmnum}[1]{\expandafter\@slowromancap\romannumeral #1@}
-\makeatother
-
 %%设置书籍信息%%
 \series{物理学系列教程}
 \version{三}
@@ -35,8 +30,8 @@
 \author{RQCEN}
 \pressname{BILIBILI教育出版社}
 \presslogo{gj.pdf}
-\coverimage{coverimage.pdf}%
-\backimage{coverimage.pdf}%
+\coverimage{coverimage.pdf}
+\backimage{coverimage.pdf}
 
 \newcommand{\indexnoun}[1]{\index[noun]{#1}}
 \newcommand{\indexvideo}[1]{\index[video]{#1}}
@@ -44,49 +39,6 @@
 \newcommand{\zhindexnoun}[2]{\zhindex[noun]{#1}{#2}}
 \newcommand{\zhindexvideo}[2]{\zhindex[video]{#1}{#2}}
 
-
-\newcommand{\inputplus}{\raisebox{-0.5em}{\Logo[0.07]{physics}{PLUS}{\faPlus}}~~~}
-\newcommand{\inputlook}{\raisebox{-0.5em}{\Logo[0.07]{physics}{LOOK}{\faPlay}}~~~}
-\newcommand{\inputlisten}{\raisebox{-0.5em}{\Logo[0.07]{physics}{LISTEN}{\faVolumeDown}}~~~}
-\newcommand{\inputread}{\raisebox{-0.5em}{\Logo[0.07]{physics}{READ}{\faStickyNote}}~~~}
-
-
-%%选择题的4个选项，根据选项内容长度自动排版%%
-\colorlet{ListColor}{ColorA}
-\newlength{\la}\newlength{\lb}\newlength{\lc}\newlength{\ld}
-\newlength{\lhalf}\newlength{\lquarter}\newlength{\lmax}
-\newcommand{\choice}[4]{
-\settowidth{\la}{A.~#1~~~}\settowidth{\lb}{B.~#2~~~}
-\settowidth{\lc}{C.~#3~~~}\settowidth{\ld}{D.~#4~~~}
-\ifthenelse{\lengthtest{\la>\lb}}
-{\setlength{\lmax}{\la}}{\setlength{\lmax}{\lb}}
-\ifthenelse{\lengthtest{\lmax<\lc}}
-{\setlength{\lmax}{\lc}}{\relax}
-\ifthenelse{\lengthtest{\lmax<\ld}}
-{\setlength{\lmax}{\ld}}{\relax}
-\setlength{\lhalf}{0.5\linewidth}
-\setlength{\lquarter}{0.25\linewidth}
-\ifthenelse{\lengthtest{\lmax>\lhalf}}
-{\begin{hlist}[pre skip=0pt,item skip=0pt,item offset={1.5em},label={\textbf{\color{ListColor}{\Alpha{hlisti}.}}},pre label={}]1
-\hitem #1
-\hitem #2
-\hitem #3
-\hitem #4
-\end{hlist}}
-{\ifthenelse{\lengthtest{\lmax>\lquarter}}
-{\begin{hlist}[pre skip=0pt,item skip=0pt,item offset={1.5em},label={\textbf{\color{ListColor}{\Alpha{hlisti}.}}},pre label={}]2
-\hitem #1
-\hitem #2
-\hitem #3
-\hitem #4
-\end{hlist}}
-{\begin{hlist}[\parskip=0pt,pre skip=0pt,item skip=0pt,item offset={1.5em}, label={\textbf{\color{ListColor}{\Alpha{hlisti}.}}},pre label={}]4
-\hitem #1
-\hitem #2
-\hitem #3
-\hitem #4
-\end{hlist}}
-}}
 
 %空心字母
 \newcommand{\E}{\mathbb{E}}
@@ -127,30 +79,29 @@
 \maketitle
 
 \frontmatter
-\part{力和运动$\omega$}
-\part{力和运动力和运动力和运动力和运动力和运动力和运动力和运动力和运动力和运动力和运动}
+
 % 内容提要
 \include{body/F03-Abstract}
 % 序言
 \include{body/F04-Foreword}
+
+
 
 \tableofcontents
 %
 \mainmatter
 
 \part{力和运动}
-\part*{力和运动}
+
 %% 第一章
-%\begin{Test}
 \include{body/M01.00-li.tex}
-%\end{Test}
-%
+
 %% 第二章
-%\include{body/M02.00-zhixianyundong}
-%
+\include{body/M02.00-zhixianyundong}
+
 %% 第三章
-%\include{body/M03.00-yundongdinglv}
-%
+\include{body/M03.00-yundongdinglv}
+
 %% 第四章
 %\include{body/M04.00-quxianyundong}
 %
@@ -180,7 +131,7 @@
 %\end{appendix}
 
 
-\makeback[][barcode.pdf]
+\makeback[\zhlipsum[2]][barcode.pdf]
 
 %\makespine[1.02cm]
 
