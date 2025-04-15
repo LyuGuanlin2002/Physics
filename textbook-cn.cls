@@ -2895,10 +2895,12 @@ underlay boxed title={
 \def\@Axiom@Label{Axm.\the@prenumber.\the@axm}
 
 %%编号定义盒子%%
-\DeclareDocumentEnvironment{Definition}{ +O{} +D<>{} }{\begin{box3}[code={
+\DeclareDocumentEnvironment{Definition}{ +O{} +D<>{} D(){} }{\begin{box3}[phantom={
 \if@mainmatter
-\stepcounter{@def}
+\refstepcounter{@def}
 \label{\@Definiton@Label}
+\else
+\label{#3}
 \fi}]{%
 \@Definiton@Title%
 \if@mainmatter%
@@ -2906,10 +2908,12 @@ underlay boxed title={
 \fi}
 [#1][#2][ColorA][\faCrosshairs]}{\end{box3}}
 %%%%
-\DeclareDocumentEnvironment{Theorem}{ +O{} +D<>{} }{\begin{box3}[code={
+\DeclareDocumentEnvironment{Theorem}{ +O{} +D<>{} D(){} }{\begin{box3}[phantom={
 \if@mainmatter
-\stepcounter{@thm}
+\refstepcounter{@thm}
 \label{\@Theorem@Label}
+\else
+\label{#3}
 \fi}]{%
 \@Theorem@Title%
 \if@mainmatter%
@@ -2917,10 +2921,12 @@ underlay boxed title={
 \fi}
 [#1][#2][ColorB][\faCrosshairs]}{\end{box3}}
 %%%%
-\DeclareDocumentEnvironment{Axiom}{ +O{} +D<>{} }{\begin{box3}[code={
+\DeclareDocumentEnvironment{Axiom}{ +O{} +D<>{} D(){} }{\begin{box3}[phantom={
 \if@mainmatter
-\stepcounter{@axm}
+\refstepcounter{@axm}
 \label{\@Axiom@Label}
+\else
+\label{#3}
 \fi}]{%
 \@Axiom@Title%
 \if@mainmatter%
@@ -2930,9 +2936,9 @@ underlay boxed title={
 %%%%
 
 %%不编号定义盒子%%
-\DeclareDocumentEnvironment{Definition*}{ +O{} +D<>{} }{\begin{box3}{\@Theorem@Title}[#1][#2][ColorA][\faCrosshairs]}{\end{box3}}
-\DeclareDocumentEnvironment{Theorem*}{ +O{} +D<>{} }{\begin{box3}{\@Theorem@Title}[#1][#2][ColorB][\faCrosshairs]}{\end{box3}}
-\DeclareDocumentEnvironment{Axiom*}{ +O{} +D<>{} }{\begin{box3}{\@Axiom@Title}[#1][#2][ColorI][\faCompactDisc]}{\end{box3}}
+\DeclareDocumentEnvironment{Definition*}{ +O{} +D<>{} D(){} }{\begin{box3}[phantomlabel={#3}]{\@Theorem@Title}[#1][#2][ColorA][\faCrosshairs]}{\end{box3}}
+\DeclareDocumentEnvironment{Theorem*}{ +O{} +D<>{} D(){} }{\begin{box3}[phantomlabel={#3}]{\@Theorem@Title}[#1][#2][ColorB][\faCrosshairs]}{\end{box3}}
+\DeclareDocumentEnvironment{Axiom*}{ +O{} +D<>{} D(){} }{\begin{box3}[phantomlabel={#3}]{\@Axiom@Title}[#1][#2][ColorI][\faCompactDisc]}{\end{box3}}
 %%%%
 %%设置引理盒子%%
 \DeclareTColorBox{box4}{O{} +m +O{} +O{} O{ColorA} O{\faDiceD20}}{
@@ -2959,10 +2965,12 @@ underlay boxed title={
 \def\@Proposition@Label{Prop.\the@prenumber.\the@prop}
 
 %%编号引理盒子%%
-\DeclareDocumentEnvironment{Lemma}{ +O{} +D<>{} }{\begin{box4}[code={
+\DeclareDocumentEnvironment{Lemma}{ +O{} +D<>{} D(){} }{\begin{box4}[phantom={
 \if@mainmatter
-\stepcounter{@lem}
+\refstepcounter{@lem}
 \label{\@Lemma@Label}
+\else
+\label{#3}
 \fi}]{%
 \@Lemma@Title%
 \if@mainmatter%
@@ -2970,10 +2978,12 @@ underlay boxed title={
 \fi}
 [#1][#2][ColorE][\faGlobe]}{\end{box4}}
 %%%%
-\DeclareDocumentEnvironment{Corollary}{ +O{} +D<>{} }{\begin{box4}[code={
+\DeclareDocumentEnvironment{Corollary}{ +O{} +D<>{} D(){} }{\begin{box4}[phantom={
 \if@mainmatter
-\stepcounter{@colry}
+\refstepcounter{@colry}
 \label{\@Corollary@Label}
+\else
+\label{#3}
 \fi
 }]{%
 \@Corollary@Title%
@@ -2982,10 +2992,12 @@ underlay boxed title={
 \fi}
 [#1][#2][ColorG][\faCompactDisc]}{\end{box4}}
 %%%%
-\DeclareDocumentEnvironment{Proposition}{ +O{} +D<>{} }{\begin{box4}[code={
+\DeclareDocumentEnvironment{Proposition}{ +O{} +D<>{} D(){} }{\begin{box4}[phantom={
 \if@mainmatter
-\stepcounter{@prop}
+\refstepcounter{@prop}
 \label{\@Proposition@Label}
+\else
+\label{#3}
 \fi
 }]{%
 \@Propostion@Title%
@@ -2995,9 +3007,9 @@ underlay boxed title={
 [#1][#2][ColorH][\faGlobe]}{\end{box4}}
 %%%%
 %%不编号引理盒子%%
-\DeclareDocumentEnvironment{Lemma*}{ +O{} +D<>{} }{\begin{box4}{\@Lemma@Title}[#1][#2][ColorE][\faGlobe]}{\end{box4}}
-\DeclareDocumentEnvironment{Corollary*}{ +O{} +D<>{} }{\begin{box4}{\@Corollary@Title}[#1][#2][ColorG][\faCompactDisc]}{\end{box4}}
-\DeclareDocumentEnvironment{Proposition*}{ +O{} +D<>{} }{\begin{box4}{\@Propostion@Title}[#1][#2][ColorH][\faGlobe]}{\end{box4}}
+\DeclareDocumentEnvironment{Lemma*}{ +O{} +D<>{} D(){} }{\begin{box4}[phantomlabel={#3}]{\@Lemma@Title}[#1][#2][ColorE][\faGlobe]}{\end{box4}}
+\DeclareDocumentEnvironment{Corollary*}{ +O{} +D<>{} D(){} }{\begin{box4}[phantomlabel={#3}]{\@Corollary@Title}[#1][#2][ColorG][\faCompactDisc]}{\end{box4}}
+\DeclareDocumentEnvironment{Proposition*}{ +O{} +D<>{} D(){} }{\begin{box4}[phantomlabel={#3}]{\@Propostion@Title}[#1][#2][ColorH][\faGlobe]}{\end{box4}}
 %%%%
 %设置拓展盒子%%
 \DeclareTColorBox{box5}{O{} +m +O{} +O{} O{ColorA} O{\faLink}}{

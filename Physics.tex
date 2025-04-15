@@ -71,6 +71,10 @@
 \newcolumntype{Z}{>{\raggedright\arraybackslash}X}
 \newcolumntype{Y}{>{\raggedleft\arraybackslash}X}
 
+\newcommand{\inputlogo}[1]{\raisebox{-0.5em}{\includegraphics[width=1.5cm]{#1}}~~}
+%%
+\newcommand{\Hinputlogo}[2]{\href{#2}{\inputlogo{#1}}}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{document}
 \MainFont
@@ -84,7 +88,6 @@
 \include{body/F03-Abstract}
 % 序言
 \include{body/F04-Foreword}
-
 
 
 \tableofcontents
