@@ -1314,6 +1314,7 @@ shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,deco
 \OriginPart[#2]{#3\@mkboth{\partlabelfront~\thepart~\partlabelback\quad#2}{\partlabelfront~\thepart~\partlabelback\quad#2}}
 \extramarks{\partlabelfront~\thepart~\partlabelback\quad#2}{\partlabelfront~\thepart~\partlabelback\quad#2}
 \else
+\phantomsection
 \OriginPart*{#3\@mkboth{#2}{#2}\addcontentsline{toc}{part}{#2}}
 \extramarks{#2}{#2}
 \fi}}
@@ -1659,6 +1660,7 @@ shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,deco
 {\if@mainmatter%
 \clearpage\OriginSection[#2]{#3}%
 \else%
+\phantomsection
 \OriginSection*{#3\markright{#2}\addcontentsline{toc}{section}{#2}}%
 \fi}}
 
@@ -1787,6 +1789,7 @@ shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,deco
 {\if@mainmatter%
 \OriginSubsection[#2]{#3}%
 \else%
+\phantomsection
 \OriginSubsection*{#3\addcontentsline{toc}{subsection}{#2}}%
 \fi}}
 %%%%
@@ -2900,7 +2903,7 @@ underlay boxed title={
 \refstepcounter{@def}
 \label{\@Definiton@Label}
 \else
-\label{#3}
+\phantomsection\label{#3}
 \fi}]{%
 \@Definiton@Title%
 \if@mainmatter%
@@ -2913,7 +2916,7 @@ underlay boxed title={
 \refstepcounter{@thm}
 \label{\@Theorem@Label}
 \else
-\label{#3}
+\phantomsection\label{#3}
 \fi}]{%
 \@Theorem@Title%
 \if@mainmatter%
@@ -2926,7 +2929,7 @@ underlay boxed title={
 \refstepcounter{@axm}
 \label{\@Axiom@Label}
 \else
-\label{#3}
+\phantomsection\label{#3}
 \fi}]{%
 \@Axiom@Title%
 \if@mainmatter%
@@ -2970,7 +2973,7 @@ underlay boxed title={
 \refstepcounter{@lem}
 \label{\@Lemma@Label}
 \else
-\label{#3}
+\phantomsection\label{#3}
 \fi}]{%
 \@Lemma@Title%
 \if@mainmatter%
@@ -2983,7 +2986,7 @@ underlay boxed title={
 \refstepcounter{@colry}
 \label{\@Corollary@Label}
 \else
-\label{#3}
+\phantomsection\label{#3}
 \fi
 }]{%
 \@Corollary@Title%
@@ -2997,7 +3000,7 @@ underlay boxed title={
 \refstepcounter{@prop}
 \label{\@Proposition@Label}
 \else
-\label{#3}
+\phantomsection\label{#3}
 \fi
 }]{%
 \@Propostion@Title%
