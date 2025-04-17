@@ -225,7 +225,7 @@ BoldFont=FZCukai.ttf]
 \newcommand{\BoxSubtitleFont}{\rmfamily\bfseries\FontSizeSet{13pt}{16.9pt}}%盒子副标题字体
 \newcommand{\BoxLogoFont}{\rmfamily\bfseries\FontSizeSet{16pt}{24pt}}%盒子logo字体
 \newcommand{\BoxSublogoFont}{\rmfamily\bfseries\FontSizeSet{14pt}{15.6pt}}%盒子小logo字体
-\newcommand{\MarginFont}{\itshape\kaiti\FontSizeSet{13pt}{16.9pt}}%边注字体
+\newcommand{\MarginNoteFont}{\itshape\kaiti\FontSizeSet{13pt}{16.9pt}}%边注字体
 \newcommand{\FootNoteFont}{\itshape\kaiti\FontSizeSet{13pt}{16.9pt}}%脚注字体
 \newcommand{\ItemFont}{\itshape\kaiti}%列表字体
 \newcommand{\MainFont}{\FontSizeSet{14pt}{21pt}}%正文字体
@@ -272,7 +272,10 @@ marginparsep=\@marginparseplen,marginparwidth=\@marginparwidthlen,reversemarginp
 \RequirePackage{emptypage,setspace,fancyhdr,lscape}%清除空页%行距%页眉页脚%旋转页面
 \RequirePackage{extramarks}%创建额外的标记，使用方法类似于\markboth和\markright
 \RequirePackage[strict]{changepage}%换页
-\RequirePackage[noadjust]{marginnote}%边注
+\RequirePackage[parboxrestore]{marginnote}%边注
+\renewcommand*{\marginfont}{\MarginNoteFont}
+\renewcommand*{\raggedleftmarginnote}{\raggedright}
+\renewcommand*{\raggedrightmarginnote}{\raggedright}
 %%脚注格式%%
 \gdef\footnoterule{}
 \gdef\footnotesize{\color{ColorA}\FootNoteFont}
@@ -300,32 +303,24 @@ marginparsep=\@marginparseplen,marginparwidth=\@marginparwidthlen,reversemarginp
 \renewcommand{\figurename}{图}
 \renewcommand{\tablename}{表}
 %%
-\def\fnum@figure{{\color{ColorA!50}\faSquare}\nobreakspace\figurename%
+\renewcommand{\thefigure}{%
 \if@mainmatter%	
-\nobreakspace{\sffamily\the@prenumber.\thefigure}%
+\the@prenumber.\arabic{figure}%
+\else%
+\relax%
 \fi}
-\def\fnum@table{{\color{ColorA!50}\faSquare}\nobreakspace\tablename%
+\renewcommand{\thetable}{%
 \if@mainmatter%	
-\nobreakspace{\sffamily\the@prenumber.\thetable}%
+\the@prenumber.\arabic{table}%
+\else%
+\relax%
 \fi}
+%%
+\def\fnum@figure{{\color{ColorA!50}\faSquare}\nobreakspace\figurename\nobreakspace{\sffamily\thefigure}}
+\def\fnum@table{{\color{ColorA!50}\faSquare}\nobreakspace\tablename\nobreakspace{\sffamily\thetable}}
 %%
 \renewcommand{\subfigurename}{图}
 \renewcommand{\subtablename}{表}
-\makeatother
-
-%%定义非浮动体标签%%
-\newcommand{\figcaption}{\setcaptiontype{figure}\caption} 
-\newcommand{\tabcaption}{\setcaptiontype{table}\caption}
-%%设置边注中的图片和表格%%
-\makeatletter
-\newcommand{\marginpic}[2]{%
-\marginpar{%
-\centering\includegraphics[width=\@marginparwidthlen-0.5em]{#1}
-\centering\figcaption{#2}}}
-\newcommand{\margintab}[2]{%
-\marginpar{%
-\centering{#1}%
-\centering\tabcaption{#2}}}
 \makeatother
 
 %%%%%%%%%%%%%%%%%%%% 目录宏包 %%%%%%%%%%%%%%%%%%%%
@@ -760,8 +755,6 @@ shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,deco
 \newcounter{@colry}[section]
 \newcounter{@prop}[section]
 \makeatother
-\renewcommand{\thefigure}{\arabic{figure}}
-\renewcommand{\thetable}{\arabic{table}}
 \renewcommand{\thesubfigure}{\thefigure.\Alph{subfigure}}
 \renewcommand{\thesubtable}{\thetable.\Alph{subtable}}
 \renewcommand{\thepart}{\arabic{part}}
@@ -796,7 +789,7 @@ shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,deco
 %%页眉和侧标的默认值%%
 \makeatletter
 \newcommand{\DefaultMark}{
-\markboth{\protect\@title}{\protect\@title}
+\markboth{\protect\@subtitle}{\protect\@subtitle}
 \extramarks{\protect\@title}{\protect\@title}}
 \makeatother
 %%设置新长度%%
@@ -3234,17 +3227,17 @@ minted language=#2}
 \bigskip%
 \noindent%
 \begin{varwidth}{3\linewidth/4}
-\BoxSubtitleFont\color{#1}#2\hspace{0.5em}#3
+\BoxSubtitleFont\upshape\color{#1}#2\hspace{0.5em}#3
 \end{varwidth}\par%
-\vspace*{0.5em}%
+\vspace*{0.5em}\hspace{2.0em}%
 \begingroup%
-\MarginFont\color{#1}%
+\color{#1}%
 }{\endgroup}
 %%%%
 %%+m表示允许换行、空行的参数%%
 \DeclareDocumentCommand{\RelaInfo}{ s +m }
 {\IfBooleanTF{#1}
-{\marginpar{%
+{\marginnote{%
 \begin{@MarginNote}{ColorH}{\faCommentDots}{相关信息}
 #2
 \end{@MarginNote}}
@@ -3256,7 +3249,7 @@ minted language=#2}
 %%
 \DeclareDocumentCommand{\DeepThink}{ s +m }
 {\IfBooleanTF{#1}
-{\marginpar{%
+{\marginnote{%
 \begin{@MarginNote}{ColorB!90!black}{\faTh}{深入思考}
 #2
 \end{@MarginNote}}
@@ -3268,7 +3261,7 @@ minted language=#2}
 %%
 \DeclareDocumentCommand{\Remark}{ s +m }
 {\IfBooleanTF{#1}
-{\marginpar{%
+{\marginnote{%
 \begin{@MarginNote}{ColorF}{\faChrome}{重点注释}
 #2
 \end{@MarginNote}}
