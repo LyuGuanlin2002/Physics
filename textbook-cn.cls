@@ -972,7 +972,7 @@ shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,deco
 \coordinate(U)at([xshift=-\@Part@StripeWidth]R);
 \coordinate(X)at([xshift=-\@Part@StripeWidth]S);
 %%部分编号%%
-\node[align=flush right,anchor=south east,font=\PartLabelFont,text=ColorA,inner xsep=0mm](NL)at([yshift=\@Part@StripeWidth+0.25cm]U){\begin{varwidth}{\textwidth-5.0cm}#1\end{varwidth}};
+\node[align=flush right,anchor=south east,font=\PartLabelFont,text=ColorA,inner xsep=0mm](NL)at([yshift=\@Part@StripeWidth+0.25cm]U){\begin{varwidth}{\textwidth-5.0cm}\strut#1\strut\end{varwidth}};
 %%页面中部色块坐标2%%
 %%获取标题宽度%%
 \pgfgetnodewidth(NL)\NLWidth
@@ -989,7 +989,7 @@ shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,deco
 %%左侧色块%%
 \filldraw[ColorB,fill=ColorB,opacity=0.2](Y)[sharp corners]--(Z)--(YY)[rounded corners=2.5mm]--(ZZ)--cycle;
 %%部分名%%
-\node[align=flush right,anchor=north east,font=\PartNameFont,text=ColorA,inner xsep=0mm](PT)at([yshift=-\@Part@StripeWidth-0.25cm]X){\begin{varwidth}{\textwidth-2.45cm}#2\end{varwidth}};
+\node[align=flush right,anchor=north east,font=\PartNameFont,text=ColorA,inner xsep=0mm](PT)at([yshift=-\@Part@StripeWidth-0.25cm]X){\begin{varwidth}{\textwidth-2.45cm}\strut#2\strut\end{varwidth}};
 %%部分简介%%
 \node[align=flush right,inner xsep=3.0mm,anchor=north east,font=\itshape\kaiti,text=ColorA](IT)at([yshift=-0.5cm]PT.south east){
 \begin{varwidth}{\textwidth-2.75cm}
@@ -1051,7 +1051,7 @@ shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,deco
 \coordinate(U)at([xshift=\@Part@StripeWidth]R);
 \coordinate(X)at([xshift=\@Part@StripeWidth]S);
 %%部分编号%%
-\node[align=flush left,anchor=south west,font=\PartLabelFont,text=ColorA,inner xsep=0mm](NL)at([yshift=\@Part@StripeWidth+0.25cm]U){\begin{varwidth}{\textwidth-5.0cm}#1\end{varwidth}};
+\node[align=flush left,anchor=south west,font=\PartLabelFont,text=ColorA,inner xsep=0mm](NL)at([yshift=\@Part@StripeWidth+0.25cm]U){\begin{varwidth}{\textwidth-5.0cm}\strut#1\strut\end{varwidth}};
 %%页面中部色块坐标2%%
 %%获取标题宽度%%
 \pgfgetnodewidth(NL)\NLWidth
@@ -1069,7 +1069,7 @@ shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,deco
 \filldraw[draw=ColorB,fill=ColorB,opacity=0.2](Y)[sharp corners]--(Z)--(YY)[rounded corners=2.5mm]--(ZZ)--cycle;
 %%
 %%部分名%%
-\node[align=flush left,anchor=north west,font=\PartNameFont,text=ColorA,inner xsep=0mm](PT)at([yshift=-\@Part@StripeWidth-0.25cm]X){\begin{varwidth}{\textwidth-2.45cm}#2\end{varwidth}};
+\node[align=flush left,anchor=north west,font=\PartNameFont,text=ColorA,inner xsep=0mm](PT)at([yshift=-\@Part@StripeWidth-0.25cm]X){\begin{varwidth}{\textwidth-2.45cm}\strut#2\strut\end{varwidth}};
 %%部分简介%%
 \node[align=flush left,inner xsep=3.0mm,anchor=north west,font=\itshape\kaiti,text=ColorA](IT)at([yshift=-0.5cm]PT.south west){
 \begin{varwidth}{\textwidth-2.75cm}
