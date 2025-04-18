@@ -272,10 +272,11 @@ marginparsep=\@marginparseplen,marginparwidth=\@marginparwidthlen,reversemarginp
 \RequirePackage{emptypage,setspace,fancyhdr,lscape}%清除空页%行距%页眉页脚%旋转页面
 \RequirePackage{extramarks}%创建额外的标记，使用方法类似于\markboth和\markright
 \RequirePackage[strict]{changepage}%换页
-\RequirePackage[parboxrestore]{marginnote}%边注
-\renewcommand*{\marginfont}{\MarginNoteFont}
-\renewcommand*{\raggedleftmarginnote}{\raggedright}
-\renewcommand*{\raggedrightmarginnote}{\raggedright}
+%%边注格式%%
+\let\oldmarginpar\marginpar
+\renewcommand{\marginpar}[1]{\oldmarginpar{%
+\setlength{\parindent}{2.0em}%
+\MarginNoteFont#1}}
 %%脚注格式%%
 \gdef\footnoterule{}
 \gdef\footnotesize{\color{ColorA}\FootNoteFont}
@@ -321,6 +322,9 @@ marginparsep=\@marginparseplen,marginparwidth=\@marginparwidthlen,reversemarginp
 %%
 \renewcommand{\subfigurename}{图}
 \renewcommand{\subtablename}{表}
+%%定义非浮动体标签%%
+\newcommand{\nonfloatfigcaption}{\setcaptiontype{figure}\caption} 
+\newcommand{\nonfloattabcaption}{\setcaptiontype{table}\caption}
 \makeatother
 
 %%%%%%%%%%%%%%%%%%%% 目录宏包 %%%%%%%%%%%%%%%%%%%%
@@ -2744,7 +2748,6 @@ shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,deco
 %%设置习题盒子样式%%
 \tcbset{Question/.style={
 enhanced standard,breakable,empty,
-pad before break=3.0mm,pad after break=5.0mm,
 top=0mm,bottom=3.0mm,
 right=0mm,left=0mm,boxsep=0mm,
 parbox=false,
@@ -2754,6 +2757,23 @@ lowerbox=ignored,
 before upper={\hspace{2.0em}},
 code={\colorlet{ListColor}{ColorA}},
 subtitle style={empty,fontupper=\BoxSubtitleFont\centering,colupper=ColorA}
+}}
+
+%%设置注释盒子样式%%
+\tcbset{NoteBox/.style args={#1/#2}{
+enhanced standard,breakable,empty,
+top=0mm,bottom=0mm,
+right=0mm,left=0mm,boxsep=0mm,
+parbox=false,
+before=\par\medskip,after=\par\medskip,
+fontupper=\MarginNoteFont,colupper=#1,
+fonttitle=\BoxTitleFont,coltitle=#1,
+varwidth boxed title=\@Box@CriticTitleWidth,
+title={\strut#2\strut},
+boxed title style={empty,left=0mm,boxsep=0mm},
+attach boxed title to top left,
+before upper={\hspace{2.0em}},
+subtitle style={empty,fontupper=\BoxSubtitleFont\centering,colupper=#1}
 }}
 
 %%设置彩色盒子样式%%
@@ -2787,13 +2807,12 @@ subtitle style={empty,fontupper=\BoxSubtitleFont,colupper=#4}
 %%
 \tcbset{ItemBox/.style args={#1/#2}{
 enhanced standard,breakable,empty,
-pad before break=3.0mm,pad after break=5.0mm,
-top=5.0mm,bottom=3.0mm,right=0mm,boxsep=0mm,
+top=5.0mm,bottom=0mm,right=0mm,boxsep=0mm,
 varwidth boxed title=\@Box@CriticTitleWidth,
 parbox=false,
 before upper={\hspace{2.0em}},
 before lower={\hspace{2.0em}},
-before=\par\medskip,after=\par,
+before=\par\medskip,after=\par\medskip,
 fontupper=\ItemFont,fontlower=\ItemFont,
 fonttitle=\BoxTitleFont,coltitle=white,
 code={\colorlet{ListColor}{#2}},
@@ -3222,53 +3241,48 @@ minted language=#2}
 %%
 \newenvironment{Improve*}{\begin{box9}[][\subsection*{\@Improve@Title}]}{\end{box9}}
 
-%%设置边注命令%%
-\newenvironment{@MarginNote}[3]{%
-\bigskip%
-\noindent%
-\begin{varwidth}{3\linewidth/4}
-\BoxSubtitleFont\upshape\color{#1}#2\hspace{0.5em}#3
-\end{varwidth}\par%
-\vspace*{0.5em}\hspace{2.0em}%
-\begingroup%
-\color{#1}%
-}{\endgroup}
+%%%%
+%设置注释盒子%%
+\DeclareTColorBox{box10}{ O{} O{ColorA} O{\faCommentDots} +m }{NoteBox=#2/{#3~~#4},#1}
+
 %%%%
 %%+m表示允许换行、空行的参数%%
 \DeclareDocumentCommand{\RelaInfo}{ s +m }
 {\IfBooleanTF{#1}
-{\marginnote{%
-\begin{@MarginNote}{ColorH}{\faCommentDots}{相关信息}
-#2
-\end{@MarginNote}}
+{\marginpar{\upshape%
+\begin{box10}[][ColorH][\faCommentDots]{相关信息}
+\setlength{\parindent}{2.0em}#2
+\end{box10}}
 }{%
-\begin{@MarginNote}{ColorH}{\faCommentDots}{相关信息}
+\begin{box10}[][ColorH][\faCommentDots]{相关信息}
 #2
-\end{@MarginNote}}
+\end{box10}}
 }
+
 %%
 \DeclareDocumentCommand{\DeepThink}{ s +m }
 {\IfBooleanTF{#1}
-{\marginnote{%
-\begin{@MarginNote}{ColorB!90!black}{\faTh}{深入思考}
-#2
-\end{@MarginNote}}
+{\marginpar{\upshape%
+\begin{box10}[][ColorB!90!black][\faTh]{深入思考}
+\setlength{\parindent}{2.0em}#2
+\end{box10}}
 }{%
-\begin{@MarginNote}{ColorB!90!black}{\faTh}{深入思考}
+\begin{box10}[][ColorB!90!black][\faTh]{深入思考}
 #2
-\end{@MarginNote}}
+\end{box10}}
 }
+
 %%
 \DeclareDocumentCommand{\Remark}{ s +m }
 {\IfBooleanTF{#1}
-{\marginnote{%
-\begin{@MarginNote}{ColorF}{\faChrome}{重点注释}
-#2
-\end{@MarginNote}}
+{\marginpar{\upshape%
+\begin{box10}[][ColorF][\faChrome]{重点注释}
+\setlength{\parindent}{2.0em}#2
+\end{box10}}
 }{%
-\begin{@MarginNote}{ColorF}{\faChrome}{重点注释}
+\begin{box10}[][ColorF][\faChrome]{重点注释}
 #2
-\end{@MarginNote}}
+\end{box10}}
 }
 
 %%数学公式小盒子%%
