@@ -349,7 +349,7 @@ marginparsep=\@marginparseplen,marginparwidth=\@marginparwidthlen,reversemarginp
 \begin{paracol}{2}
 \@starttoc{toc}
 \switchcolumn
-#3
+\MarginNoteFont#3
 \end{paracol}}
 {\@starttoc{toc}}
 \endgroup}
@@ -360,7 +360,7 @@ marginparsep=\@marginparseplen,marginparwidth=\@marginparwidthlen,reversemarginp
 \begin{paracol}{2}
 \@starttoc{lof}
 \switchcolumn
-#2
+\MarginNoteFont#2
 \end{paracol}}
 {\@starttoc{lof}}
 }
@@ -371,7 +371,7 @@ marginparsep=\@marginparseplen,marginparwidth=\@marginparwidthlen,reversemarginp
 \begin{paracol}{2}
 \@starttoc{lot}
 \switchcolumn
-#2
+\MarginNoteFont#2
 \end{paracol}}
 {\@starttoc{lot}}
 }
@@ -384,7 +384,7 @@ marginparsep=\@marginparseplen,marginparwidth=\@marginparwidthlen,reversemarginp
 \begin{paracol}{2}
 \@startshorttoc{toc}
 \switchcolumn
-#3
+\MarginNoteFont#3
 \end{paracol}}
 {\@startshorttoc{toc}}
 \endgroup}
