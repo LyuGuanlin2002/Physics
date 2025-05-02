@@ -8,20 +8,20 @@
 \SetupKeyvalOptions{family=TextBook,prefix=TextBook@,setkeys=\kvsetkeys}
 \newcommand{\ekv}[1]{\kvsetkeys{TextBook}{#1}}
 %%声明颜色键及默认值%%
-\DeclareStringOption[blue]{color}
-\DeclareVoidOption{blue}{\ekv{color=blue}}
-\DeclareVoidOption{green}{\ekv{color=green}}
-\DeclareVoidOption{red}{\ekv{color=red}}
-\DeclareVoidOption{purple}{\ekv{color=purple}}
-\DeclareVoidOption{gray}{\ekv{color=gray}}
-\DeclareVoidOption{orange}{\ekv{color=orange}}
-\DeclareVoidOption{yellow}{\ekv{color=yellow}}
-\DeclareVoidOption{colorful}{\ekv{color=colorful}}
+\DeclareStringOption[blue]{themecolor}
+\DeclareVoidOption{blue}{\ekv{themecolor=blue}}
+\DeclareVoidOption{green}{\ekv{themecolor=green}}
+\DeclareVoidOption{red}{\ekv{themecolor=red}}
+\DeclareVoidOption{purple}{\ekv{themecolor=purple}}
+\DeclareVoidOption{gray}{\ekv{themecolor=gray}}
+\DeclareVoidOption{orange}{\ekv{themecolor=orange}}
+\DeclareVoidOption{yellow}{\ekv{themecolor=yellow}}
+\DeclareVoidOption{colorful}{\ekv{themecolor=colorful}}
 %%声明参考文献生成方式布尔键%%
 \DeclareBoolOption[false]{splitbib}
 %%加载book作为基础文档类%%
 \DeclareDefaultOption{\PassOptionsToClass{\CurrentOption}{book}}
-\ProcessKeyvalOptions*\relax
+\ProcessKeyvalOptions*%\relax
 \LoadClass[12pt]{book}
 
 %%%%%%%%%%%%%%%%%%%% 文本内容风格宏包 %%%%%%%%%%%%%%%%%%%%
@@ -35,7 +35,7 @@
 %%
 \RequirePackage[table,dvipsnames,svgnames,x11names]{xcolor}%颜色宏包，必须放在tikz之前
 %%蓝色主题%%
-\ifdefstring{\TextBook@color}{blue}{
+\ifdefstring{\TextBook@themecolor}{blue}{
 \definecolor{ColorA}{RGB}{68,114,210}
 \definecolor{ColorB}{rgb}{0.3,0.52,1.0}
 \colorlet{ColorC}{RoyalBlue}
@@ -47,7 +47,7 @@
 \colorlet{ColorI}{CornflowerBlue}
 }{\relax}
 %%红色主题%%
-\ifdefstring{\TextBook@color}{red}{
+\ifdefstring{\TextBook@themecolor}{red}{
 \colorlet{ColorA}{Firebrick2}
 \colorlet{ColorB}{Brown2}
 \colorlet{ColorC}{Crimson}
@@ -59,7 +59,7 @@
 \colorlet{ColorI}{Red3}
 }{\relax}
 %%绿色主题%%
-\ifdefstring{\TextBook@color}{green}{
+\ifdefstring{\TextBook@themecolor}{green}{
 \definecolor{ColorA}{rgb}{0.3,0.6,0.3}
 \definecolor{ColorB}{rgb}{0.4,0.7,0.4}
 \colorlet{ColorC}{ForestGreen}
@@ -71,7 +71,7 @@
 \colorlet{ColorI}{Chartreuse3}
 }{\relax}
 %%紫色主题%%
-\ifdefstring{\TextBook@color}{purple}{
+\ifdefstring{\TextBook@themecolor}{purple}{
 \definecolor{ColorA}{RGB}{147,75,201}
 \definecolor{ColorB}{RGB}{192,113,217}
 \colorlet{ColorC}{BlueViolet}
@@ -83,7 +83,7 @@
 \colorlet{ColorI}{MediumOrchid}
 }{\relax}
 %%橙色主题%%
-\ifdefstring{\TextBook@color}{orange}{
+\ifdefstring{\TextBook@themecolor}{orange}{
 \colorlet{ColorA}{Firebrick2}
 \colorlet{ColorB}{Dandelion}
 \colorlet{ColorC}{DarkOrange}
@@ -95,7 +95,7 @@
 \colorlet{ColorI}{OrangeRed}
 }{\relax}
 %%黄色主题%%
-\ifdefstring{\TextBook@color}{yellow}{
+\ifdefstring{\TextBook@themecolor}{yellow}{
 \colorlet{ColorA}{Dandelion}
 \colorlet{ColorB}{Goldenrod1}
 \colorlet{ColorC}{Gold}
@@ -107,16 +107,16 @@
 \colorlet{ColorI}{DarkGoldenrod2}
 }{\relax}
 %%彩色主题%%
-\ifdefstring{\TextBook@color}{colorful}{
-\colorlet{ColorA}{Firebrick2}
-\colorlet{ColorB}{Dandelion}
-\colorlet{ColorC}{DodgerBlue1}
-\colorlet{ColorD}{ForestGreen}
-\colorlet{ColorE}{SlateBlue2}
-\colorlet{ColorF}{Red1}
-\colorlet{ColorG}{RedOrange}
-\colorlet{ColorH}{DarkGoldenrod1}
-\colorlet{ColorI}{HotPink1}
+\ifdefstring{\TextBook@themecolor}{colorful}{
+\definecolor{ColorA}{RGB}{132,60,12}
+\definecolor{ColorB}{RGB}{180,90,0}
+\definecolor{ColorC}{RGB}{84,130,53}
+\definecolor{ColorD}{RGB}{192,0,0}
+\definecolor{ColorE}{RGB}{240,146,82}
+\definecolor{ColorF}{RGB}{0,122,59}
+\definecolor{ColorG}{RGB}{68,114,196}
+\definecolor{ColorH}{RGB}{231,120,12}
+\definecolor{ColorI}{RGB}{171,68,171}
 }{\relax}
 
 \makeatletter
@@ -134,6 +134,11 @@
 
 %%%%%%%%%%%%%%%%%%%% 字体设置 %%%%%%%%%%%%%%%%%%%%
 \RequirePackage[fontset=none]{ctex}%中文文本
+%%%%
+\xeCJKsetup{
+CJKecglue={\hspace{0.25em plus 0.1em minus 0.08em}}%中英文间距微调推荐值
+}
+%%%%
 \RequirePackage{fontspec}%字体设置宏包
 \RequirePackage{mathptmx}%数学字体设置宏包
 %%设置英文字体%%
@@ -227,7 +232,7 @@ BoldFont=FZCukai.ttf]
 \newcommand{\BoxSublogoFont}{\rmfamily\bfseries\FontSizeSet{14pt}{15.6pt}}%盒子小logo字体
 \newcommand{\MarginNoteFont}{\itshape\kaiti\FontSizeSet{13pt}{16.9pt}}%边注字体
 \newcommand{\FootNoteFont}{\itshape\kaiti\FontSizeSet{13pt}{16.9pt}}%脚注字体
-\newcommand{\ItemFont}{\itshape\kaiti}%列表字体
+\newcommand{\ItemFont}{\kaiti}%列表字体
 \newcommand{\MainFont}{\FontSizeSet{14pt}{21pt}}%正文字体
 
 %%%%%%%%%%%%%%%%%%%% 页面布局设定宏包 %%%%%%%%%%%%%%%%%%%%
@@ -2807,7 +2812,7 @@ subtitle style={empty,fontupper=\BoxSubtitleFont,colupper=#4}
 %%
 \tcbset{ItemBox/.style args={#1/#2}{
 enhanced standard,breakable,empty,
-top=5.0mm,bottom=0mm,right=0mm,boxsep=0mm,
+top=5.0mm,bottom=0mm,left=0mm,right=0mm,boxsep=0mm,
 varwidth boxed title=\@Box@CriticTitleWidth,
 parbox=false,
 before upper={\hspace{2.0em}},
@@ -2881,8 +2886,8 @@ overlay middle and last={
 %%设置节前盒子%%
 \DeclareTColorBox{box0}{O{} +m O{ColorB}}{ItemBox=#2/#3,#1}
 
-\newenvironment{Point}{\begin{box0}[left=0mm]{本章要点}[ColorA]}{\end{box0}}
-\newenvironment{Point*}{\begin{box0}[left=0mm]{本节导言}[ColorA]}{\end{box0}}
+\newenvironment{Point}{\begin{box0}{本章要点}[ColorA]}{\end{box0}}
+\newenvironment{Point*}{\begin{box0}{本节导言}[ColorA]}{\end{box0}}
 
 \newenvironment{Case}{\begin{box0}{基础概念、公式和定理}[ColorB]\begin{Concept}}{\end{Concept}\end{box0}}
 \newenvironment{Case*}{\begin{box0}{本节提要}[ColorB]\begin{Concept}}{\end{Concept}\end{box0}}

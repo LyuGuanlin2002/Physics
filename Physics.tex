@@ -1,4 +1,4 @@
-\documentclass[color=red,openany]{textbook-cn}%,splitbib
+\documentclass[themecolor=colorful,openany]{textbook-cn}%,splitbib
 \graphicspath{{./figure/}{./figures/}{./image/}{./images/}{./graphics/}{./graphic/}{./pictures/}{./picture/}}%提供多种图片路径
 \input{./styles/Cover-cn.tex}
 \input{./styles/Logo.tex}
@@ -22,12 +22,12 @@
 
 %%设置书籍信息%%
 \series{物理学系列教程}
-\version{三}
+\version{一}
 \title{物理学基础讲义}
 \englishtitle{Fundamental of Physics}
-\subtitle{经典力学}
-\englishsubtitle{Classical Mechanics}
-\author{RQCEN}
+\subtitle{经典力学与热力学}
+\englishsubtitle{Classical Mechanics \& Thermal Dynamics}
+\author{N·A·S·A}
 \pressname{BILIBILI教育出版社}
 \presslogo{gj.pdf}
 \coverimage{coverimage.pdf}
@@ -75,6 +75,7 @@
 %%
 \newcommand{\Hinputlogo}[2]{\href{#2}{\inputlogo{#1}}}
 
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{document}
 \MainFont
@@ -82,32 +83,30 @@
 \makecover
 \maketitle
 
-\lipsum
-
 \frontmatter
 
 % 内容提要
-\include{body/F03-Abstract}
+\include{main/F01-Abstract}
 % 序言
-\include{body/F04-Foreword}
+\include{main/F02-Foreword}
 
+\shorttableofcontents
+\tableofcontents
 
-\tableofcontents*[\zhlipsum[2]]
-
-\listoffigures
+%\listoffigures
 %
 \mainmatter
 
-\part{力和运动}
+\part{力学}
 
 %% 第一章
-\include{body/M01.00-li.tex}
+\include{main/M01.00-li.tex}
 
 %% 第二章
-\include{body/M02.00-zhixianyundong}
+%\include{main/M02.00-zhixianyundong}
 
 %% 第三章
-\include{body/M03.00-yundongdinglv}
+%\include{main/M03.00-yundongdinglv}
 
 %% 第四章
 %\include{body/M04.00-quxianyundong}
