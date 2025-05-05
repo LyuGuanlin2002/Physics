@@ -4,7 +4,7 @@
 \ProvidesClass{textbook-cn}[By Lyu Guanlin]
 
 %%%%%%%%%%%%%%%%%%%% 自定义命令宏包 %%%%%%%%%%%%%%%%%%%%
-\RequirePackage{xkeyval,kvoptions,etoolbox,ifthen,xifthen,xparse}%设置键和键值%自定义命令
+\RequirePackage{xkeyval,kvoptions,etoolbox,ifthen,xifthen,xparse,expl3,letltxmacro}%设置键和键值%自定义命令
 \SetupKeyvalOptions{family=TextBook,prefix=TextBook@,setkeys=\kvsetkeys}
 \newcommand{\ekv}[1]{\kvsetkeys{TextBook}{#1}}
 %%声明颜色键及默认值%%
@@ -398,7 +398,7 @@ marginparsep=\@marginparseplen,marginparwidth=\@marginparwidthlen,reversemarginp
 %%%%%%%%%%%%%%%%%%%% 参考文献宏包 %%%%%%%%%%%%%%%%%%%%
 %%参考文献编译方式：先用XeLaTeX编译主文件.tex一次；再用BibTeX编译主文件（或各子文件）.tex一次；然后用XeLaTeX编译主文件.tex两次%%
 \RequirePackage[numbers,sectionbib]{natbib}%参考文献格式
-\renewcommand{\bibnumfmt}[1]{\protect\cir{#1}}%修改参考文献序号样式
+\renewcommand{\bibnumfmt}[1]{\protect\NumberedLabel{#1}}%修改参考文献序号样式
 \renewcommand{\citenumfont}[1]{\color{ColorA}\CiteNumFont#1}%修改引用样式
 \bibpunct{\color{ColorA}{[}}{\color{ColorA}{]}}{,}{n}{}{;}%修改方括号颜色
 \renewcommand{\bibname}{参考文献}%修改参考文献标题
@@ -772,20 +772,51 @@ shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,deco
 
 %%%%%%%%%%%%%%%%%%%% 列表环境 %%%%%%%%%%%%%%%%%%%%%%
 %%设置题号%%
-\newcommand*\cir[1]{%
+\newcommand*{\NumberedLabel}[1]{%
 \tikz[baseline=-0.1em]{%
-\node[circle,fill=ListColor,draw=ListColor,anchor=base,minimum size=5.0mm,align=center,inner sep=0mm,outer sep=0mm,font=\ListNumFont,text=white]{\maxsizebox{4.5mm}{!}{#1}};}}
-%%概念列表环境%%
-\newenvironment{Concept}{%
-\begin{multicols}{2}%
+\node[circle,fill=ListColor,draw=ListColor,anchor=base,minimum size=1.0em,align=center,inner sep=0mm,outer sep=0mm,font=\ListNumFont,text=white]{\maxsizebox{0.9em}{!}{#1}};}}
+\newcommand*{\UnnumberedLabel}{%
+\tikz[baseline=-0.4em]{%
+\node[circle,fill=white,draw=ListColor,ultra thick,anchor=base,minimum size=1.0em,inner sep=0mm,outer sep=0mm]{};%
+\node[circle,fill=ListColor,draw=ListColor,anchor=base,minimum size=0.5em,inner sep=0mm,outer sep=0mm]{};%
+}}
+%%无编号列表环境%%
+\NewDocumentEnvironment{UnnumberedItem}{O{1}}{%
+\ifnum#1=1%
+\begin{itemize}[label=\protect\UnnumberedLabel]%
+\else%
+\begin{multicols}{#1}%
 \ItemFont%
-\begin{itemize}[label=\color{ListColor}\bfseries\faGenderless]}{\end{itemize}\end{multicols}\global\colorlet{ListColor}{ColorA}}
-%%题目列表环境%%
-\newenvironment{QsNum}{\begin{enumerate}[label=\protect\cir{\arabic*}]}
-{\end{enumerate}\global\colorlet{ListColor}{ColorA}}
+\begin{itemize}[label=\protect\UnnumberedLabel]%
+\fi%
+}{%
+\ifnum#1=1%
+\end{itemize}%
+\else%
+\end{itemize}%
+\end{multicols}%
+\fi%
+\global\colorlet{ListColor}{ColorA}}
+%%编号列表环境%%
+\NewDocumentEnvironment{NumberedItem}{O{1}}{%
+\ifnum#1=1%
+\begin{enumerate}[label=\protect\NumberedLabel{\arabic*}]%
+\else%
+\begin{multicols}{#1}%
+\ItemFont%
+\begin{enumerate}[label=\protect\NumberedLabel{\arabic*}]%
+\fi%
+}{%
+\ifnum#1=1%
+\end{enumerate}%
+\else%
+\end{enumerate}%
+\end{multicols}%
+\fi%
+\global\colorlet{ListColor}{ColorA}}
 
 %%设置星级%%
-\NewDocumentCommand{\score}{mm O{ColorB}}{
+\NewDocumentCommand{\score}{m m O{ColorB}}{
 \begin{tikzpicture}[baseline]
 \foreach \i in {1,...,#1}{
 \pgfmathparse{\i<=#2 ? "#3" : "white"}
@@ -2842,6 +2873,20 @@ underlay boxed title={
 \draw[#2!80,fill=#2!80,ultra thin]([xshift=-5*\@BoxTitle@Radius,yshift=-\@BoxTitle@Radius]frame.north east)circle({2*\@BoxTitle@Radius/3});}
 }}
 
+\tcbset{BlockBox/.style args={#1}{
+enhanced standard,breakable,
+pad before break=3.0mm,pad after break=5.0mm,
+top=3.5mm,bottom=3.0mm,toptitle=4.0mm,bottomtitle=-2.5mm,
+colframe=ColorB!7.5,colback=ColorB!7.5,colbacktitle=ColorB!7.5,rounded corners,arc=7.5pt,
+before=\par\medskip,after=\par\medskip,
+parbox=false,
+before upper={\hspace{2.0em}},
+before lower={\hspace{2.0em}},
+fonttitle=\BoxTitleFont,coltitle=ColorA,
+subtitle style={empty,fontupper=\BoxSubtitleFont,colupper=ColorA},
+title={#1}
+}}
+
 \tcbset{CodeBox/.style args={#1/#2/#3/#4/#5}{
 enhanced standard,breakable,
 code={\colorlet{ListColor}{#4}},
@@ -2889,8 +2934,8 @@ overlay middle and last={
 \newenvironment{Point}{\begin{box0}{本章要点}[ColorA]}{\end{box0}}
 \newenvironment{Point*}{\begin{box0}{本节导言}[ColorA]}{\end{box0}}
 
-\newenvironment{Case}{\begin{box0}{基础概念、公式和定理}[ColorB]\begin{Concept}}{\end{Concept}\end{box0}}
-\newenvironment{Case*}{\begin{box0}{本节提要}[ColorB]\begin{Concept}}{\end{Concept}\end{box0}}
+\newenvironment{Case}{\begin{box0}{基础概念、公式和定理}[ColorB]}{\end{box0}}
+\newenvironment{Case*}{\begin{box0}{本节提要}[ColorB]}{\end{box0}}
 %%%%
 
 %%设置易错点盒子%%
@@ -3157,24 +3202,13 @@ underlay boxed title={
 \DeclareDocumentEnvironment{Review}{ +O{} +D<>{} }{\begin{box6}{知识回顾}[#1][#2][ColorC][\faFan]}{\end{box6}}
 
 %%%%
-\DeclareTColorBox{box7}{ +O{} +O{} }{
-enhanced standard,breakable,
-pad before break=3.0mm,pad after break=5.0mm,
-top=3.5mm,bottom=3.0mm,toptitle=4.0mm,bottomtitle=-2.5mm,
-colframe=ColorB!7.5,colback=ColorB!7.5,colbacktitle=ColorB!7.5,rounded corners,arc=7.5pt,
-before=\par\medskip,after=\par\medskip,
-parbox=false,
-before upper={\hspace{2.0em}},
-before lower={\hspace{2.0em}},
-fonttitle=\BoxTitleFont,coltitle=ColorA,
-subtitle style={empty,fontupper=\BoxSubtitleFont,colupper=ColorA},
-title={#1},#2}
+\DeclareTColorBox{box7}{ +O{} +O{} }{BlockBox=#2,#1}
 
-\newenvironment{Proof}{\begin{box7}[\faBars~~证明]}{\end{box7}}
+\newenvironment{Proof}{\begin{box7}[][\faBars~~证明]}{\end{box7}}
 %%
-\newenvironment{Solution}{\begin{box7}[\faBars~~参考答案]}{\end{box7}}
+\newenvironment{Solution}{\begin{box7}[][\faBars~~参考答案]}{\end{box7}}
 %%
-\DeclareDocumentEnvironment{Block}{ +O{} }{\begin{box7}[#1]}{\end{box7}}
+\DeclareDocumentEnvironment{Block}{ +O{} }{\begin{box7}[][#1]}{\end{box7}}
 
 %%%%
 \DeclareTColorBox{box8}{O{} +m +O{} +O{} O{ColorA} O{}}{CodeBox=#2/#3/#4/#5/#6,#1}
