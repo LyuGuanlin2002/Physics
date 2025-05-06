@@ -99,6 +99,65 @@
 %
 \mainmatter
 
+%\partimage{
+%\begin{tikzpicture}[scale=0.8]
+%	%============ 参数配置 ============%
+%	\def\archWidth{14}        % 支架总宽度
+%	\def\archHeight{8}        % 支架立柱高度
+%	\def\archRadius{8mm}      % 顶部圆角半径
+%	\def\lineSep{12}          % 悬挂线间距
+%	\def\numBalls{5}          % 小球数量
+%	\def\hangLength{6}        % 悬挂线长度
+%	\def\swingAngle{-10}      % 左摆角度
+%	\def\baseHeight{1.5}        % 底座高度
+%	\def\baseDownWidth{17}    % 底座下底宽度
+%	\def\baseUpWidth{16}      % 底座上底宽度
+%	
+%	%============ 自动计算参数 ============%
+%	\pgfmathsetmacro\spacing{\lineSep/(\numBalls+1)}  % 小球间距
+%	\pgfmathsetmacro\ballRadius{\spacing/2}           % 小球半径
+%	\pgfmathsetmacro\startX{-\lineSep/2 + \spacing}   % 起始坐标
+%	
+%	%============ 倒U型支架 ============%
+%	\draw[white,line width=3.0mm,rounded corners=\archRadius] 
+%	(-\archWidth/2,0) -- (-\archWidth/2,\archHeight) 
+%	-- (\archWidth/2,\archHeight) -- (\archWidth/2,0);
+%	
+%	%============ 正梯形底座 ============%
+%	\draw[white,line width=1.5mm,fill=white,rounded corners] 
+%	(-\baseUpWidth/2,0) -- 
+%	(\baseUpWidth/2,0) -- 
+%	(\baseDownWidth/2,-\baseHeight) -- 
+%	(-\baseDownWidth/2,-\baseHeight) -- cycle;
+%	
+%	%============ 悬挂系统 ============%
+%	\foreach \i in {0,...,4} {
+%		\pgfmathsetmacro\xPos{\startX + \i*\spacing}
+%		
+%		% 左侧摆动球
+%		\ifnum\i=0
+%		\draw[white,line width=1.5mm,rotate around={\swingAngle:(\xPos,\archHeight)}] 
+%		(\xPos,\archHeight) -- ++(0,-\hangLength) coordinate (ballL);
+%		\draw[white,fill=white] (ballL) circle (\ballRadius);
+%		\fi
+%		
+%		% 右侧静止球
+%		\ifnum\i>0
+%		\pgfmathsetmacro\mirrorX{-\xPos}
+%		\draw[white,line width=1.5mm] (\xPos,\archHeight) -- (\xPos,\archHeight-\hangLength) coordinate (ballR);
+%		\draw[white,fill=white] (ballR) circle (\ballRadius);
+%		% 左上角高光
+%		\coordinate(B)at(\xPos,\archHeight-\hangLength+\ballRadius*0.6);
+%		\draw[ColorB!15,line width=1.0mm] (B) arc (90:180:\ballRadius*0.6);
+%		\fi
+%	}
+%	\node[inner sep=15mm,anchor=north east,, transparent]at(-\baseDownWidth/2,-\baseHeight){};
+%\end{tikzpicture}
+%
+%}
+
+
+
 \part{力学}
 
 %% 第一章

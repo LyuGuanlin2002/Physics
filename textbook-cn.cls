@@ -121,15 +121,15 @@
 
 \makeatletter
 %%定义书籍信息%%
-\newcommand*{\coverimage}[1]{\def\@coverimage{#1}}
-\newcommand*{\backimage}[1]{\def\@backimage{#1}}
-\newcommand*{\series}[1]{\def\@series{#1}}
-\newcommand*{\version}[1]{\def\@version{#1}}
-\newcommand*{\subtitle}[1]{\def\@subtitle{#1}}
-\newcommand*{\englishtitle}[1]{\def\@englishtitle{\MakeUppercase{#1}}}
-\newcommand*{\englishsubtitle}[1]{\def\@englishsubtitle{\MakeUppercase{#1}}}
-\newcommand*{\presslogo}[1]{\def\@presslogo{#1}}
-\newcommand*{\pressname}[1]{\def\@pressname{#1}}
+\newcommand{\coverimage}[1]{\long\def\@coverimage{#1}}
+\newcommand{\backimage}[1]{\long\def\@backimage{#1}}
+\newcommand{\series}[1]{\long\def\@series{#1}}
+\newcommand{\version}[1]{\long\def\@version{#1}}
+\newcommand{\subtitle}[1]{\long\def\@subtitle{#1}}
+\newcommand{\englishtitle}[1]{\long\def\@englishtitle{\MakeUppercase{#1}}}
+\newcommand{\englishsubtitle}[1]{\long\def\@englishsubtitle{\MakeUppercase{#1}}}
+\newcommand{\presslogo}[1]{\long\def\@presslogo{#1}}
+\newcommand{\pressname}[1]{\long\def\@pressname{#1}}
 \makeatother
 
 %%%%%%%%%%%%%%%%%%%% 字体设置 %%%%%%%%%%%%%%%%%%%%
@@ -953,9 +953,10 @@ shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,deco
 \setlength{\@Part@MiddleOuterBlockLength}{4.0cm}
 %%
 %%部分介绍%%
-\newcommand*{\partintro}[1]{\def\@partintro{\hspace*{2.0em}#1}}
+\newcommand{\partintro}[1]{\long\def\@partintro{\hspace*{2.0em}#1}}
+\newcommand{\partimage}[1]{\long\def\@partimage{#1}}
 \partintro{}
-\newcommand*{\partimage}[1]{\def\@partimage{#1}}
+\partimage{}
 %%
 %%奇数页布局%%
 \NewDocumentCommand{\@Part@OddPage@Style}{ +m +m }{
@@ -999,7 +1000,7 @@ shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,deco
 \draw[ColorB!7.5,fill=ColorB!7.5](M)[sharp corners]--(N)--(O)--(P)[rounded corners=2.5mm]--cycle;
 %%%%
 %%章节图片%%
-\node[anchor=north east,outer sep=0mm,inner sep=0mm](Pic)at(A){\ifdefvoid{\@partimage}{}{\includegraphics[width=\paperwidth,height=\paperheight]{\@partimage}}};
+\node[anchor=south west,outer sep=0mm,inner sep=0mm](Pic)at(current page.south west){\@partimage};
 %%%%
 \begin{pgfonlayer}{@Part@Top}
 %%页面中部色块坐标1%%
@@ -1078,7 +1079,7 @@ shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,deco
 \draw[ColorB!7.5,fill=ColorB!7.5](M)[sharp corners]--(N)--(O)--(P)[rounded corners=2.5mm]--cycle;
 %%%%
 %%章节图片%%
-\node[anchor=north west,outer sep=0mm,inner sep=0mm](Pic)at(A){\ifdefvoid{\@partimage}{}{\includegraphics[width=\paperwidth,height=\paperheight]{\@partimage}}};
+\node[anchor=south east,outer sep=0mm,inner sep=0mm](Pic)at(current page.south east){\@partimage};
 %%%%
 \begin{pgfonlayer}{@Part@Top}
 %%页面中部色块坐标1%%
@@ -1176,7 +1177,7 @@ shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,deco
 \draw[ColorB!7.5,fill=ColorB!7.5](M)[sharp corners]--(N)--(O)--(P)[rounded corners=2.5mm]--cycle;
 %%%%
 %%章节图片%%
-\node[anchor=north east,outer sep=0mm,inner sep=0mm](Pic)at(A){\ifdefvoid{\@partimage}{}{\includegraphics[width=\paperwidth,height=\paperheight]{\@partimage}}};
+\node[anchor=south west,outer sep=0mm,inner sep=0mm](Pic)at(current page.south west){\@partimage};
 %%%%
 \begin{pgfonlayer}{@Part@Star@Top}%
 \PartNameFont%
@@ -1262,7 +1263,7 @@ shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,deco
 \draw[ColorB!7.5,fill=ColorB!7.5](M)[sharp corners]--(N)--(O)--(P)[rounded corners=2.5mm]--cycle;
 %%%%
 %%章节图片%%
-\node[anchor=north west,outer sep=0mm,inner sep=0mm](Pic)at(A){\ifdefvoid{\@partimage}{}{\includegraphics[width=\paperwidth,height=\paperheight]{\@partimage}}};
+\node[anchor=south east,outer sep=0mm,inner sep=0mm](Pic)at(current page.south east){\@partimage};
 %%%%
 \begin{pgfonlayer}{@Part@Star@Top}%
 \PartNameFont%
@@ -1383,9 +1384,9 @@ shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,deco
 \setlength{\@Chapter@PageSize}{1.1cm}
 \setlength{\@Chapter@SayingBlockWidth}{\@FrameWidth+1.0cm}
 %%%%
-\newcommand*{\chaptersaying}[1]{\def\@chaptersaying{#1}}
-\newcommand*{\chaptersubtitle}[1]{\def\@chaptersubtitle{#1}}
-\newcommand*{\chapterimage}[1]{\def\@chapterimage{#1}}
+\newcommand{\chaptersaying}[1]{\long\def\@chaptersaying{#1}}
+\newcommand{\chaptersubtitle}[1]{\long\def\@chaptersubtitle{#1}}
+\newcommand{\chapterimage}[1]{\long\def\@chapterimage{#1}}
 \chaptersaying{}
 \chaptersubtitle{}
 \chapterimage{}
@@ -1434,7 +1435,7 @@ shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,deco
 %%框架1%%
 \draw[ColorB!7.5,fill=ColorB!7.5,sharp corners](A)rectangle(C);
 %%章节图片%%
-\node[anchor=north west,outer sep=0mm,inner sep=0mm](U)at(A){\ifdefvoid{\@chapterimage}{}{\includegraphics[width=\paperwidth,height=\paperheight]{\@chapterimage}}};
+\node[anchor=north west,outer sep=0mm,inner sep=0mm](U)at(A){\@chapterimage};
 %%框架2%%
 \draw[white,fill=white](J)[rounded corners=5.0mm]--(I)[rounded corners=5.0mm]--(H)[rounded corners=2.5mm]--(G)[in=0,out=180]to(F)[sharp corners]--(E)--cycle;
 \end{pgfonlayer}
@@ -1484,7 +1485,7 @@ shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,deco
 %%框架1%%
 \draw[ColorB!7.5,fill=ColorB!7.5,sharp corners](A)rectangle(C);
 %%章节图片%%
-\node[anchor=north east,outer sep=0mm,inner sep=0mm](U)at(A){\ifdefvoid{\@chapterimage}{}{\includegraphics[width=\paperwidth,height=\paperheight]{\@chapterimage}}};
+\node[anchor=north east,outer sep=0mm,inner sep=0mm](U)at(A){\@chapterimage};
 %%框架2%%
 \draw[white,fill=white](J)[rounded corners=5.0mm]--(I)[rounded corners=5.0mm]--(H)[rounded corners=2.5mm]--(G)[in=180,out=0]to(F)[sharp corners]--(E)--cycle;
 \end{pgfonlayer}
@@ -1558,7 +1559,7 @@ shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,deco
 %%框架1%%
 \draw[ColorB!7.5,fill=ColorB!7.5,sharp corners](A)rectangle(C);
 %%章节图片%%
-\node[anchor=north west,outer sep=0mm,inner sep=0mm](U)at(A){\ifdefvoid{\@chapterimage}{}{\includegraphics[height=\paperheight,width=\paperwidth]{\@chapterimage}}};
+\node[anchor=north west,outer sep=0mm,inner sep=0mm](U)at(A){\@chapterimage};
 %%框架2%%
 \draw[white,fill=white](J)[rounded corners=5.0mm]--(I)[rounded corners=5.0mm]--(H)[sharp corners]--(E)[sharp corners]--cycle;
 \end{pgfonlayer}
@@ -1614,7 +1615,7 @@ shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,deco
 %%框架1%%
 \draw[ColorB!7.5,fill=ColorB!7.5,sharp corners](A)rectangle(C);
 %%章节图片%%
-\node[anchor=north east,outer sep=0mm,inner sep=0mm](U)at(A){\ifdefvoid{\@chapterimage}{}{\includegraphics[height=\paperheight,width=\paperwidth]{\@chapterimage}}};
+\node[anchor=north east,outer sep=0mm,inner sep=0mm](U)at(A){\@chapterimage};
 %%框架2%%
 \draw[white,fill=white](J)[rounded corners=5.0mm]--(I)[rounded corners=5.0mm]--(H)[sharp corners]--(E)[sharp corners]--cycle;
 \end{pgfonlayer}
@@ -1757,7 +1758,7 @@ shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,deco
 %%%%
 %%不编号小节标题样式%%
 %%不编号小节副标题%%
-\newcommand*{\subsectionsubtitle}[1]{\def\@subsectionsubtitle{#1}}
+\newcommand{\subsectionsubtitle}[1]{\long\def\@subsectionsubtitle{#1}}
 \subsectionsubtitle{}
 %%%%
 \newlength{\@Subsection@Star@LabelCriticWidth}
@@ -1895,7 +1896,9 @@ shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,deco
 \if@mainmatter%
 ~\sffamily\the@prenumber%
 \fi}%
-}}
+}%
+\vspace{-8.0pt}%
+}
 %%%%
 \NewDocumentCommand{\Thinking}{s}{%
 \IfBooleanTF{#1}{%
@@ -1905,7 +1908,9 @@ shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,deco
 \if@mainmatter%
 ~\sffamily\the@prenumber%
 \fi}%
-}}
+}%
+\vspace{-8.0pt}%
+}
 %%%%
 \NewDocumentCommand{\Improve}{s}{%
 \IfBooleanTF{#1}{%
@@ -1915,7 +1920,9 @@ shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,deco
 \if@mainmatter%
 ~\sffamily\thechapter%
 \fi}%
-}}
+}%
+\vspace{-8.0pt}%
+}
 \makeatother
 
 %%%%%%%%%%%%%%%%%% 目录样式 %%%%%%%%%%%%%%%%%%%%%%%%
