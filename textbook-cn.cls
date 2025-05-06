@@ -2826,42 +2826,21 @@ shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,deco
 %%设置注释盒子样式%%
 \tcbset{NoteBox/.style args={#1/#2}{
 enhanced standard,breakable,empty,
-top=0mm,bottom=0mm,
-right=0mm,left=0mm,boxsep=0mm,
+boxsep=3.0mm,
+top=-3.0mm,bottom=-3.0mm,right=-3.0mm,left=-3.0mm,
 parbox=false,
 before=\par\medskip,after=\par\medskip,
 fontupper=\MarginNoteFont,colupper=#1,
 fonttitle=\BoxTitleFont,coltitle=#1,
 varwidth boxed title=\@Box@CriticTitleWidth,
 title={\strut#2\strut},
-boxed title style={empty,left=0mm,boxsep=0mm},
+boxed title style={empty,left=0mm,bottom=1.5mm,boxsep=0mm},
 attach boxed title to top left,
 before upper={\hspace{2.0em}},
-subtitle style={empty,fontupper=\BoxSubtitleFont\centering,colupper=#1}
-}}
-
-%%设置彩色盒子样式%%
-\tcbset{ColorfulBox/.style args={#1/#2/#3/#4}{
-enhanced standard,breakable,
-pad before break=3.0mm,pad after break=4.5mm,
-grow to left by=-2.0pt,
-rounded corners,arc=5.0pt,boxrule=2.25pt,
-colback=white,colframe=white,
-frame style={left color=#4!50,right color=#4!50,middle color=#4},
-top=3.0mm,bottom=2.5mm,
-varwidth boxed title=\@Box@CriticTitleWidth,
-before=\par\bigskip,after=\par\bigskip,
-fonttitle=\BoxTitleFont,coltitle=white,
-title={\strut#1\strut},
-IfBlankTF={#2}{}{after title={\strut~:~~#2\strut}},
-attach boxed title to top left={yshift*=-\tcboxedtitleheight+1.5mm},
-boxed title style={size=minimal,empty,valign=center,left=2.5em,right=1.0em},
-parbox=false,
-IfBlankTF={#3}{before upper={\hspace{2.0em}}
-}{before upper={\noindent{\BoxTitleFont\color{#4}#3}\hspace{1.0em}}
-},
-before lower={\hspace{2.0em}},
-subtitle style={empty,fontupper=\BoxSubtitleFont,colupper=#4}
+after upper={\vspace{2.0mm}},
+before lower={\vspace{2.0mm}\hspace{2.0em}},
+subtitle style={empty,fontupper=\BoxSubtitleFont\centering,colupper=#1},
+segmentation style={cap=round,ultra thick,draw=#1!25,solid}
 }}
 %%%%
 \newlength{\@ItemBox@BigCircle@LineWidth}
@@ -2871,11 +2850,12 @@ subtitle style={empty,fontupper=\BoxSubtitleFont,colupper=#4}
 %%
 \tcbset{ItemBox/.style args={#1/#2}{
 enhanced standard,breakable,empty,
-top=5.0mm,bottom=0mm,left=0mm,right=0mm,boxsep=0mm,
+boxsep=3.0mm,
+top=2.0mm,bottom=-3.0mm,left=-3.0mm,right=-3.0mm,
 varwidth boxed title=\@Box@CriticTitleWidth,
 parbox=false,
 before upper={\hspace{2.0em}},
-before lower={\hspace{2.0em}},
+before lower={\vspace{2.0mm}\hspace{2.0em}},
 before=\par\medskip,after=\par\medskip,
 fontupper=\ItemFont,fontlower=\ItemFont,
 fonttitle=\BoxTitleFont,coltitle=white,
@@ -2887,6 +2867,7 @@ title={%
 attach boxed title to top left={xshift=\@ItemBox@SmallCircle@LineWidth/2,yshift*=-\tcboxedtitleheight},
 boxed title style={size=minimal,empty,valign=center,left=2.5em,right=1.0em},
 subtitle style={empty,fontupper=\BoxSubtitleFont,colupper=#2},
+segmentation style={cap=round,ultra thick,draw=#2!25,solid},
 %%%%
 underlay boxed title={
 \BoxTitleFont
@@ -2900,29 +2881,41 @@ underlay boxed title={
 \draw[#2!90,fill=#2!90,ultra thin]([xshift=-3*\@BoxTitle@Radius,yshift=-\@BoxTitle@Radius]frame.north east)circle({2*\@BoxTitle@Radius/3});
 \draw[#2!80,fill=#2!80,ultra thin]([xshift=-5*\@BoxTitle@Radius,yshift=-\@BoxTitle@Radius]frame.north east)circle({2*\@BoxTitle@Radius/3});}
 }}
-
-\tcbset{BlockBox/.style args={#1}{
+%%设置彩色盒子样式%%
+\tcbset{ColorfulBox/.style args={#1/#2/#3/#4}{
 enhanced standard,breakable,
-pad before break=3.0mm,pad after break=5.0mm,
-top=3.5mm,bottom=3.0mm,toptitle=4.0mm,bottomtitle=-2.5mm,
-colframe=ColorB!7.5,colback=ColorB!7.5,colbacktitle=ColorB!7.5,rounded corners,arc=7.5pt,
-before=\par\medskip,after=\par\medskip,
-parbox=false,
-before upper={\hspace{2.0em}},
-before lower={\hspace{2.0em}},
-fonttitle=\BoxTitleFont,coltitle=ColorA,
-subtitle style={empty,fontupper=\BoxSubtitleFont,colupper=ColorA},
-title={#1}
-}}
-
-\tcbset{CodeBox/.style args={#1/#2/#3/#4/#5}{
-enhanced standard,breakable,
-code={\colorlet{ListColor}{#4}},
-pad before break=3.0mm,pad after break=4.5mm,
+pad before break=4.0mm,pad after break=4.5mm,
+grow to left by=-2.0pt,
 rounded corners,arc=5.0pt,boxrule=2.25pt,
 colback=white,colframe=white,
 frame style={left color=#4!50,right color=#4!50,middle color=#4},
-top=3.0mm,bottom=2.5mm,
+boxsep=3.0mm,
+top=2.5mm,bottom=0.5mm,left=2.0mm,right=2.0mm,
+varwidth boxed title=\@Box@CriticTitleWidth,
+before=\par\bigskip,after=\par\bigskip,
+fonttitle=\BoxTitleFont,coltitle=white,
+title={\strut#1\strut},
+IfBlankTF={#2}{}{after title={\strut~:~~#2\strut}},
+attach boxed title to top left={yshift*=-\tcboxedtitleheight+1.5mm},
+boxed title style={size=minimal,empty,valign=center,left=2.5em,right=1.0em},
+parbox=false,
+IfBlankTF={#3}{before upper={\hspace{2.0em}}
+}{before upper={\noindent{\BoxTitleFont\color{#4}#3}\hspace{1.0em}}
+},
+before lower={\hspace{2.0em}},
+subtitle style={empty,fontupper=\BoxSubtitleFont,colupper=#4},
+segmentation style={cap=round,ultra thick,draw=#4!25,solid,shorten <= 5.0mm,shorten >= 5.0mm}
+}}
+%%%%
+\tcbset{CodeBox/.style args={#1/#2/#3/#4/#5}{
+enhanced standard,breakable,
+code={\colorlet{ListColor}{#4}},
+pad before break=4.0mm,pad after break=4.5mm,
+rounded corners,arc=5.0pt,boxrule=2.25pt,
+colback=white,colframe=white,
+frame style={left color=#4!50,right color=#4!50,middle color=#4},
+boxsep=3.0mm,
+top=2.5mm,bottom=0.5mm,left=2.0em+1.0mm,right=2.0mm,
 before=\par\bigskip,after=\par\bigskip,
 parbox=false,
 IfEmptyTF={#3}{
@@ -2933,10 +2926,10 @@ fonttitle=\BoxTitleFont,coltitle=white,
 varwidth boxed title=\@Box@CriticTitleWidth,
 title={\strut#1\strut},
 IfBlankTF={#2}{}{after title={\strut~:~~#2\strut}},
-boxed title style={size=minimal,empty,left=1.2em,right=1.2em,top=0.3em,bottom=0.1em},
-left=2.0em,
+boxed title style={size=minimal,empty,left=1.2em,right=1.2em,top=0.25em,bottom=0.05em},
 attach boxed title to top left={yshift*=-\tcboxedtitleheight},
 subtitle style={empty,fontupper=\BoxSubtitleFont,colupper=#4},
+segmentation style={cap=round,ultra thick,draw=#4!25,solid,shorten <= 2.0em+4.0mm,shorten >= 5.0mm},
 %%%%
 underlay boxed title={
 \BoxTitleFont
@@ -2954,6 +2947,23 @@ overlay middle and last={
 \begin{tcbclipinterior}
 \fill[#4!7.5,draw=#4!7.5](frame.south west)rectangle([xshift=1.9em]frame.north west);
 \end{tcbclipinterior}}
+}}
+%%%%
+\tcbset{BlockBox/.style args={#1}{
+enhanced standard,breakable,
+pad before break=4.0mm,pad after break=5.0mm,
+boxsep=3.0mm,
+top=2.5mm,bottom=1.5mm,left=2.0mm,right=2.0mm,
+toptitle=1.0mm,bottomtitle=-4.5mm,
+colframe=ColorB!7.5,colback=ColorB!7.5,colbacktitle=ColorB!7.5,rounded corners,arc=7.5pt,
+before=\par\medskip,after=\par\medskip,
+parbox=false,
+before upper={\hspace{2.0em}},
+before lower={\hspace{2.0em}},
+fonttitle=\BoxTitleFont,coltitle=ColorA,
+subtitle style={empty,fontupper=\BoxSubtitleFont,colupper=ColorA},
+segmentation style={cap=round,ultra thick,draw=ColorA!25,solid,shorten <= 5.0mm,shorten >= 5.0mm},
+title={#1}
 }}
 
 %%设置节前盒子%%
@@ -2985,9 +2995,9 @@ underlay boxed title={
 
 %%%%
 \DeclareDocumentEnvironment{Warning}{ +O{} +D<>{} }{\begin{box1}{易错点警示}[#1][#2][ColorF][\faExclamation]}{\end{box1}}
-\DeclareDocumentEnvironment{Discussion}{ +O{} +D<>{}}{\begin{box1}{思考与讨论}[#1][#2][ColorC][\faQuestion]}
+\DeclareDocumentEnvironment{Discussion}{ +O{} +D<>{}}{\begin{box1}[lowerbox=ignored]{思考与讨论}[#1][#2][ColorC][\faQuestion]}
 {\end{box1}}
-\DeclareDocumentEnvironment{Check}{ +O{} +D<>{} }{\begin{box1}{随堂练习}[#1][#2][ColorI][\faCheck]}
+\DeclareDocumentEnvironment{Check}{ +O{} +D<>{} }{\begin{box1}[lowerbox=ignored]{随堂练习}[#1][#2][ColorI][\faCheck]}
 {\end{box1}}
 
 %%设置演示盒子%%
@@ -3241,9 +3251,9 @@ underlay boxed title={
 %%%%
 \DeclareTColorBox{box8}{O{} +m +O{} +O{} O{ColorA} O{}}{CodeBox=#2/#3/#4/#5/#6,#1}
 
-\NewDocumentEnvironment{Reading}{ +O{} +D<>{} +m +m }{\begin{box8}{阅读理解}[#1][#2][ColorB][\score{#3}{#4}[ColorB]]}{\end{box8}}
-\NewDocumentEnvironment{Cloze}{ +O{} +D<>{} +m +m }{\begin{box8}{完形填空}[#1][#2][ColorA][\score{#3}{#4}[ColorA]]}{\end{box8}}
-\NewDocumentEnvironment{Article}{ +O{} +D<>{} +m +m }{\begin{box8}{文本解读}[#1][#2][ColorC][\score{#3}{#4}[ColorC]]}{\end{box8}}
+\NewDocumentEnvironment{Reading}{ +O{} +D<>{} }{\begin{box8}[lowerbox=ignored]{阅读理解}[#1][#2][ColorB]}{\end{box8}}
+\NewDocumentEnvironment{Cloze}{ +O{} +D<>{} }{\begin{box8}[lowerbox=ignored]{完形填空}[#1][#2][ColorA]}{\end{box8}}
+\NewDocumentEnvironment{Article}{ +O{} +D<>{} }{\begin{box8}[lowerbox=ignored]{文本解读}[#1][#2][ColorC]}{\end{box8}}
 \NewDocumentEnvironment{Vocabulary}{ +O{} +D<>{} }{\begin{box8}{词汇解析}[#1][#2][ColorE]}{\end{box8}}
 %%%%
 %%修改代码盒子左侧行数样式%%
@@ -3252,6 +3262,7 @@ underlay boxed title={
 \newtcblisting{PythonBox}[1][]{
 CodeBox={代码示例}/#1/{}/ColorA/{\uppercase{python}},
 before upper={},before lower={},
+comment and listing,
 minted options={breaklines,autogobble,linenos,numbersep=5.5mm},
 listing only,listing engine=minted,
 minted language=python}
@@ -3259,6 +3270,7 @@ minted language=python}
 \newtcblisting{CppBox}[1][]{
 CodeBox={代码示例}/#1/{}/ColorB/{\uppercase{cpp}},
 before upper={},before lower={},
+comment and listing,
 minted options={breaklines,autogobble,linenos,numbersep=5.5mm},
 listing only,listing engine=minted,
 minted language=cpp}
@@ -3266,6 +3278,7 @@ minted language=cpp}
 \newtcblisting{JavaBox}[1][]{
 CodeBox={代码示例}/#1/{}/ColorC/{\uppercase{java}},
 before upper={},before lower={},
+comment and listing,
 minted options={breaklines,autogobble,linenos,numbersep=5.5mm},
 listing only,listing engine=minted,
 minted language=java}
@@ -3273,6 +3286,7 @@ minted language=java}
 \newtcblisting{CodeBox}[3][]{
 CodeBox={代码示例}/#1/{}/#3/{\uppercase{#2}},
 before upper={},before lower={},
+comment and listing,
 minted options={breaklines,autogobble,linenos,numbersep=5.5mm},
 listing only,listing engine=minted,
 minted language=#2}
