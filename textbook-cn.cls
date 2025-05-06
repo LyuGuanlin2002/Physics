@@ -763,6 +763,9 @@ shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,deco
 \newcounter{@lem}[section]
 \newcounter{@colry}[section]
 \newcounter{@prop}[section]
+\newcounter{@check}
+\newcounter{@reading}
+\newcounter{@cloze}
 \makeatother
 \renewcommand{\thesubfigure}{\thefigure.\Alph{subfigure}}
 \renewcommand{\thesubtable}{\thetable.\Alph{subtable}}
@@ -2977,7 +2980,7 @@ title={#1}
 %%%%
 
 %%设置易错点盒子%%
-\DeclareTColorBox{box1}{O{} +m +O{} +O{} O{ColorA} O{\faQuestion}}{
+\DeclareTColorBox{box1}{+O{} +m +O{} +O{} O{ColorA} O{\faQuestion}}{
 ColorfulBox=#2/#3/#4/#5,
 %%%%
 underlay boxed title={
@@ -2997,11 +3000,11 @@ underlay boxed title={
 \DeclareDocumentEnvironment{Warning}{ +O{} +D<>{} }{\begin{box1}{易错点警示}[#1][#2][ColorF][\faExclamation]}{\end{box1}}
 \DeclareDocumentEnvironment{Discussion}{ +O{} +D<>{}}{\begin{box1}[lowerbox=ignored]{思考与讨论}[#1][#2][ColorC][\faQuestion]}
 {\end{box1}}
-\DeclareDocumentEnvironment{Check}{ +O{} +D<>{} }{\begin{box1}[lowerbox=ignored]{随堂练习}[#1][#2][ColorI][\faCheck]}
+\DeclareDocumentEnvironment{Check}{ +O{} +D<>{} }{\begin{box1}[step=@check]{随堂练习~{\sffamily\the@check}}[#1][#2][ColorI][\faCheck]}
 {\end{box1}}
 
 %%设置演示盒子%%
-\DeclareTColorBox{box2}{O{} +m +O{} +O{} O{ColorA} O{\faLayerGroup}}{
+\DeclareTColorBox{box2}{+O{} +m +O{} +O{} O{ColorA} O{\faLayerGroup}}{
 ColorfulBox=#2/#3/#4/#5,
 %%%%
 underlay boxed title={
@@ -3039,7 +3042,7 @@ underlay boxed title={
 %%简化序号命令%%
 \newcommand{\the@prenumber}{\thechapter.\thesection}
 %%设置定义定理盒子%%
-\DeclareTColorBox{box3}{O{} +m +O{} +O{} O{ColorA} O{\faCodepen}}{
+\DeclareTColorBox{box3}{+O{} +m +O{} +O{} O{ColorA} O{\faCodepen}}{
 ColorfulBox=#2/#3/#4/#5,
 %%%%
 underlay boxed title={
@@ -3114,7 +3117,7 @@ underlay boxed title={
 \DeclareDocumentEnvironment{Axiom*}{ +O{} +D<>{} D(){} }{\begin{box3}[phantomlabel={#3}]{\@Axiom@Title}[#1][#2][ColorI][\faCompactDisc]}{\end{box3}}
 %%%%
 %%设置引理盒子%%
-\DeclareTColorBox{box4}{O{} +m +O{} +O{} O{ColorA} O{\faDiceD20}}{
+\DeclareTColorBox{box4}{+O{} +m +O{} +O{} O{ColorA} O{\faDiceD20}}{
 ColorfulBox=#2/#3/#4/#5,
 %%%%
 underlay boxed title={
@@ -3185,7 +3188,7 @@ underlay boxed title={
 \DeclareDocumentEnvironment{Proposition*}{ +O{} +D<>{} D(){} }{\begin{box4}[phantomlabel={#3}]{\@Propostion@Title}[#1][#2][ColorH][\faGlobe]}{\end{box4}}
 %%%%
 %设置拓展盒子%%
-\DeclareTColorBox{box5}{O{} +m +O{} +O{} O{ColorA} O{\faLink}}{
+\DeclareTColorBox{box5}{+O{} +m +O{} +O{} O{ColorA} O{\faLink}}{
 ColorfulBox=#2/#3/#4/#5,
 %%%%
 underlay boxed title={
@@ -3205,7 +3208,7 @@ underlay boxed title={
 {\end{box5}}
 
 %%设置案例盒子%%
-\DeclareTColorBox{box6}{O{} +m +O{} +O{} O{ColorA} O{\faFile*}}{
+\DeclareTColorBox{box6}{+O{} +m +O{} +O{} O{ColorA} O{\faFile*}}{
 ColorfulBox=#2/#3/#4/#5,
 %%%%
 underlay boxed title={
@@ -3249,11 +3252,14 @@ underlay boxed title={
 \DeclareDocumentEnvironment{Block}{ +O{} }{\begin{box7}[][#1]}{\end{box7}}
 
 %%%%
-\DeclareTColorBox{box8}{O{} +m +O{} +O{} O{ColorA} O{}}{CodeBox=#2/#3/#4/#5/#6,#1}
+\DeclareTColorBox{box8}{+O{} +m +O{} +O{} O{ColorA} O{}}{CodeBox=#2/#3/#4/#5/#6,#1}
 
-\NewDocumentEnvironment{Reading}{ +O{} +D<>{} }{\begin{box8}[lowerbox=ignored]{阅读理解}[#1][#2][ColorB]}{\end{box8}}
-\NewDocumentEnvironment{Cloze}{ +O{} +D<>{} }{\begin{box8}[lowerbox=ignored]{完形填空}[#1][#2][ColorA]}{\end{box8}}
-\NewDocumentEnvironment{Article}{ +O{} +D<>{} }{\begin{box8}[lowerbox=ignored]{文本解读}[#1][#2][ColorC]}{\end{box8}}
+\NewDocumentEnvironment{Reading}{ +O{} +D<>{} }{\begin{box8}[step=@reading]{阅读理解~{\sffamily\the@reading}}[#1][#2][ColorB]}{\end{box8}}
+%%
+\NewDocumentEnvironment{Cloze}{ +O{} +D<>{} }{\begin{box8}[step=@cloze]{完形填空~{\sffamily\the@cloze}}[#1][#2][ColorA]}{\end{box8}}
+%%
+\NewDocumentEnvironment{Article}{ +O{} +D<>{} }{\begin{box8}{文本解读}[#1][#2][ColorC]}{\end{box8}}
+%%
 \NewDocumentEnvironment{Vocabulary}{ +O{} +D<>{} }{\begin{box8}{词汇解析}[#1][#2][ColorE]}{\end{box8}}
 %%%%
 %%修改代码盒子左侧行数样式%%
@@ -3293,7 +3299,7 @@ minted language=#2}
 
 %%%%
 %设置注释盒子%%
-\DeclareTColorBox{box9}{ O{} O{ColorA} O{\faCommentDots} +m }{NoteBox=#2/{#3~~#4},#1}
+\DeclareTColorBox{box9}{ +O{} O{ColorA} O{\faCommentDots} +m }{NoteBox=#2/{#3~~#4},#1}
 
 %%%%
 %%+m表示允许换行、空行的参数%%
