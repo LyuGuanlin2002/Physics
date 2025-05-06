@@ -224,7 +224,7 @@ BoldFont=FZCukai.ttf]
 \newcommand{\CiteNumFont}{\rmfamily}%引用字体
 \newcommand{\LineNumFont}{\sffamily\bfseries\FontSizeSet{10pt}{12pt}}%行号字体
 \newcommand{\ListNumFont}{\sffamily\bfseries\FontSizeSet{12pt}{14.4pt}}%列表序号字体
-\newcommand{\ExerciseTitleFont}{\rmfamily\bfseries\FontSizeSet{13pt}{16.9pt}}%练习标题字体
+\newcommand{\PracticeTitleFont}{\rmfamily\bfseries\FontSizeSet{13pt}{16.9pt}}%练习标题字体
 \newcommand{\EgLabelFont}{\rmfamily\bfseries\FontSizeSet{13pt}{15.6pt}}%例题标签字体
 \newcommand{\BoxTitleFont}{\rmfamily\bfseries\FontSizeSet{13pt}{16.9pt}}%盒子标题字体
 \newcommand{\BoxSubtitleFont}{\rmfamily\bfseries\FontSizeSet{13pt}{16.9pt}}%盒子副标题字体
@@ -771,15 +771,16 @@ shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,deco
 \renewcommand{\thesubsection}{\arabic{subsection}}
 
 %%%%%%%%%%%%%%%%%%%% 列表环境 %%%%%%%%%%%%%%%%%%%%%%
-%%设置题号%%
-\newcommand*{\NumberedLabel}[1]{%
-\tikz[baseline=-0.1em]{%
-\node[circle,fill=ListColor,draw=ListColor,anchor=base,minimum size=1.0em,align=center,inner sep=0mm,outer sep=0mm,font=\ListNumFont,text=white]{\maxsizebox{0.9em}{!}{#1}};}}
+%%设置不编号点样式%%
 \newcommand*{\UnnumberedLabel}{%
 \tikz[baseline=-0.4em]{%
 \node[circle,fill=white,draw=ListColor,ultra thick,anchor=base,minimum size=1.0em,inner sep=0mm,outer sep=0mm]{};%
 \node[circle,fill=ListColor,draw=ListColor,anchor=base,minimum size=0.5em,inner sep=0mm,outer sep=0mm]{};%
 }}
+%%设置编号点样式%%
+\newcommand*{\NumberedLabel}[1]{%
+\tikz[baseline=-0.1em]{%
+\node[circle,fill=ListColor,draw=ListColor,ultra thick,anchor=base,minimum size=1.0em,align=center,inner sep=0mm,outer sep=0mm,font=\ListNumFont,text=white]{\maxsizebox{0.9em}{!}{#1}};}}
 %%无编号列表环境%%
 \NewDocumentEnvironment{UnnumberedItem}{O{1}}{%
 \ifnum#1=1%
@@ -1863,24 +1864,58 @@ shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,deco
 {3.25ex \@plus1.0ex \@minus0.2ex}{-1em}
 {\ParagraphNameFont\color{ColorA}}}
 %%%%
-%%练习题面板标题%%
-\NewDocumentCommand{\ExerciseTitle}{ +m }{
+%%练习标题设置%%
+\NewDocumentCommand{\Practice}{ +m }{
 \begin{center}
 \begin{tikzpicture}%
-\ExerciseTitleFont%
-\def\@ExerciseTitle@Radius{\dimexpr\baselineskip/2\relax}%
-\pgfdeclarelayer{@Exercise@Bottom}%
-\pgfsetlayers{@Exercise@Bottom,main}%
-\node[draw=ColorB,fill=ColorB,ultra thick,rounded corners,text=white,outer sep=0mm,inner xsep=0.5em,inner ysep=0mm,align=center](E){%
+\PracticeTitleFont%
+\def\@PracticeTitle@Radius{\dimexpr\baselineskip/2\relax}%
+\pgfdeclarelayer{@Practice@Bottom}%
+\pgfsetlayers{@Practice@Bottom,main}%
+\node[draw=ColorB,fill=ColorB,thick,rounded corners,text=white,outer sep=0mm,inner xsep=0.5em,inner ysep=0mm,align=center](E){%
 \begin{varwidth}{\linewidth/2}
 \strut#1\strut
 \end{varwidth}};
-\begin{pgfonlayer}{@Exercise@Bottom}
-\draw[draw=ColorB!50,fill=ColorB!50,line width=12.0pt,rounded corners=\@ExerciseTitle@Radius]([xshift=-6.0mm]E.north west)rectangle([xshift=6.0mm]E.south east);
+\begin{pgfonlayer}{@Practice@Bottom}
+\draw[draw=ColorB!50,fill=ColorB!50,line width=8.0pt,rounded corners=\@PracticeTitle@Radius]([xshift=-\@PracticeTitle@Radius]E.north west)rectangle([xshift=\@PracticeTitle@Radius]E.south east);
 \end{pgfonlayer}
 \end{tikzpicture}
 \end{center}
 }
+%%习题标题设置%%
+\def\@Exercise@Title{课后习题}
+\def\@Thinking@Title{思考题}
+\def\@Improve@Title{复习与提高}
+%%%%
+\NewDocumentCommand{\Exercise}{s}{%
+\IfBooleanTF{#1}{%
+\subsection*{\@Exercise@Title}%
+}{%
+\subsection*{\@Exercise@Title%
+\if@mainmatter%
+~\sffamily\the@prenumber%
+\fi}%
+}}
+%%%%
+\NewDocumentCommand{\Thinking}{s}{%
+\IfBooleanTF{#1}{%
+\subsection*{\@Thinking@Title}%
+}{%
+\subsection*{\@Thinking@Title%
+\if@mainmatter%
+~\sffamily\the@prenumber%
+\fi}%
+}}
+%%%%
+\NewDocumentCommand{\Improve}{s}{%
+\IfBooleanTF{#1}{%
+\subsection*{\@Improve@Title}%
+}{%
+\subsection*{\@Improve@Title%
+\if@mainmatter%
+~\sffamily\thechapter%
+\fi}%
+}}
 \makeatother
 
 %%%%%%%%%%%%%%%%%% 目录样式 %%%%%%%%%%%%%%%%%%%%%%%%
@@ -2781,20 +2816,6 @@ shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,deco
 %%%%
 \newlength{\@Box@CriticTitleWidth}
 \setlength{\@Box@CriticTitleWidth}{2\linewidth/3}
-%%设置习题盒子样式%%
-\tcbset{Question/.style={
-enhanced standard,breakable,empty,
-top=0mm,bottom=3.0mm,
-right=0mm,left=0mm,boxsep=0mm,
-parbox=false,
-after=\par\medskip,
-fonttitle=\BoxTitleFont,coltitle=white,
-lowerbox=ignored,
-before upper={\hspace{2.0em}},
-code={\colorlet{ListColor}{ColorA}},
-subtitle style={empty,fontupper=\BoxSubtitleFont\centering,colupper=ColorA}
-}}
-
 %%设置注释盒子样式%%
 \tcbset{NoteBox/.style args={#1/#2}{
 enhanced standard,breakable,empty,
@@ -2959,7 +2980,7 @@ underlay boxed title={
 \DeclareDocumentEnvironment{Warning}{ +O{} +D<>{} }{\begin{box1}{易错点警示}[#1][#2][ColorF][\faExclamation]}{\end{box1}}
 \DeclareDocumentEnvironment{Discussion}{ +O{} +D<>{}}{\begin{box1}{思考与讨论}[#1][#2][ColorC][\faQuestion]}
 {\end{box1}}
-\DeclareDocumentEnvironment{Practice}{ +O{} +D<>{} }{\begin{box1}{随堂练习}[#1][#2][ColorI][\faCheck]}
+\DeclareDocumentEnvironment{Check}{ +O{} +D<>{} }{\begin{box1}{随堂练习}[#1][#2][ColorI][\faCheck]}
 {\end{box1}}
 
 %%设置演示盒子%%
@@ -3249,79 +3270,46 @@ minted options={breaklines,autogobble,linenos,numbersep=5.5mm},
 listing only,listing engine=minted,
 minted language=#2}
 
-
-\def\@Exercise@Title{课后习题}
-\def\@Thinking@Title{思考题}
-\def\@Improve@Title{复习与提高}
-%%%%
-\DeclareTColorBox{box9}{ O{} O{} }{Question,code={#2},#1}
-%%%%
-\newenvironment{Exercise}{\begin{box9}[][%
-\subsection*{\@Exercise@Title%
-\if@mainmatter%
-~\sffamily\the@prenumber%
-\fi}]}{\end{box9}}
-%%
-\newenvironment{Exercise*}{\begin{box9}[][\subsection*{\@Exercise@Title}]}{\end{box9}}
-%%%%
-\newenvironment{Thinking}{\begin{box9}[][%
-\subsection*{\@Thinking@Title%
-\if@mainmatter%
-~\sffamily\the@prenumber%
-\fi}]}{\end{box9}}
-%%
-\newenvironment{Thinking*}{\begin{box9}[][\subsection*{\@Thinking@Title}]}{\end{box9}}
-%%%%
-\newenvironment{Improve}{\begin{box9}[][%
-\subsection*{\@Improve@Title%
-\if@mainmatter%
-~\sffamily\thechapter%
-\fi}]}{\end{box9}}
-%%
-\newenvironment{Improve*}{\begin{box9}[][\subsection*{\@Improve@Title}]}{\end{box9}}
-
 %%%%
 %设置注释盒子%%
-\DeclareTColorBox{box10}{ O{} O{ColorA} O{\faCommentDots} +m }{NoteBox=#2/{#3~~#4},#1}
+\DeclareTColorBox{box9}{ O{} O{ColorA} O{\faCommentDots} +m }{NoteBox=#2/{#3~~#4},#1}
 
 %%%%
 %%+m表示允许换行、空行的参数%%
 \DeclareDocumentCommand{\RelaInfo}{ s +m }
 {\IfBooleanTF{#1}
 {\marginpar{\upshape%
-\begin{box10}[][ColorH][\faCommentDots]{相关信息}
+\begin{box9}[][ColorH][\faCommentDots]{相关信息}
 \setlength{\parindent}{2.0em}#2
-\end{box10}}
+\end{box9}}
 }{%
-\begin{box10}[][ColorH][\faCommentDots]{相关信息}
+\begin{box9}[][ColorH][\faCommentDots]{相关信息}
 #2
-\end{box10}}
+\end{box9}}
 }
-
-%%
+%%%%
 \DeclareDocumentCommand{\DeepThink}{ s +m }
 {\IfBooleanTF{#1}
 {\marginpar{\upshape%
-\begin{box10}[][ColorB!90!black][\faTh]{深入思考}
+\begin{box9}[][ColorB!90!black][\faTh]{深入思考}
 \setlength{\parindent}{2.0em}#2
-\end{box10}}
+\end{box9}}
 }{%
-\begin{box10}[][ColorB!90!black][\faTh]{深入思考}
+\begin{box9}[][ColorB!90!black][\faTh]{深入思考}
 #2
-\end{box10}}
+\end{box9}}
 }
-
-%%
+%%%%
 \DeclareDocumentCommand{\Remark}{ s +m }
 {\IfBooleanTF{#1}
 {\marginpar{\upshape%
-\begin{box10}[][ColorF][\faChrome]{重点注释}
+\begin{box9}[][ColorF][\faChrome]{重点注释}
 \setlength{\parindent}{2.0em}#2
-\end{box10}}
+\end{box9}}
 }{%
-\begin{box10}[][ColorF][\faChrome]{重点注释}
+\begin{box9}[][ColorF][\faChrome]{重点注释}
 #2
-\end{box10}}
+\end{box9}}
 }
 
 %%数学公式小盒子%%
