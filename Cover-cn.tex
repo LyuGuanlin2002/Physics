@@ -76,7 +76,7 @@ evaluate=\x as \opa using 1.2-0.2*\x] in {2,...,10}{
 \IfValueTF{#2}{
 \node[draw=white,fill=white,inner xsep=0mm,anchor=south east](BC)at([yshift=-0.5cm]current page text area.south east){\includegraphics[width=5.0cm]{#2}};}{\relax}
 %%说明文字%%
-\node[font=\ChapterSayingFont,backup node](BT)at(current page text area.north east){\hspace*{2.0em}#1};
+\node[align=flush left,font=\ChapterSayingFont,backup node](BT)at(current page text area.north east){\hspace*{2.0em}#1};
 %%书籍系列%%
 \node[font=\FontSizeSet{15pt}{18pt}\bfseries\rmfamily,backdown node](S)at([yshift=4.0cm]current page text area.west){\ifdefvoid{\@series}{}{\@series}};
 %%书籍系列%%

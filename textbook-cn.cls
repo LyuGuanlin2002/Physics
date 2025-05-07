@@ -252,7 +252,7 @@ BoldFont=FZCukai.ttf]
 \renewcommand{\columnseprulecolor}{\color{ColorA}}
 %%设置默认正文分栏环境%%
 \newenvironment{Paracol}[1][2]{\begin{paracol}{#1}}{\end{paracol}}
-%%页面布局设置%%
+%%页面布局设置%%letterpaper
 \newlength{\@innerlen}
 \newlength{\@outerlen}
 \newlength{\@toplen}
@@ -269,7 +269,7 @@ BoldFont=FZCukai.ttf]
 \setlength{\@marginparseplen}{-\@marginparwidthlen+0.75em}
 \setlength{\@handseplen}{0.875cm}
 \setlength{\@footskiplen}{0.95cm}
-\RequirePackage[letterpaper,
+\RequirePackage[a4paper,
 inner=\@innerlen,outer=\@outerlen,top=\@toplen,bottom=\@botlen,
 headsep=\@handseplen,footskip=\@footskiplen,
 marginparsep=\@marginparseplen,marginparwidth=\@marginparwidthlen,reversemarginpar]{geometry}
@@ -1775,30 +1775,30 @@ shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,deco
 %%%%
 \NewDocumentCommand{\@SubsectionStarStyle}{ +m +m }{%
 \begingroup%
-\raggedright%
+\raggedright%[trim left=0mm,trim right=\linewidth,clip]
 \tikz{%
 \node[inner sep=0mm,outer sep=0mm]{%
 \hspace*{-\@BigLabelCircle@LineWidth/2+\@SmallLabelCircle@LineWidth/2}%
-\begin{tikzpicture}
-\SubsectionFont
+\begin{tikzpicture}%
+\SubsectionFont%
 \def\@Subsection@Star@Radius{\dimexpr\baselineskip/2\relax}%0.9
-\pgfdeclarelayer{@Subsection@Star@Bottom}
-\pgfsetlayers{@Subsection@Star@Bottom,main}
+\pgfdeclarelayer{@Subsection@Star@Bottom}%
+\pgfsetlayers{@Subsection@Star@Bottom,main}%
 \node[text=white,inner xsep=\@Subsection@Star@Radius,inner ysep=0mm,outer sep=0mm](L){%
 \hspace*{\@Subsection@Star@LabelHSkip+2.0pt}%
 \begin{varwidth}{\@Subsection@Star@LabelCriticWidth}
 %\AdjustStrut{0.9}%
 \strut#1\strut
-\end{varwidth}};
-\pgfgetnodewidth(L)\@Subsection@Star@LabelWidth
-\pgfgetnodeheight(L)\@Subsection@Star@LabelHeight
+\end{varwidth}};%
+\pgfgetnodewidth(L)\@Subsection@Star@LabelWidth%
+\pgfgetnodeheight(L)\@Subsection@Star@LabelHeight%
 %%
 \node[text=ColorA,inner xsep=\@Subsection@Star@Radius,inner ysep=0mm,outer sep=0mm,minimum width=\linewidth-\@Subsection@Star@LabelWidth,anchor=north west](N)at(L.north east){%
 \begin{minipage}{\linewidth-\@Subsection@Star@LabelWidth-2\@Subsection@Star@Radius}
 %\AdjustStrut{0.9}%
 \strut#2\strut
 \end{minipage}};
-\pgfgetnodeheight(N)\@Subsection@Star@NameHeight
+\pgfgetnodeheight(N)\@Subsection@Star@NameHeight%
 %%
 \begin{pgfonlayer}{@Subsection@Star@Bottom}
 \ifdim\@Subsection@Star@NameHeight>\@Subsection@Star@LabelHeight
@@ -1815,8 +1815,7 @@ shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,deco
 \draw[ColorA,line width=\@SmallLabelCircle@LineWidth,fill=white]([xshift=\@Subsection@Star@Radius+\@SmallLabelCircle@LineWidth/2,yshift=-\@Subsection@Star@Radius]L.north west)circle(\@Subsection@Star@Radius);
 \draw[ColorA,fill=ColorA]([xshift=\@Subsection@Star@Radius+\@SmallLabelCircle@LineWidth/2,yshift=-\@Subsection@Star@Radius]L.north west)circle(\@Subsection@Star@Radius/2);
 \end{pgfonlayer}
-\end{tikzpicture}};}
-\vspace*{-5.0mm}%
+\end{tikzpicture}};}%
 \endgroup}
 
 %%%%
@@ -1900,7 +1899,6 @@ shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,deco
 ~\sffamily\the@prenumber%
 \fi}%
 }%
-\vspace{-8.0pt}%
 }
 %%%%
 \NewDocumentCommand{\Thinking}{s}{%
@@ -1912,7 +1910,6 @@ shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,deco
 ~\sffamily\the@prenumber%
 \fi}%
 }%
-\vspace{-8.0pt}%
 }
 %%%%
 \NewDocumentCommand{\Improve}{s}{%
@@ -1924,7 +1921,6 @@ shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,deco
 ~\sffamily\thechapter%
 \fi}%
 }%
-\vspace{-8.0pt}%
 }
 \makeatother
 
@@ -3269,34 +3265,30 @@ underlay boxed title={
 \renewcommand{\theFancyVerbLine}{\LineNumFont\color{ColorA}{\arabic{FancyVerbLine}}}
 %%%%
 \newtcblisting{PythonBox}[1][]{
-CodeBox={代码示例}/#1/{}/ColorA/{\uppercase{python}},
+CodeBox={代码示例}/#1/{}/ColorA/{\uppercase{\sffamily python}},
 before upper={},before lower={},
-comment and listing,
-minted options={breaklines,autogobble,linenos,numbersep=5.5mm},
+minted options={breaklines,autogobble,linenos,numbersep=8.5mm},
 listing only,listing engine=minted,
 minted language=python}
 
 \newtcblisting{CppBox}[1][]{
-CodeBox={代码示例}/#1/{}/ColorB/{\uppercase{cpp}},
+CodeBox={代码示例}/#1/{}/ColorB/{\uppercase{\sffamily cpp}},
 before upper={},before lower={},
-comment and listing,
-minted options={breaklines,autogobble,linenos,numbersep=5.5mm},
+minted options={breaklines,autogobble,linenos,numbersep=8.5mm},
 listing only,listing engine=minted,
 minted language=cpp}
 
 \newtcblisting{JavaBox}[1][]{
-CodeBox={代码示例}/#1/{}/ColorC/{\uppercase{java}},
+CodeBox={代码示例}/#1/{}/ColorC/{\uppercase{\sffamily java}},
 before upper={},before lower={},
-comment and listing,
-minted options={breaklines,autogobble,linenos,numbersep=5.5mm},
+minted options={breaklines,autogobble,linenos,numbersep=8.5mm},
 listing only,listing engine=minted,
 minted language=java}
 
 \newtcblisting{CodeBox}[3][]{
-CodeBox={代码示例}/#1/{}/#3/{\uppercase{#2}},
+CodeBox={代码示例}/#1/{}/#3/{\uppercase{\sffamily#2}},
 before upper={},before lower={},
-comment and listing,
-minted options={breaklines,autogobble,linenos,numbersep=5.5mm},
+minted options={breaklines,autogobble,linenos,numbersep=8.5mm},
 listing only,listing engine=minted,
 minted language=#2}
 
