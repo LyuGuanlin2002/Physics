@@ -2831,7 +2831,6 @@ shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,deco
 enhanced standard,breakable,empty,
 boxsep=3.0mm,
 top=-3.0mm,bottom=-3.0mm,right=-3.0mm,left=-3.0mm,
-parbox=false,
 before=\par\medskip,after=\par\medskip,
 fontupper=\MarginNoteFont,colupper=#1,
 fonttitle=\BoxTitleFont,coltitle=#1,
@@ -2839,11 +2838,12 @@ varwidth boxed title=\@Box@CriticTitleWidth,
 title={\strut#2\strut},
 boxed title style={empty,left=0mm,bottom=1.5mm,boxsep=0mm},
 attach boxed title to top left,
-before upper={\hspace{2.0em}},
-after upper={\vspace{2.0mm}},
-before lower={\vspace{2.0mm}\hspace{2.0em}},
-subtitle style={empty,fontupper=\BoxSubtitleFont\centering,colupper=#1},
-segmentation style={cap=round,ultra thick,draw=#1!25,solid}
+before upper={\setlength{\parindent}{2.0em}},
+before lower={\setlength{\parindent}{2.0em}},
+subtitle style={empty,fontupper=\BoxSubtitleFont\centering,colupper=#1,top=-3.0mm,bottom=-3.0mm},
+segmentation engine=path,
+segmentation style={cap=round,line width=2.25pt,draw=#2!25,loosely dashed},
+segmentation at break=false
 }}
 %%%%
 \newlength{\@ItemBox@BigCircle@LineWidth}
@@ -2856,9 +2856,8 @@ enhanced standard,breakable,empty,
 boxsep=3.0mm,
 top=2.0mm,bottom=-3.0mm,left=-3.0mm,right=-3.0mm,
 varwidth boxed title=\@Box@CriticTitleWidth,
-parbox=false,
-before upper={\hspace{2.0em}},
-before lower={\vspace{2.0mm}\hspace{2.0em}},
+before upper={\setlength{\parindent}{2.0em}},
+before lower={\setlength{\parindent}{2.0em}},
 before=\par\medskip,after=\par\medskip,
 fontupper=\ItemFont,fontlower=\ItemFont,
 fonttitle=\BoxTitleFont,coltitle=white,
@@ -2869,8 +2868,10 @@ title={%
 },
 attach boxed title to top left={xshift=\@ItemBox@SmallCircle@LineWidth/2,yshift*=-\tcboxedtitleheight},
 boxed title style={size=minimal,empty,valign=center,left=2.5em,right=1.0em},
-subtitle style={empty,fontupper=\BoxSubtitleFont,colupper=#2},
-segmentation style={cap=round,ultra thick,draw=#2!25,solid},
+subtitle style={empty,fontupper=\BoxSubtitleFont,colupper=#2,top=-3.0mm,bottom=-3.0mm},
+segmentation engine=path,
+segmentation style={cap=round,line width=2.25pt,draw=#2!25,loosely dashed},
+segmentation at break=false,
 %%%%
 underlay boxed title={
 \BoxTitleFont
@@ -2887,13 +2888,13 @@ underlay boxed title={
 %%设置彩色盒子样式%%
 \tcbset{ColorfulBox/.style args={#1/#2/#3/#4}{
 enhanced standard,breakable,
-pad before break=4.0mm,pad after break=4.5mm,
+pad after break=5.0mm,
 grow to left by=-2.0pt,
 rounded corners,arc=5.0pt,boxrule=2.25pt,
 colback=white,colframe=white,
 frame style={left color=#4!50,right color=#4!50,middle color=#4},
 boxsep=3.0mm,
-top=2.5mm,bottom=0.5mm,left=2.0mm,right=2.0mm,
+top=1.5mm,bottom=1.5mm,left=2.0mm,right=2.0mm,
 varwidth boxed title=\@Box@CriticTitleWidth,
 before=\par\bigskip,after=\par\bigskip,
 fonttitle=\BoxTitleFont,coltitle=white,
@@ -2901,38 +2902,40 @@ title={\strut#1\strut},
 IfBlankTF={#2}{}{after title={\strut~:~~#2\strut}},
 attach boxed title to top left={yshift*=-\tcboxedtitleheight+1.5mm},
 boxed title style={size=minimal,empty,valign=center,left=2.5em,right=1.0em},
-parbox=false,
-IfBlankTF={#3}{before upper={\hspace{2.0em}}
-}{before upper={\noindent{\BoxTitleFont\color{#4}#3}\hspace{1.0em}}
+IfBlankTF={#3}{before upper={\setlength{\parindent}{2.0em}}
+}{before upper={\setlength{\parindent}{2.0em}%
+\noindent{\BoxTitleFont\color{#4}#3}\hspace{1.0em}}
 },
-before lower={\hspace{2.0em}},
-subtitle style={empty,fontupper=\BoxSubtitleFont,colupper=#4},
-segmentation style={cap=round,ultra thick,draw=#4!25,solid,shorten <= 5.0mm,shorten >= 5.0mm}
+before lower={\setlength{\parindent}{2.0em}},
+subtitle style={empty,fontupper=\BoxSubtitleFont,colupper=#4,top=-3.0mm,bottom=-3.0mm},
+segmentation style={cap=round,line width=2.25pt,draw=#4!25,solid,shorten <= 5.0mm,shorten >= 5.0mm},
+segmentation at break=false
 }}
 %%%%
 \tcbset{CodeBox/.style args={#1/#2/#3/#4/#5}{
 enhanced standard,breakable,
 code={\colorlet{ListColor}{#4}},
-pad before break=4.0mm,pad after break=4.5mm,
+pad after break=5.0mm,
 rounded corners,arc=5.0pt,boxrule=2.25pt,
 colback=white,colframe=white,
 frame style={left color=#4!50,right color=#4!50,middle color=#4},
 boxsep=3.0mm,
-top=2.5mm,bottom=0.5mm,left=2.0em+1.0mm,right=2.0mm,
+top=1.5mm,bottom=1.5mm,left=2.0em+0.5mm,right=2.0mm,
 before=\par\bigskip,after=\par\bigskip,
-parbox=false,
 IfEmptyTF={#3}{
-before upper={\hspace{2.0em}}
-}{before upper={{\BoxTitleFont\color{#4}#3}\hspace{1.0em}}},
-before lower={\hspace{2.0em}},
+before upper={\setlength{\parindent}{2.0em}}
+}{before upper={\setlength{\parindent}{2.0em}%
+\noindent{\BoxTitleFont\color{#4}#3}\hspace{1.0em}}},
+before lower={\setlength{\parindent}{2.0em}},
 fonttitle=\BoxTitleFont,coltitle=white,
 varwidth boxed title=\@Box@CriticTitleWidth,
 title={\strut#1\strut},
 IfBlankTF={#2}{}{after title={\strut~:~~#2\strut}},
 boxed title style={size=minimal,empty,left=1.2em,right=1.2em,top=0.25em,bottom=0.05em},
 attach boxed title to top left={yshift*=-\tcboxedtitleheight},
-subtitle style={empty,fontupper=\BoxSubtitleFont,colupper=#4},
-segmentation style={cap=round,ultra thick,draw=#4!25,solid,shorten <= 2.0em+4.0mm,shorten >= 5.0mm},
+subtitle style={empty,fontupper=\BoxSubtitleFont,colupper=#4,top=-3.0mm,bottom=-3.0mm},
+segmentation style={cap=round,line width=2.25pt,draw=#4!25,solid,shorten <= 2.0em+3.5mm,shorten >= 5.0mm},
+segmentation at break=false,
 %%%%
 underlay boxed title={
 \BoxTitleFont
@@ -2954,19 +2957,19 @@ overlay middle and last={
 %%%%
 \tcbset{BlockBox/.style args={#1}{
 enhanced standard,breakable,
-pad before break=4.0mm,pad after break=5.0mm,
+pad after break=5.0mm,
 boxsep=3.0mm,
-top=2.5mm,bottom=1.5mm,left=2.0mm,right=2.0mm,
-toptitle=1.0mm,bottomtitle=-4.5mm,
+top=1.5mm,bottom=1.5mm,left=2.0mm,right=2.0mm,
+bottomtitle=-4.5mm,
 colframe=ColorB!7.5,colback=ColorB!7.5,colbacktitle=ColorB!7.5,rounded corners,arc=7.5pt,
 before=\par\medskip,after=\par\medskip,
-parbox=false,
-before upper={\hspace{2.0em}},
-before lower={\hspace{2.0em}},
+before upper={\setlength{\parindent}{2.0em}},
+before lower={\setlength{\parindent}{2.0em}},
 fonttitle=\BoxTitleFont,coltitle=ColorA,
-subtitle style={empty,fontupper=\BoxSubtitleFont,colupper=ColorA},
-segmentation style={cap=round,ultra thick,draw=ColorA!25,solid,shorten <= 5.0mm,shorten >= 5.0mm},
-title={#1}
+subtitle style={empty,fontupper=\BoxSubtitleFont,colupper=ColorA,top=-3.0mm,bottom=-3.0mm},
+segmentation style={cap=round,line width=2.25pt,draw=ColorA!25,solid,shorten <= 5.0mm,shorten >= 5.0mm},
+segmentation at break=false,
+IfBlankTF={#1}{}{title={\strut#1\strut}}
 }}
 
 %%设置节前盒子%%
