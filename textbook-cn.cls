@@ -2967,7 +2967,7 @@ before upper={\setlength{\parindent}{2.0em}},
 before lower={\setlength{\parindent}{2.0em}},
 fonttitle=\BoxTitleFont,coltitle=ColorA,
 subtitle style={empty,fontupper=\BoxSubtitleFont,colupper=ColorA,top=-3.0mm,bottom=-3.0mm},
-segmentation style={cap=round,line width=2.25pt,draw=ColorA!25,solid,shorten <= 5.0mm,shorten >= 5.0mm},
+segmentation style={cap=round,line width=2.25pt,draw=ColorA!25,solid,shorten <= 5.0mm,shorten >= 5.0mm,loosely dashed},
 segmentation at break=false,
 IfBlankTF={#1}{}{title={\strut#1\strut}}
 }}
