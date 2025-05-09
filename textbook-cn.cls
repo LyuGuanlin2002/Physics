@@ -252,7 +252,7 @@ BoldFont=FZCukai.ttf]
 \renewcommand{\columnseprulecolor}{\color{ColorA}}
 %%设置默认正文分栏环境%%
 \newenvironment{Paracol}[1][2]{\begin{paracol}{#1}}{\end{paracol}}
-%%页面布局设置%%letterpaper
+%%页面布局设置%%a4paper
 \newlength{\@innerlen}
 \newlength{\@outerlen}
 \newlength{\@toplen}
@@ -269,7 +269,7 @@ BoldFont=FZCukai.ttf]
 \setlength{\@marginparseplen}{-\@marginparwidthlen+0.75em}
 \setlength{\@handseplen}{0.875cm}
 \setlength{\@footskiplen}{0.95cm}
-\RequirePackage[a4paper,
+\RequirePackage[letterpaper,
 inner=\@innerlen,outer=\@outerlen,top=\@toplen,bottom=\@botlen,
 headsep=\@handseplen,footskip=\@footskiplen,
 marginparsep=\@marginparseplen,marginparwidth=\@marginparwidthlen,reversemarginpar]{geometry}
@@ -1775,7 +1775,7 @@ shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,deco
 %%%%
 \NewDocumentCommand{\@SubsectionStarStyle}{ +m +m }{%
 \begingroup%
-\raggedright%[trim left=0mm,trim right=\linewidth,clip]
+\raggedright%
 \tikz{%
 \node[inner sep=0mm,outer sep=0mm]{%
 \hspace*{-\@BigLabelCircle@LineWidth/2+\@SmallLabelCircle@LineWidth/2}%
@@ -3345,7 +3345,8 @@ rounded corners,arc=5.0pt,colupper=ColorA,#1}
 %%重定义标题页%%
 \renewcommand{\maketitle}{%
 \begin{titlepage}%
-\begin{tikzpicture}[remember picture,overlay]
+\setlength{\parindent}{0em}
+\begin{tikzpicture}[remember picture,overlay]%
 \coordinate(A)at(current page.north west);
 \coordinate(B)at(current page.north east);
 \coordinate(C)at(current page.south east);
@@ -3357,39 +3358,44 @@ rounded corners,arc=5.0pt,colupper=ColorA,#1}
 %%背景%%
 \draw[ColorB!5,fill=ColorB!5,sharp corners](D)rectangle(B);
 \draw[ColorA!25,fill=ColorA!25](A)--(B)--(C)--(D)--(H)[rounded corners=5.0mm]--(G)[rounded corners=5.0mm]--(F)[sharp corners]--(E)--cycle;
-\end{tikzpicture}
-\vspace*{-1.0cm}
-\begin{center}%
+\end{tikzpicture}%
 \centering\color{ColorA}\bfseries%
 %%书籍系列%%
 \ifdefvoid{\@series}{}{%
-{\FontSizeSet{15pt}{18pt}\rmfamily\@series\par}}%
-\vskip1.75cm%
+{\FontSizeSet{15pt}{18pt}\rmfamily\@series\\}}%
+\vskip1.0cm%
 %%标题%%
-{\FontSizeSet{55pt}{66pt}\rmfamily\@title\par}%
+{\FontSizeSet{55pt}{66pt}\rmfamily\@title\\}%
 %%英文标题%%
 \ifdefvoid{\@englishtitle}{}{%
-\vskip0.75cm%
-{\FontSizeSet{20pt}{24pt}\sffamily\@englishtitle\par}}
+\vskip0.5cm%
+{\FontSizeSet{20pt}{24pt}\sffamily\@englishtitle\\}}
 %%副标题%%
 \ifdefvoid{\@subtitle}{}{%
-\vskip1.0cm%
-{\FontSizeSet{30pt}{36pt}\rmfamily\@subtitle\par}}%
+\vskip0.75cm%
+{\FontSizeSet{30pt}{36pt}\rmfamily\@subtitle\\}}%
 %%英文副标题%%
 \ifdefvoid{\@englishsubtitle}{}{%
 \vskip0.25cm%
-{\FontSizeSet{17.5pt}{21pt}\sffamily\@englishsubtitle\par}}%
+{\FontSizeSet{17.5pt}{21pt}\sffamily\@englishsubtitle\\}}%
 %%版本号%%
 \ifdefvoid{\@version}{}{%
 \vskip0.75cm%
-{\FontSizeSet{15pt}{18pt}\rmfamily 第{\@version}版\par}}%
-\vskip0.5cm%
+{\FontSizeSet{15pt}{18pt}\rmfamily 第{\@version}版\\}}%
+\vskip1.0cm%
 %%作者%%
-{\FontSizeSet{15pt}{18pt}\rmfamily 主编\quad\@author\par}%
+{\FontSizeSet{15pt}{18pt}\rmfamily%
+\begin{varwidth}{\linewidth-4.0cm}
+\@author
+\end{varwidth}%
+\qquad%
+\begin{varwidth}{2.0cm}
+编著
+\end{varwidth}%
+\\}%
 \vfill%
 %%出版社%%
-{\FontSizeSet{15pt}{18pt}\rmfamily\ifdefvoid{\@presslogo}{}{\raisebox{-0.2cm}{\mbox{\includegraphics[width=0.75cm]{\@presslogo}}}}\hskip0.25cm\@pressname\par}%
-\end{center}
+{\FontSizeSet{15pt}{18pt}\rmfamily\ifdefvoid{\@presslogo}{}{\raisebox{-0.2cm}{\mbox{\includegraphics[width=0.75cm]{\@presslogo}}}}\hskip0.25cm\@pressname\\}%
 \end{titlepage}}
 \makeatother
 
