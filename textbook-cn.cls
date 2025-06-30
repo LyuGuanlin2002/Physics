@@ -1875,12 +1875,12 @@ shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,deco
 \def\@PracticeTitle@Radius{\dimexpr\baselineskip/2\relax}%
 \pgfdeclarelayer{@Practice@Bottom}%
 \pgfsetlayers{@Practice@Bottom,main}%
-\node[draw=ColorB,fill=ColorB,thick,rounded corners,text=white,outer sep=0mm,inner xsep=0.5em,inner ysep=0mm,align=center](E){%
+\node[draw=ColorB,fill=ColorB,rounded corners,text=white,outer sep=0mm,inner xsep=0.5em,inner ysep=0mm,align=center](E){%
 \begin{varwidth}{\linewidth/2}
 \strut#1\strut
 \end{varwidth}};
 \begin{pgfonlayer}{@Practice@Bottom}
-\draw[draw=ColorB!50,fill=ColorB!50,line width=8.0pt,rounded corners=\@PracticeTitle@Radius]([xshift=-\@PracticeTitle@Radius]E.north west)rectangle([xshift=\@PracticeTitle@Radius]E.south east);
+\draw[draw=ColorB!50,fill=ColorB!50,line width=6.0pt,rounded corners=\@PracticeTitle@Radius]([xshift=-\@PracticeTitle@Radius]E.north west)rectangle([xshift=\@PracticeTitle@Radius]E.south east);
 \end{pgfonlayer}
 \end{tikzpicture}
 \end{center}
