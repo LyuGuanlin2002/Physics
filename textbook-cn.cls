@@ -828,6 +828,43 @@ shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,deco
 \draw(\i*1.25em,0)node[name=circle\i,circle,inner sep=0mm,minimum size=0.35cm,draw=#3,very thick,fill=\circlecolor]{};}
 \end{tikzpicture}}
 
+%%设置答题卡%%
+\NewDocumentCommand{\AnswerSheet}{+O{选择题答题区域} m m O{\linewidth} O{0.7cm}}{
+\begin{flushleft}
+\UnnumberedLabel~{\color{ColorA}\bfseries#1}\\
+\vspace*{0.5em}
+\begin{tikzpicture}[yscale=-1]
+% 计算总高度
+\pgfmathsetlengthmacro{\totalheight}{#2*#5}
+% 绘制表格外框
+\draw[ColorA,fill=ColorB!5,very thick,rounded corners](0,0)rectangle(#4,\totalheight);
+% 绘制水平线
+\ifnum#2=1
+\relax
+\else
+\foreach \row in {2,...,#2}{
+\draw[ColorA,very thick](0,\row*#5-#5)--(#4,\row*#5-#5);
+}
+\fi
+% 绘制垂直线
+\ifnum#3=1
+\relax
+\else
+\foreach \col in {2,...,#3}{
+\draw[ColorA,very thick](\col*#4/#3-#4/#3,0)--(\col*#4/#3-#4/#3,\totalheight);
+}
+\fi
+% 添加题号
+\foreach \row in {1,...,\numexpr#2\relax}{
+\foreach \col in {1,...,\numexpr#3\relax}{
+\FPeval\Num{round((\row+1)/2*\col:0)}
+\ifthenelse{\isodd{\row}}{
+\node[text=ColorA,font=\bfseries]at({(\col-0.5)*#4/#3},{(\row-0.5)*#5}){\Num};
+}{\relax}
+}}
+\end{tikzpicture}
+\end{flushleft}
+}
 %%%%%%%%%%%%%%%%%% 页面样式 %%%%%%%%%%%%%%%%%%%%%%%%
 %%定义部分总数（序言、前言视作一个部分，目录、插图目录、表格目录视作一个部分，绪论、有编号部分、无编号部分以及后记）,编译两次可以得到正确的页面框架%%
 %%页眉和侧标的默认值%%
@@ -1683,7 +1720,7 @@ shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,deco
 \setlength{\@Section@Star@LabelNameXSep}{5.0mm}
 %%编号节样式%%
 \titleformat{\section}[hang]{%
-\vspace*{1.0cm}%
+\vspace*{0.5cm}%
 \SectionFont%
 \def\@Section@LabelRadius{\dimexpr\baselineskip/2\relax}}{%
 \sectionlabelfront\hspace{\@Section@LabelXSep}%
@@ -1693,7 +1730,7 @@ shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,deco
 \hspace{\@Section@LabelXSep}\sectionlabelback}{\@Section@LabelNameXSep}{#1}
 %%不编号节样式%%
 \titleformat{name=\section,numberless}[hang]{%
-\vspace*{1.0cm}%
+\vspace*{0.5cm}%
 \SectionFont\color{ColorA}%
 \def\@Section@Star@LabelRadius{\dimexpr\baselineskip/2\relax}}{%
 \tikz[baseline=-0.4em]{%
@@ -2305,7 +2342,7 @@ shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,deco
 %%%%
 %修改有编号节样式
 \titleformat{\section}[hang]{%
-\vspace*{1.0cm}%
+\vspace*{0.5cm}%
 \SectionFont\color{ColorA}%
 \def\@Section@Star@LabelRadius{\baselineskip/2}}{%
 \tikz[baseline=-0.4em]{%
@@ -2406,7 +2443,7 @@ shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,deco
 %%%%
 %修改有编号节样式
 \titleformat{\section}[hang]{%
-\vspace*{1.0cm}%
+\vspace*{0.5cm}%
 \SectionFont\color{ColorA}%
 \def\@Section@Star@LabelRadius{\baselineskip/2}}{%
 \tikz[baseline=-0.4em]{%
