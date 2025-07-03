@@ -21,7 +21,7 @@
 \DeclareBoolOption[false]{splitbib}
 %%加载book作为基础文档类%%
 \DeclareDefaultOption{\PassOptionsToClass{\CurrentOption}{book}}
-\ProcessKeyvalOptions*%\relax
+\ProcessKeyvalOptions*%\relax,openany
 \LoadClass[12pt]{book}
 
 %%%%%%%%%%%%%%%%%%%% 文本内容风格宏包 %%%%%%%%%%%%%%%%%%%%
@@ -753,8 +753,6 @@ shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,deco
 \makeatletter
 \newcounter{@Thumb@Number}%记录侧标数
 \regtotcounter{@Thumb@Number}%获取侧标数最大值，需要编译两次才能正确获取
-\newcounter{@Total@PartNumber}%记录所有部分的总数
-\regtotcounter{@Total@PartNumber}
 \newcounter{@egnum}[section]
 \newcounter{@varnum}[section]
 \newcounter{@def}[section]
@@ -867,8 +865,8 @@ shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,deco
 }
 %%%%%%%%%%%%%%%%%% 页面样式 %%%%%%%%%%%%%%%%%%%%%%%%
 %%定义部分总数（序言、前言视作一个部分，目录、插图目录、表格目录视作一个部分，绪论、有编号部分、无编号部分以及后记）,编译两次可以得到正确的页面框架%%
-%%页眉和侧标的默认值%%
 \makeatletter
+%%页眉和侧标的默认值%%
 \newcommand{\DefaultMark}{
 \markboth{\protect\@subtitle}{\protect\@subtitle}
 \extramarks{\protect\@title}{\protect\@title}}
@@ -883,9 +881,9 @@ shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,deco
 \ifthenelse{\totvalue{@Thumb@Number}=0\or\totvalue{@Thumb@Number}=1}
 {\setlength{\SepH}{0cm}
 \setlength{\MarkY}{-\paperheight/2}}
-{\setlength{\SepH}{\dimexpr(\paperheight-2\DeltaH)/\totvalue{@Thumb@Number}}%设置侧标每次移动的距离
+{\setlength{\SepH}{\dimexpr(\paperheight-2\DeltaH)/(\totvalue{@Thumb@Number}-1)\relax}%设置侧标每次移动的距离
 \setlength{\MarkY}{-\DeltaH}}%设置侧标上下两侧锚点坐标的初值
-\pagestyle{MainPage}
+\pagestyle{empty}
 \DefaultMark
 \makeatother}
 
@@ -972,11 +970,26 @@ shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,deco
 %%
 %%定义主页面样式%%
 \fancypagestyle{MainPage}{
-\fancyhead{}
-\fancyfoot{}
+\fancyhf{}
 \fancyfoot[C]{\@Main@PageStyle}
 \fancyhead[RO]{\HeaderFont\color{ColorA}\rightmark}
 \fancyhead[LE]{\HeaderFont\color{ColorA}\leftmark}}
+
+%%绘制空白页面样式%%
+\newcommand{\@Empty@PageStyle}{%
+\AddToShipoutPictureBG*{%
+\AtPageLowerLeft{%
+\begin{tikzpicture}[remember picture]
+\draw[ColorB!7.5!ColorA!7.5,fill=ColorB!7.5!ColorA!7.5](0,0)rectangle(\paperwidth,\paperheight);
+\end{tikzpicture}}}
+}
+%%
+%%重定义空白页面样式%%
+\fancypagestyle{empty}{%
+\fancyhf{}%清除所有页眉页脚
+\fancyfoot[C]{\@Empty@PageStyle}
+}
+
 \makeatother
 
 %%%%%%%%%%%%%%%%%%%% 书籍层次样式 %%%%%%%%%%%%%%%%%%%%%%
@@ -1367,12 +1380,17 @@ shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,deco
 }
 %%
 %%编号部分页%%
+%%主次颜色交换%%
+\newcommand{\@ExchangeColor}{
+\colorlet{ColorTemp}{ColorA}
+\colorlet{ColorA}{ColorB}
+\colorlet{ColorB}{ColorTemp}
+}
+%%%%
 \titleformat{\part}
 {}{}{0em}
-{\stepcounter{@Total@PartNumber}%部分数计数
-\stepcounter{@Thumb@Number}%侧标数计数
-\gaddtolength{\MarkY}{-\SepH}%更新侧标位置
-\startcontents[part]%开启小目录
+{\startcontents[part]%开启小目录
+\@ExchangeColor%
 \@PartStyle{\partlabelfront~{\sffamily\thepart}~\partlabelback}{#1}%部分样式
 \thispagestyle{empty}}
 [\global\partintro{}%清空\partintro
@@ -1380,10 +1398,8 @@ shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,deco
 %%不编号部分页%%
 \titleformat{name=\part,numberless}
 {}{}{0em}
-{\stepcounter{@Total@PartNumber}%部分数计数
-\stepcounter{@Thumb@Number}%侧标数计数
-\gaddtolength{\MarkY}{-\SepH}%更新侧标位置
-\startcontents[part]%开启小目录
+{\startcontents[part]%开启小目录
+\@ExchangeColor%
 \@PartStarStyle{#1}%部分样式
 \thispagestyle{empty}}
 [\global\partintro{}%清空\partintro
@@ -1395,16 +1411,16 @@ shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,deco
 \NewCommandCopy{\OriginPart}{\part}
 \RenewDocumentCommand{\part}{s +O{#3} +m}{
 \IfBooleanTF{#1}
-{\OriginPart*{#3\@mkboth{#2}{#2}}
-\extramarks{#2}{#2}}
+{\OriginPart*{#3\@mkboth{#2}{#2}}}
 {\if@mainmatter
 \OriginPart[#2]{#3\@mkboth{\partlabelfront~{\sffamily\thepart}~\partlabelback\quad#2}{\partlabelfront~{\sffamily\thepart}~\partlabelback\quad#2}}
-\extramarks{\partlabelfront~{\sffamily\thepart}~\partlabelback\quad#2}{\partlabelfront~{\sffamily\thepart}~\partlabelback\quad#2}
 \else
 \phantomsection
 \OriginPart*{#3\@mkboth{#2}{#2}\addcontentsline{toc}{part}{#2}}
-\extramarks{#2}{#2}
-\fi}}
+\fi}
+\@ExchangeColor%
+}
+
 %%部分结束命令%%
 \newcommand{\PartEnd}{\stopcontents[part]}
 
@@ -1665,17 +1681,20 @@ shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,deco
 \fi
 \end{tikzpicture}
 }
-%%制定章节页的侧标更新规则%%
-\newcommand{\@Thumb@Step@Rule}{
-\ifnum\totvalue{@Total@PartNumber}=0%若文档中到当前章时还没有部分层次
-\if@mainmatter%如果在mainmatter中
+
+%%侧标更新规则%%
+\newcommand{\@Thumb@Update@Rule}{
 \stepcounter{@Thumb@Number}%侧标数计数
+\ifnum\value{@Thumb@Number}=1%
+\relax%
+\else%
 \gaddtolength{\MarkY}{-\SepH}%更新侧标位置
-\fi\fi}
+\fi%
+}
 %%编号章节页%%
 \titleformat{\chapter}
 {}{}{0em}
-{\@Thumb@Step@Rule
+{\@Thumb@Update@Rule%
 \@ChapterStyle{\chapterlabelfront~{\sffamily\thechapter}~\chapterlabelback}{#1}%章样式
 \enlargethispage{-0.75cm}%修改页面大小
 \thispagestyle{empty}}
@@ -1684,7 +1703,7 @@ shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,deco
 %%不编号章节页%%
 \titleformat{name=\chapter,numberless}
 {}{}{0em}
-{\@Thumb@Step@Rule
+{\@Thumb@Update@Rule%
 \@ChapterStarStyle{#1}{\@chaptersubtitle}%章样式
 \thispagestyle{empty}}
 [\global\chaptersubtitle{}%清空\chaptersubtitle
@@ -1695,17 +1714,10 @@ shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,deco
 \NewCommandCopy{\OriginChapter}{\chapter}
 \RenewDocumentCommand{\chapter}{s +O{#3} +m}{
 \IfBooleanTF{#1}
-{\OriginChapter*{#3\@mkboth{#2}{#2}}
-\ifnum\totvalue{@Total@PartNumber}=0%若文档中到当前章时还没有部分层次
-\if@mainmatter%如果在mainmatter中
-\extramarks{#2}{#2}
-\fi\fi}
-{\OriginChapter[#2]{#3}
-\ifnum\totvalue{@Total@PartNumber}=0%若文档中到当前章时还没有部分层次
-\if@mainmatter%如果在mainmatter中
-\extramarks{\chapterlabelfront~{\sffamily\thechapter}~\chapterlabelback\quad#2}{\chapterlabelfront~{\sffamily\thechapter}~\chapterlabelback\quad#2}
-\fi\fi}
-\vspace*{\@Chapter@VSpace}}
+{\OriginChapter*{#3\@mkboth{#2}{#2}}}
+{\OriginChapter[#2]{#3}}
+\vspace*{\@Chapter@VSpace}
+}
 
 %%节样式%%
 %%编号节样式%%
@@ -2333,7 +2345,7 @@ shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,deco
 %修改有编号章样式
 \titleformat{\chapter}
 {}{}{0em}
-{\@Thumb@Step@Rule
+{\@Thumb@Update@Rule%
 \@ChapterStarStyle{\chapterlabelfront~{\sffamily\thechapter}~\chapterlabelback}{##1}%章样式
 \enlargethispage{-0.25cm}%修改页面大小
 \thispagestyle{empty}}
@@ -2434,7 +2446,7 @@ shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,deco
 %修改有编号章样式
 \titleformat{\chapter}
 {}{}{0em}
-{\@Thumb@Step@Rule
+{\@Thumb@Update@Rule%
 \@ChapterStarStyle{\chapterlabelfront~{\sffamily\thechapter}~\chapterlabelback}{##1}%章样式
 \enlargethispage{-0.25cm}%修改页面大小
 \thispagestyle{empty}}
@@ -2840,16 +2852,19 @@ shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,deco
 %%重定义\frontmatter%%
 \renewcommand{\frontmatter}[1][roman]{
 \cleardoublepage
+\pagestyle{MainPage}
 \@mainmatterfalse
 \pagenumbering{#1}}
 %%重定义\mainmatter%%
 \renewcommand{\mainmatter}{
 \cleardoublepage
+\pagestyle{MainPage}
 \@mainmattertrue
 \pagenumbering{arabic}}
 %%重定义\backmatter%%
 \renewcommand{\backmatter}[1][Roman]{
 \cleardoublepage
+\pagestyle{MainPage}
 \@mainmatterfalse
 \pagenumbering{#1}}
 \makeatother
