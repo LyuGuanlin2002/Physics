@@ -980,7 +980,7 @@ shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,deco
 \AddToShipoutPictureBG*{%
 \AtPageLowerLeft{%
 \begin{tikzpicture}[remember picture]
-\draw[ColorB!7.5!ColorA!7.5,fill=ColorB!7.5!ColorA!7.5](0,0)rectangle(\paperwidth,\paperheight);
+\draw[ColorB!5!ColorA!5,fill=ColorB!5!ColorA!5](0,0)rectangle(\paperwidth,\paperheight);
 \end{tikzpicture}}}
 }
 %%
