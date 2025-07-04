@@ -208,6 +208,7 @@ BoldFont=FZCukai.ttf]
 \newcommand{\HeaderFont}{\rmfamily\bfseries\FontSizeSet{13pt}{16.9pt}}%页眉字体
 \newcommand{\FooterFont}{\rmfamily\bfseries\FontSizeSet{13pt}{16.9pt}}%页脚字体
 \newcommand{\PageNumberFont}{\sffamily\bfseries\FontSizeSet{16pt}{19.2pt}}%页码字体
+\newcommand{\PartNumberFont}{\sffamily\bfseries\FontSizeSet{16pt}{19.2pt}}%页码字体
 \newcommand{\ThumbFont}{\rmfamily\bfseries\FontSizeSet{14pt}{18.2pt}}%侧标字体
 \newcommand{\CaptionFont}{\rmfamily\FontSizeSet{13pt}{19.5pt}}%图表标签字体
 \newcommand{\TocPartFont}{\rmfamily\bfseries\FontSizeSet{14.5pt}{18.85pt}}%目录部分字体
@@ -869,7 +870,7 @@ shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,deco
 %%页眉和侧标的默认值%%
 \newcommand{\DefaultMark}{
 \markboth{\protect\@subtitle}{\protect\@subtitle}
-\extramarks{\protect\@title}{\protect\@title}}
+}
 \makeatother
 %%设置新长度%%
 \newlength{\DeltaH}%第一个侧标与最后一个侧标的中心点到页面最上端和最下端的垂直距离
@@ -915,6 +916,7 @@ shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,deco
 \RenewDocumentCommand{\sectionmark}{+m}{\markright{\sectionlabelfront~{\sffamily\thesection}~\sectionlabelback\quad#1}}
 %%%%
 %%绘制主页面样式%%
+\edef\currentpart{\thepart}
 \newcommand{\@Main@PageStyle}{
 \begin{tikzpicture}[remember picture,overlay]
 %%根据页数的奇偶生成%%
@@ -938,9 +940,18 @@ shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,deco
 ([xshift=-\@FrameWidth+0.15cm]B)--cycle;
 \node[font=\PageNumberFont,text=white,anchor=south,align=center,inner ysep=2.0mm](P)at([xshift=-\@outerlen/2-0.3cm,yshift=-\@PageNumWidth]B){\maxsizebox{0.8cm}{!}{\thepage}};
 %%绘制侧标%%
-\draw[draw=ColorA,fill=ColorA,sharp corners,line width=1.0pt]node[append after command={(T.north west)--(T.north east)--(T.south east)[rounded corners=1.75mm]--(T.south west)[rounded corners=1.75mm]--cycle},font=\ThumbFont,text=white,align=center,outer sep=0mm,inner xsep=2.5mm,inner ysep=3.5mm,anchor=east](T)at([yshift=\MarkY]B){\rotatebox[origin=c]{90}{\begin{varwidth}{\DeltaH}
-\strut\lastxmark\strut
+\draw[ColorA,fill=ColorA,sharp corners,line width=1.0pt]node[append after command={(T.north west)--(T.north east)--(T.south east)[rounded corners=1.75mm]--(T.south west)[rounded corners=1.75mm]--cycle},font=\ThumbFont,text=white,align=center,outer sep=0mm,inner xsep=2.5mm,inner ysep=3.5mm,anchor=east](T)at([yshift=\MarkY]B){\rotatebox[origin=c]{90}{\begin{varwidth}{\DeltaH}
+\strut\@title\strut
 \end{varwidth}}};
+\if@partnumbermark
+%%绘制部分序号标签%%
+\draw[ColorA,fill=ColorA,line width=1.0pt]
+([xshift=-\@outerlen+0.25cm]C)[rounded corners=1.5mm]--
+([xshift=-\@outerlen+0.25cm,yshift=\@PageNumWidth]C)[rounded corners=1.5mm]--
+([xshift=-\@FrameWidth+0.15cm,yshift=\@PageNumWidth]C)[sharp corners]--
+([xshift=-\@FrameWidth+0.15cm]C)--cycle;
+\node[font=\PartNumberFont,text=white,anchor=north,align=center,inner ysep=2.0mm,inner xsep=0mm](PN)at([xshift=-\@outerlen/2-0.3cm,yshift=\@PageNumWidth-0.075cm]C){\maxsizebox{0.8cm}{!}{\firstleftxmark}};
+\fi
 %%%%
 \else
 \coordinate(A)at(current page.north east);
@@ -962,11 +973,22 @@ shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,deco
 ([xshift=\@FrameWidth-0.15cm]B)--cycle;
 \node[font=\PageNumberFont,text=white,anchor=south,align=center,inner ysep=2.0mm](P)at([xshift=\@outerlen/2+0.3cm,yshift=-\@PageNumWidth]B){\maxsizebox{0.8cm}{!}{\thepage}};
 %%绘制侧标%%
-\draw[draw=ColorA,fill=ColorA,sharp corners,line width=1.0pt]node[append after command={(T.north west)[rounded corners=1.75mm]--(T.north east)[rounded corners=1.75mm]--(T.south east)[sharp corners]--(T.south west)--cycle},font=\ThumbFont,text=white,align=center,outer sep=0mm,inner xsep=2.5mm,inner ysep=3.5mm,anchor=west](T)at([yshift=\MarkY]B){\rotatebox[origin=c]{270}{\begin{varwidth}{\DeltaH}
-\strut\firstxmark\strut
+\draw[ColorA,fill=ColorA,sharp corners,line width=1.0pt]node[append after command={(T.north west)[rounded corners=1.75mm]--(T.north east)[rounded corners=1.75mm]--(T.south east)[sharp corners]--(T.south west)--cycle},font=\ThumbFont,text=white,align=center,outer sep=0mm,inner xsep=2.5mm,inner ysep=3.5mm,anchor=west](T)at([yshift=\MarkY]B){\rotatebox[origin=c]{270}{\begin{varwidth}{\DeltaH}
+\strut\@title\strut
 \end{varwidth}}};
+\if@partnumbermark
+%%绘制部分序号标签%%
+\draw[ColorA,fill=ColorA,line width=1.0pt]
+([xshift=\@outerlen-0.25cm]C)[rounded corners=1.5mm]--
+([xshift=\@outerlen-0.25cm,yshift=\@PageNumWidth]C)[rounded corners=1.5mm]--
+([xshift=\@FrameWidth-0.15cm,yshift=\@PageNumWidth]C)[sharp corners]--
+([xshift=\@FrameWidth-0.15cm]C)--cycle;
+\node[font=\PartNumberFont,text=white,anchor=north,align=center,inner ysep=2.0mm,inner xsep=0mm](PN)at([xshift=\@outerlen/2+0.3cm,yshift=\@PageNumWidth-0.075cm]C){\maxsizebox{0.8cm}{!}{\firstleftxmark}};
+\fi
+%%
 \fi
 \end{tikzpicture}}
+
 %%
 %%定义主页面样式%%
 \fancypagestyle{MainPage}{
@@ -1387,11 +1409,14 @@ shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,deco
 \colorlet{ColorB}{ColorTemp}
 }
 %%%%
+\newif\if@partnumbermark
 \titleformat{\part}
 {}{}{0em}
 {\startcontents[part]%开启小目录
 \@ExchangeColor%
 \@PartStyle{\partlabelfront~{\sffamily\thepart}~\partlabelback}{#1}%部分样式
+\global\@partnumbermarktrue%
+\extramarks{\Roman{part}}{\Roman{part}}%
 \thispagestyle{empty}}
 [\global\partintro{}%清空\partintro
 \global\partimage{}]%清空\partimage
@@ -1401,6 +1426,8 @@ shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,deco
 {\startcontents[part]%开启小目录
 \@ExchangeColor%
 \@PartStarStyle{#1}%部分样式
+\global\@partnumbermarkfalse%
+\extramarks{}{}%
 \thispagestyle{empty}}
 [\global\partintro{}%清空\partintro
 \global\partimage{}]%清空\partimage
