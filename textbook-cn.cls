@@ -980,7 +980,6 @@ shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,deco
 %%
 \fi
 \end{tikzpicture}}
-
 %%
 %%定义主页面样式%%
 \fancypagestyle{MainPage}{
@@ -988,13 +987,22 @@ shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,deco
 \fancyfoot[C]{\@Main@PageStyle}
 \fancyhead[RO]{\HeaderFont\color{ColorA}\rightmark}
 \fancyhead[LE]{\HeaderFont\color{ColorA}\leftmark}}
-
+%%BookPressLogo%%
+\newcommand{\BookPressLogo}{%
+\tikz{%
+\path[fill=ColorB,even odd rule]
+(26.1,7.4)--(24.3,-0.5)--(16.9,-0.4)..controls(16.8,-0.2)and(16.8,0.0)..(16.7,0.2)--(23.6,0.3)--(25.4,7.2)--cycle;
+%%%%
+\path[fill=ColorA,even odd rule]
+(24.2,9.4)--(24.1,8.9)..controls(23.8,7.7)and(23.5,6.7)..(23.2,5.4)..controls(22.6,3.5)and(22.7,2.9)..(21.5,2.2)..controls(20.2,1.7)and(19.2,1.5)..(16.1,0.8)--(16.4,-0.9)--(25.0,-1.8)--(26.4,4.7)--(27.1,4.6)--(25.6,-2.6)--(24.9,-2.5)..controls(21.6,-2.1)and(19.5,-1.9)..(16.1,-1.2)--(15.9,-0.9)..controls(15.5,-0.1)and(15.4,0.3)..(15.5,0.7)--(17.8,5.4)--(17.9,5.4)..controls(19.1,5.7)and(22.4,8.0)..(24.2,9.4)--cycle;}
+}
 %%绘制空白页面样式%%
 \newcommand{\@Empty@PageStyle}{%
 \AddToShipoutPictureBG*{%
 \AtPageLowerLeft{%
 \begin{tikzpicture}[remember picture]
-\draw[ColorB!5!ColorA!5,fill=ColorB!5!ColorA!5](0,0)rectangle(\paperwidth,\paperheight);
+\draw[ColorB!7.5,fill=ColorB!7.5](0,0)rectangle(\paperwidth,\paperheight);
+\node[opacity=0.075](L)at(current page.center){\BookPressLogo};
 \end{tikzpicture}}}
 }
 %%
@@ -1003,7 +1011,6 @@ shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,deco
 \fancyhf{}%清除所有页眉页脚
 \fancyfoot[C]{\@Empty@PageStyle}
 }
-
 \makeatother
 
 %%%%%%%%%%%%%%%%%%%% 书籍层次样式 %%%%%%%%%%%%%%%%%%%%%%
@@ -1394,18 +1401,10 @@ shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,deco
 }
 %%
 %%编号部分页%%
-%%主次颜色交换%%
-\newcommand{\@ExchangeColor}{
-\colorlet{ColorTemp}{ColorA}
-\colorlet{ColorA}{ColorB}
-\colorlet{ColorB}{ColorTemp}
-}
-%%%%
 \newif\if@partnumbermark
 \titleformat{\part}
 {}{}{0em}
 {\startcontents[part]%开启小目录
-\@ExchangeColor%
 \@PartStyle{\partlabelfront~{\sffamily\thepart}~\partlabelback}{#1}%部分样式
 \global\@partnumbermarktrue%
 \extramarks{\partlabelfront~{\sffamily\thepart}~\partlabelback}{\partlabelfront~{\sffamily\thepart}~\partlabelback}%
@@ -1416,7 +1415,6 @@ shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,deco
 \titleformat{name=\part,numberless}
 {}{}{0em}
 {\startcontents[part]%开启小目录
-\@ExchangeColor%
 \@PartStarStyle{#1}%部分样式
 \global\@partnumbermarkfalse%
 \extramarks{}{}%
@@ -1437,7 +1435,6 @@ shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,deco
 \phantomsection
 \OriginPart*{#3\@mkboth{#2}{#2}\addcontentsline{toc}{part}{#2}}
 \fi}
-\@ExchangeColor%
 }
 
 %%部分结束命令%%
@@ -3469,5 +3466,3 @@ rounded corners,arc=5.0pt,colupper=ColorA,#1}
 {\FontSizeSet{15pt}{18pt}\rmfamily\ifdefvoid{\@presslogo}{}{\raisebox{-0.2cm}{\mbox{\includegraphics[width=0.75cm]{\@presslogo}}}}\hskip0.25cm\@pressname\\}%
 \end{titlepage}}
 \makeatother
-
-
