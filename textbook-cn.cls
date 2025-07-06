@@ -865,6 +865,15 @@ shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,deco
 \end{flushleft}
 }
 %%%%%%%%%%%%%%%%%% 页面样式 %%%%%%%%%%%%%%%%%%%%%%%%
+%%BookPressLogo%%
+\newcommand{\BookPressLogo}{%
+\tikz{%
+\path[fill=ColorB,even odd rule]
+(26.1,7.4)--(24.3,-0.5)--(16.9,-0.4)..controls(16.8,-0.2)and(16.8,0.0)..(16.7,0.2)--(23.6,0.3)--(25.4,7.2)--cycle;
+%%%%
+\path[fill=ColorA,even odd rule]
+(24.2,9.4)--(24.1,8.9)..controls(23.8,7.7)and(23.5,6.7)..(23.2,5.4)..controls(22.6,3.5)and(22.7,2.9)..(21.5,2.2)..controls(20.2,1.7)and(19.2,1.5)..(16.1,0.8)--(16.4,-0.9)--(25.0,-1.8)--(26.4,4.7)--(27.1,4.6)--(25.6,-2.6)--(24.9,-2.5)..controls(21.6,-2.1)and(19.5,-1.9)..(16.1,-1.2)--(15.9,-0.9)..controls(15.5,-0.1)and(15.4,0.3)..(15.5,0.7)--(17.8,5.4)--(17.9,5.4)..controls(19.1,5.7)and(22.4,8.0)..(24.2,9.4)--cycle;}
+}
 %%定义部分总数（序言、前言视作一个部分，目录、插图目录、表格目录视作一个部分，绪论、有编号部分、无编号部分以及后记）,编译两次可以得到正确的页面框架%%
 \makeatletter
 %%页眉和侧标的默认值%%
@@ -987,15 +996,6 @@ shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,deco
 \fancyfoot[C]{\@Main@PageStyle}
 \fancyhead[RO]{\HeaderFont\color{ColorA}\rightmark}
 \fancyhead[LE]{\HeaderFont\color{ColorA}\leftmark}}
-%%BookPressLogo%%
-\newcommand{\BookPressLogo}{%
-\tikz{%
-\path[fill=ColorB,even odd rule]
-(26.1,7.4)--(24.3,-0.5)--(16.9,-0.4)..controls(16.8,-0.2)and(16.8,0.0)..(16.7,0.2)--(23.6,0.3)--(25.4,7.2)--cycle;
-%%%%
-\path[fill=ColorA,even odd rule]
-(24.2,9.4)--(24.1,8.9)..controls(23.8,7.7)and(23.5,6.7)..(23.2,5.4)..controls(22.6,3.5)and(22.7,2.9)..(21.5,2.2)..controls(20.2,1.7)and(19.2,1.5)..(16.1,0.8)--(16.4,-0.9)--(25.0,-1.8)--(26.4,4.7)--(27.1,4.6)--(25.6,-2.6)--(24.9,-2.5)..controls(21.6,-2.1)and(19.5,-1.9)..(16.1,-1.2)--(15.9,-0.9)..controls(15.5,-0.1)and(15.4,0.3)..(15.5,0.7)--(17.8,5.4)--(17.9,5.4)..controls(19.1,5.7)and(22.4,8.0)..(24.2,9.4)--cycle;}
-}
 %%绘制空白页面样式%%
 \newcommand{\@Empty@PageStyle}{%
 \AddToShipoutPictureBG*{%
@@ -1940,12 +1940,12 @@ shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,deco
 \def\@PracticeTitle@Radius{\dimexpr\baselineskip/2\relax}%
 \pgfdeclarelayer{@Practice@Bottom}%
 \pgfsetlayers{@Practice@Bottom,main}%
-\node[draw=ColorB,fill=ColorB,rounded corners,text=white,outer sep=0mm,inner xsep=0.5em,inner ysep=0mm,align=center](E){%
+\node[draw=ColorA,fill=ColorA,rounded corners,text=white,outer sep=0mm,inner xsep=0.5em,inner ysep=0mm,align=center](E){%
 \begin{varwidth}{\linewidth/2}
 \strut#1\strut
 \end{varwidth}};
 \begin{pgfonlayer}{@Practice@Bottom}
-\draw[draw=ColorB!50,fill=ColorB!50,line width=6.0pt,rounded corners=\@PracticeTitle@Radius]([xshift=-\@PracticeTitle@Radius]E.north west)rectangle([xshift=\@PracticeTitle@Radius]E.south east);
+\draw[draw=ColorA!65,fill=ColorA!65,line width=6.0pt,rounded corners=\@PracticeTitle@Radius]([xshift=-\@PracticeTitle@Radius]E.north west)rectangle([xshift=\@PracticeTitle@Radius]E.south east);
 \end{pgfonlayer}
 \end{tikzpicture}
 \end{center}
@@ -2271,13 +2271,13 @@ shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,deco
 \newenvironment{Answer}{%
 \medskip%
 \@AnswerStyle{解答}{ColorG}%
-\hspace*{1.0em}\vspace*{0.5em}%
+\hspace*{0.5em}\vspace*{0.25em}%
 }{\medskip}
 %%%%
 \newenvironment{Answer*}{%
 \medskip%
 \@AnswerStyle{解析}{ColorF}%
-\hspace*{1.0em}\vspace*{0.5em}%
+\hspace*{0.5em}\vspace*{0.25em}%
 }{\medskip}
 
 %%%%
@@ -2293,13 +2293,13 @@ shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,deco
 \else%
 \@AnswerStyle{\@Example@Name}{ColorA}%
 \fi%
-\hspace*{1.0em}\vspace*{0.5em}%
+\hspace*{0.5em}\vspace*{0.25em}%
 }{\medskip}
 %%%%
 \newenvironment{Example*}{%
 \medskip%
 \@AnswerStyle{\@Example@Name}{ColorA}%
-\hspace*{1.0em}\vspace*{0.5em}%
+\hspace*{0.5em}\vspace*{0.25em}%
 }{\medskip}
 
 %%变式%%
@@ -2314,13 +2314,13 @@ shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,deco
 \else%
 \@AnswerStyle{\@Variant@Name}{ColorB}%
 \fi%
-\hspace*{1.0em}\vspace*{0.5em}%
+\hspace*{0.5em}\vspace*{0.25em}%
 }{\medskip}
 %%%%
 \newenvironment{Variant*}{%
 \medskip%
 \@AnswerStyle{\@Variant@Name}{ColorB}%
-\hspace*{1.0em}\vspace*{0.5em}%
+\hspace*{0.5em}\vspace*{0.25em}%
 }{\medskip}
 
 %%%%
