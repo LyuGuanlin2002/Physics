@@ -106,6 +106,18 @@
 \colorlet{ColorH}{Goldenrod2}
 \colorlet{ColorI}{DarkGoldenrod2}
 }{\relax}
+%%棕色主题%%
+\ifdefstring{\TextBook@themecolor}{brown}{
+\definecolor{ColorA}{RGB}{132,60,12}
+\definecolor{ColorB}{RGB}{180,90,0}
+\definecolor{ColorC}{RGB}{99,45,9}
+\definecolor{ColorD}{RGB}{61,28,5}
+\definecolor{ColorE}{RGB}{135,61,11}
+\definecolor{ColorF}{RGB}{197,80,17}
+\definecolor{ColorG}{RGB}{237,122,43}
+\definecolor{ColorH}{RGB}{107,49,9}
+\definecolor{ColorI}{RGB}{151,69,13}
+}{\relax}
 %%彩色主题%%
 \ifdefstring{\TextBook@themecolor}{colorful}{
 \definecolor{ColorA}{RGB}{132,60,12}
@@ -313,18 +325,14 @@ marginparsep=\@marginparseplen,marginparwidth=\@marginparwidthlen,reversemarginp
 \renewcommand{\thefigure}{%
 \if@mainmatter%	
 \the@prenumber.\arabic{figure}%
-\else%
-\relax%
 \fi}
 \renewcommand{\thetable}{%
 \if@mainmatter%	
 \the@prenumber.\arabic{table}%
-\else%
-\relax%
 \fi}
 %%
-\def\fnum@figure{{\color{ColorA!50}\faSquare}\nobreakspace\figurename\nobreakspace{\sffamily\thefigure}}
-\def\fnum@table{{\color{ColorA!50}\faSquare}\nobreakspace\tablename\nobreakspace{\sffamily\thetable}}
+\def\fnum@figure{{\color{ColorA!50}\faSquare}\nobreakspace\figurename\nobreakspace{\sffamily\@Environment@Mark\thefigure}}
+\def\fnum@table{{\color{ColorA!50}\faSquare}\nobreakspace\tablename\nobreakspace{\sffamily\@Environment@Mark\thetable}}
 %%
 \renewcommand{\subfigurename}{图}
 \renewcommand{\subtablename}{表}
@@ -347,52 +355,68 @@ marginparsep=\@marginparseplen,marginparwidth=\@marginparwidthlen,reversemarginp
 %\setcounter{tocdepth}{2}
 \makeatletter
 %%重定义\tableofcontents%%
-\RenewDocumentCommand{\tableofcontents}{s D<>{1} +O{}}{
+\RenewDocumentCommand{\tableofcontents}{s O{1} O{1}}{
 \begingroup%确保计数器值只在局部生效
 \chapter*{\contentsname}
-\c@tocdepth=#2%预设目录深度为1
+\c@tocdepth=#3%预设目录深度为1
 \IfBooleanTF{#1}{
 \begin{paracol}{2}
 \@starttoc{toc}
-\switchcolumn
-\MarginNoteFont#3
 \end{paracol}}
-{\@starttoc{toc}}
+{\ifnum#2=1%
+\@starttoc{toc}
+\else
+\begin{multicols}{#2}
+\@starttoc{toc}
+\end{multicols}
+\fi}
 \endgroup}
 %%重定义\listoffigures%%
-\RenewDocumentCommand{\listoffigures}{s +O{}}{
+\RenewDocumentCommand{\listoffigures}{s O{1}}{
 \chapter*{\listfigurename}
 \IfBooleanTF{#1}{
 \begin{paracol}{2}
 \@starttoc{lof}
-\switchcolumn
-\MarginNoteFont#2
 \end{paracol}}
-{\@starttoc{lof}}
+{\ifnum#2=1
+\@starttoc{lof}
+\else
+\begin{multicols}{#2}
+\@starttoc{lof}
+\end{multicols}
+\fi}
 }
 %%重定义\listoftables%%
-\RenewDocumentCommand{\listoftables}{s +O{}}{
+\RenewDocumentCommand{\listoftables}{s O{1}}{
 \chapter*{\listtablename}
 \IfBooleanTF{#1}{
 \begin{paracol}{2}
 \@starttoc{lot}
-\switchcolumn
-\MarginNoteFont#2
 \end{paracol}}
-{\@starttoc{lot}}
+{\ifnum#2=1
+\@starttoc{lot}
+\else
+\begin{multicols}{#2}
+\@starttoc{lot}
+\end{multicols}
+\fi}
 }
 %%重定义\shorttableofcontents%%
-\RenewDocumentCommand{\shorttableofcontents}{s D<>{0} +O{}}{
+\RenewDocumentCommand{\shorttableofcontents}{s O{1} O{0}}{
 \begingroup%确保计数器值只在局部生效
 \chapter*{\shorttocname}
-\c@tocdepth=#2%预设目录深度为0
+\c@tocdepth=#3%预设目录深度为0
 \IfBooleanTF{#1}{
 \begin{paracol}{2}
 \@startshorttoc{toc}
-\switchcolumn
-\MarginNoteFont#3
 \end{paracol}}
-{\@startshorttoc{toc}}
+{\ifnum#2=1%
+\@startshorttoc{toc}
+\else
+\begin{multicols}{#2}
+\@startshorttoc{toc}
+\end{multicols}
+\fi}
 \endgroup}
 \makeatother
 
@@ -769,8 +793,10 @@ shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,deco
 \renewcommand{\thesubfigure}{\thefigure.\Alph{subfigure}}
 \renewcommand{\thesubtable}{\thetable.\Alph{subtable}}
 \renewcommand{\thepart}{\arabic{part}}
+\renewcommand{\thechapter}{\arabic{chapter}}
 \renewcommand{\thesection}{\arabic{section}}
 \renewcommand{\thesubsection}{\arabic{subsection}}
+\renewcommand{\thesubsubsection}{\arabic{subsubsection}}
 
 %%%%%%%%%%%%%%%%%%%% 列表环境 %%%%%%%%%%%%%%%%%%%%%%
 %%设置不编号点样式%%
@@ -817,6 +843,34 @@ shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,deco
 \end{multicols}%
 \fi%
 \global\colorlet{ListColor}{ColorA}}
+
+%%题序号环境%%
+\makeatletter
+%临时计数器，储存每个列表环境的最后一条item的序号%
+\newcounter{@temp@item}[section]
+\setcounter{@temp@item}{0}
+%%%%
+\NewDocumentEnvironment{QuestionItem}{O{1}}{%
+\ifnum#1=1%align=left,
+\begin{enumerate}[label={\sffamily\color{ListColor}\bfseries\arabic*.}]%
+\setcounter{enumi}{\value{@temp@item}}%
+\else%
+\begin{multicols}{#1}%
+\ItemFont%align=left,
+\begin{enumerate}[label={\sffamily\color{ListColor}\bfseries\arabic*.}]%
+\setcounter{enumi}{\value{@temp@item}}%
+\fi%
+}{%
+\ifnum#1=1%
+\setcounter{@temp@item}{\value{enumi}}%
+\end{enumerate}%
+\else%
+\setcounter{@temp@item}{\value{enumi}}%
+\end{enumerate}%
+\end{multicols}%
+\fi%
+\global\colorlet{ListColor}{ColorA}}
+\makeatother
 
 %%设置星级%%
 \NewDocumentCommand{\score}{m m O{ColorB}}{
@@ -907,10 +961,10 @@ shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,deco
 \newlength{\@PageNumWidth}
 \setlength{\@PageNumWidth}{\@toplen-\@handseplen+1.0mm}
 %%%%
-\newcommand{\partlabelfront}{第}
-\newcommand{\partlabelback}{部分}
-\newcommand{\chapterlabelfront}{第}
-\newcommand{\chapterlabelback}{章}
+\newcommand{\partlabelfront}{第~}
+\newcommand{\partlabelback}{~部分}
+\newcommand{\chapterlabelfront}{第~}
+\newcommand{\chapterlabelback}{~章}
 \newcommand{\sectionlabelfront}{第}
 \newcommand{\sectionlabelback}{节}
 \newcommand{\subsectionlabelfront}{课时}
@@ -918,11 +972,11 @@ shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,deco
 \renewcommand{\headrulewidth}{0pt}
 \RenewDocumentCommand{\chaptermark}{ +m }{
 \if@mainmatter
-\markboth{\chapterlabelfront~{\sffamily\thechapter}~\chapterlabelback\quad#1}{\chapterlabelfront~{\sffamily\thechapter}~\chapterlabelback\quad#1}
+\markboth{\chapterlabelfront{\sffamily\thechapter}\chapterlabelback\quad#1}{\chapterlabelfront{\sffamily\thechapter}\chapterlabelback\quad#1}
 \else
 \markboth{#1}{#1}
 \fi}
-\RenewDocumentCommand{\sectionmark}{+m}{\markright{\sectionlabelfront~{\sffamily\thesection}~\sectionlabelback\quad#1}}
+\RenewDocumentCommand{\sectionmark}{+m}{\markright{\sectionlabelfront{\sffamily\thesection}\sectionlabelback\quad#1}}
 %%%%
 %%绘制主页面样式%%
 \edef\currentpart{\thepart}
@@ -1405,9 +1459,9 @@ shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,deco
 \titleformat{\part}
 {}{}{0em}
 {\startcontents[part]%开启小目录
-\@PartStyle{\partlabelfront~{\sffamily\thepart}~\partlabelback}{#1}%部分样式
+\@PartStyle{\partlabelfront{\sffamily\thepart}\partlabelback}{#1}%部分样式
 \global\@partnumbermarktrue%
-\extramarks{\partlabelfront~{\sffamily\thepart}~\partlabelback}{\partlabelfront~{\sffamily\thepart}~\partlabelback}%
+\extramarks{\partlabelfront{\sffamily\thepart}\partlabelback}{\partlabelfront{\sffamily\thepart}\partlabelback}%
 \thispagestyle{empty}}
 [\global\partintro{}%清空\partintro
 \global\partimage{}]%清空\partimage
@@ -1430,7 +1484,7 @@ shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,deco
 \IfBooleanTF{#1}
 {\OriginPart*{#3\@mkboth{#2}{#2}}}
 {\if@mainmatter
-\OriginPart[#2]{#3\@mkboth{\partlabelfront~{\sffamily\thepart}~\partlabelback\quad#2}{\partlabelfront~{\sffamily\thepart}~\partlabelback\quad#2}}
+\OriginPart[#2]{#3\@mkboth{\partlabelfront{\sffamily\thepart}\partlabelback\quad#2}{\partlabelfront{\sffamily\thepart}\partlabelback\quad#2}}
 \else
 \phantomsection
 \OriginPart*{#3\@mkboth{#2}{#2}\addcontentsline{toc}{part}{#2}}
@@ -1439,7 +1493,6 @@ shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,deco
 
 %%部分结束命令%%
 \newcommand{\PartEnd}{\stopcontents[part]}
-
 %%章节页样式%%
 \newlength{\@Chapter@BlockHeight}
 \newlength{\@Chapter@VSpace}
@@ -1711,7 +1764,7 @@ shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,deco
 \titleformat{\chapter}
 {}{}{0em}
 {\@Thumb@Update@Rule%
-\@ChapterStyle{\chapterlabelfront~{\sffamily\thechapter}~\chapterlabelback}{#1}%章样式
+\@ChapterStyle{\chapterlabelfront{\sffamily\thechapter}\chapterlabelback}{#1}%章样式
 \enlargethispage{-0.75cm}%修改页面大小
 \thispagestyle{empty}}
 [\global\chapterimage{}%清空\chapterimage
@@ -1751,11 +1804,14 @@ shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,deco
 \vspace*{0.5cm}%
 \SectionFont%
 \def\@Section@LabelRadius{\dimexpr\baselineskip/2\relax}}{%
-\sectionlabelfront\hspace{\@Section@LabelXSep}%
+\sectionlabelfront%
+\hspace{\@Section@LabelXSep}%
 \tikz[baseline=-0.4em]{%
 \draw[ColorA,fill=ColorA](0,0)circle(\@Section@LabelRadius);
 \node[circle,outer sep=0mm,inner sep=0mm,font=\SectionFont\sffamily,text=white]at(0,0){\maxsizebox{2\@Section@LabelRadius}{!}{\thesection}};}%
-\hspace{\@Section@LabelXSep}\sectionlabelback}{\@Section@LabelNameXSep}{#1}
+\hspace{\@Section@LabelXSep}%
+\sectionlabelback%
+}{\@Section@LabelNameXSep}{#1}
 %%不编号节样式%%
 \titleformat{name=\section,numberless}[hang]{%
 \vspace*{0.5cm}%
@@ -1793,6 +1849,7 @@ shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,deco
 \begin{tikzpicture}%
 \SubsectionFont%
 \def\@Subsection@Radius{\dimexpr\baselineskip/2\relax}%0.9
+\def\@Subsection@BRadius{\dimexpr\baselineskip/2+6.5pt\relax}
 \pgfdeclarelayer{@Subsection@Bottom}%
 \pgfsetlayers{@Subsection@Bottom,main}%
 \node[text=white,inner xsep=\@Subsection@Radius,inner ysep=0mm,outer sep=0mm](L){%
@@ -1811,12 +1868,12 @@ shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,deco
 \pgfgetnodeheight(N)\@Subsection@NameHeight
 %%
 \begin{pgfonlayer}{@Subsection@Bottom}
-\draw[ColorA,line width=0.1pt,fill=ColorA,rounded corners=\@Subsection@Radius](L.north west)rectangle(L.south east);
-\draw[white,line width=13.5pt,fill=white]([yshift=-\@Subsection@Radius]L.north east)circle(\@Subsection@Radius);
+\path[fill=ColorA,rounded corners=\@Subsection@Radius](L.north west)rectangle(L.south east);
+\draw[white,fill=white]([yshift=-\@Subsection@Radius]L.north east)circle(\@Subsection@BRadius);
 \ifdim\@Subsection@NameHeight>\dimexpr2\@Subsection@Radius\relax
-\draw[ColorB!7.5,line width=0.1pt,fill=ColorB!7.5](N.north east)[sharp corners]--(N.north west)[rounded corners=\@Subsection@Radius]--(N.south west)--(N.south east)--cycle;
+\path[fill=ColorB!7.5](N.north east)[sharp corners]--(N.north west)[rounded corners=\@Subsection@Radius]--(N.south west)--(N.south east)--cycle;
 \else
-\draw[ColorB!7.5,line width=0.1pt,fill=ColorB!7.5](N.north east)[sharp corners]--(N.north west)--(N.south west)[rounded corners=\@Subsection@Radius]--(N.south east)--cycle;
+\path[fill=ColorB!7.5](N.north east)[sharp corners]--(N.north west)--(N.south west)[rounded corners=\@Subsection@Radius]--(N.south east)--cycle;
 \fi
 \draw[ColorA,line width=4.0pt,fill=white]([yshift=-\@Subsection@Radius]L.north east)circle(\@Subsection@Radius);
 \node[circle,text=ColorA,inner sep=0mm,outer sep=0mm](Num)at([yshift=-\@Subsection@Radius]L.north east){\maxsizebox{2\@Subsection@Radius}{!}{\sffamily#3}};
@@ -1830,27 +1887,21 @@ shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,deco
 \subsectionsubtitle{}
 %%%%
 \newlength{\@Subsection@Star@LabelCriticWidth}
-\newlength{\@Subsection@Star@LabelHSkip}
-\newlength{\@BigLabelCircle@LineWidth}
-\newlength{\@SmallLabelCircle@LineWidth}
 \setlength{\@Subsection@Star@LabelCriticWidth}{4.0cm}
-\setlength{\@Subsection@Star@LabelHSkip}{2.8em}
-\setlength{\@BigLabelCircle@LineWidth}{13.5pt}
-\setlength{\@SmallLabelCircle@LineWidth}{4.0pt}
 %%%%
 \NewDocumentCommand{\@SubsectionStarStyle}{ +m +m }{%
 \begingroup%
 \raggedright%
-\tikz{%
-\node[inner sep=0mm,outer sep=0mm]{%
-\hspace*{-\@BigLabelCircle@LineWidth/2+\@SmallLabelCircle@LineWidth/2}%
 \begin{tikzpicture}%
 \SubsectionFont%
 \def\@Subsection@Star@Radius{\dimexpr\baselineskip/2\relax}%0.9
+\def\@Subsection@Star@BRadius{\dimexpr\baselineskip/2+6.5pt\relax}
+\def\@Subsection@Star@SRadius{\dimexpr\baselineskip/2+2.0pt\relax}
+%%%%
 \pgfdeclarelayer{@Subsection@Star@Bottom}%
 \pgfsetlayers{@Subsection@Star@Bottom,main}%
 \node[text=white,inner xsep=\@Subsection@Star@Radius,inner ysep=0mm,outer sep=0mm](L){%
-\hspace*{\@Subsection@Star@LabelHSkip+2.0pt}%
+\hspace*{\@Subsection@Star@Radius+0.5em}%
 \begin{varwidth}{\@Subsection@Star@LabelCriticWidth}
 %\AdjustStrut{0.9}%
 \strut#1\strut
@@ -1858,8 +1909,8 @@ shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,deco
 \pgfgetnodewidth(L)\@Subsection@Star@LabelWidth%
 \pgfgetnodeheight(L)\@Subsection@Star@LabelHeight%
 %%
-\node[text=ColorA,inner xsep=\@Subsection@Star@Radius,inner ysep=0mm,outer sep=0mm,minimum width=\linewidth-\@Subsection@Star@LabelWidth,anchor=north west](N)at(L.north east){%
-\begin{minipage}{\linewidth-\@Subsection@Star@LabelWidth-2\@Subsection@Star@Radius}
+\node[text=ColorA,inner xsep=\@Subsection@Star@Radius,inner ysep=0mm,outer sep=0mm,anchor=north west](N)at(L.north east){%
+\begin{minipage}{\linewidth-\@Subsection@Star@LabelWidth-2\@Subsection@Star@Radius-\@Subsection@Star@SRadius}
 %\AdjustStrut{0.9}%
 \strut#2\strut
 \end{minipage}};
@@ -1867,20 +1918,21 @@ shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,deco
 %%
 \begin{pgfonlayer}{@Subsection@Star@Bottom}
 \ifdim\@Subsection@Star@NameHeight>\@Subsection@Star@LabelHeight
-\draw[ColorB!7.5,line width=0.1pt,fill=ColorB!7.5,rounded corners=\@Subsection@Star@Radius](L.north west)rectangle(N.south east);
+\path[fill=ColorB!7.5,rounded corners=\@Subsection@Star@Radius](L.north west)rectangle(N.south east);
 %
-\draw[ColorA,line width=0.1pt,fill=ColorA,rounded corners=\@Subsection@Star@Radius](L.north west)rectangle(N.south west);
+\path[fill=ColorA,rounded corners=\@Subsection@Star@Radius](L.north west)rectangle(N.south west);
 \else
-\draw[ColorB!7.5,line width=0.1pt,fill=ColorB!7.5,rounded corners=\@Subsection@Star@Radius](L.south west)rectangle(N.north east);
+\path[fill=ColorB!7.5,rounded corners=\@Subsection@Star@Radius](L.south west)rectangle(N.north east);
 %
-\draw[ColorA,line width=0.1pt,fill=ColorA,rounded corners=\@Subsection@Star@Radius](L.south west)rectangle(N.north west);
+\path[fill=ColorA,rounded corners=\@Subsection@Star@Radius](L.south west)rectangle(N.north west);
 \fi
 %%
-\draw[white,line width=\@BigLabelCircle@LineWidth,fill=white]([xshift=\@Subsection@Star@Radius+\@SmallLabelCircle@LineWidth/2,yshift=-\@Subsection@Star@Radius]L.north west)circle(\@Subsection@Star@Radius);
-\draw[ColorA,line width=\@SmallLabelCircle@LineWidth,fill=white]([xshift=\@Subsection@Star@Radius+\@SmallLabelCircle@LineWidth/2,yshift=-\@Subsection@Star@Radius]L.north west)circle(\@Subsection@Star@Radius);
-\draw[ColorA,fill=ColorA]([xshift=\@Subsection@Star@Radius+\@SmallLabelCircle@LineWidth/2,yshift=-\@Subsection@Star@Radius]L.north west)circle(\@Subsection@Star@Radius/2);
+\coordinate(CC)at([yshift=-\@Subsection@Star@Radius]L.north west);
+\draw[white,fill=white,sharp corners](CC)--([yshift=\@Subsection@Star@BRadius]CC)arc(90:-90:\@Subsection@Star@BRadius)--cycle;
+\draw[ColorA,fill=ColorA](CC)circle(\@Subsection@Star@SRadius);
+\draw[white,line width=4.0pt,fill=ColorA](CC)circle(2*\@Subsection@Star@Radius/3);
 \end{pgfonlayer}
-\end{tikzpicture}};}%
+\end{tikzpicture}%
 \endgroup}
 
 %%%%
@@ -1961,7 +2013,7 @@ shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,deco
 }{%
 \subsection*{\@Exercise@Title%
 \if@mainmatter%
-~\sffamily\the@prenumber%
+~\sffamily\@Environment@Mark\the@prenumber%
 \fi}%
 }%
 }
@@ -1972,7 +2024,7 @@ shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,deco
 }{%
 \subsection*{\@Thinking@Title%
 \if@mainmatter%
-~\sffamily\the@prenumber%
+~\sffamily\@Environment@Mark\the@prenumber%
 \fi}%
 }%
 }
@@ -1990,9 +2042,364 @@ shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,deco
 \makeatother
 
 %%%%%%%%%%%%%%%%%% 目录样式 %%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%% 环境、文档层次和目录 %%%%%%%%%%%%%%%%%%%%%%%%
+\makeatletter
+%%重定义\frontmatter%%
+\renewcommand{\frontmatter}[1][roman]{
+\cleardoublepage
+\pagestyle{MainPage}
+\@mainmatterfalse
+\pagenumbering{#1}}
+%%重定义\mainmatter%%
+\renewcommand{\mainmatter}{
+\cleardoublepage
+\pagestyle{MainPage}
+\@mainmattertrue
+\pagenumbering{arabic}}
+%%重定义\backmatter%%
+\renewcommand{\backmatter}[1][Roman]{
+\cleardoublepage
+\pagestyle{MainPage}
+\@mainmatterfalse
+\pagenumbering{#1}}
+%%%%
+%%以下为本文档类内置栏目，请谨慎修改%%
+%设置环境布尔变量
+\newif\if@appendix
+\newif\if@quiz
+\newif\if@project
+\newif\if@topic
+%%%%
+%%写入目录布尔变量%%
+\newcommand{\@Cts@Appendix@True}{%
+\addtocontents{toc}{\protect\@appendixtrue}
+\addtocontents{lof}{\protect\@appendixtrue}
+\addtocontents{lot}{\protect\@appendixtrue}
+}
+%%
+\newcommand{\@Cts@Quiz@True}{%
+\addtocontents{toc}{\protect\@quiztrue}
+\addtocontents{lof}{\protect\@quiztrue}
+\addtocontents{lot}{\protect\@quiztrue}
+}
+%%
+\newcommand{\@Cts@Topic@True}{%
+\addtocontents{toc}{\protect\@topictrue}
+\addtocontents{lof}{\protect\@topictrue}
+\addtocontents{lot}{\protect\@topictrue}
+}
+%%
+\newcommand{\@Cts@Project@True}{%
+\addtocontents{toc}{\protect\@projecttrue}
+\addtocontents{lof}{\protect\@projecttrue}
+\addtocontents{lot}{\protect\@projecttrue}
+}
+%%
+\newcommand{\@Cts@Appendix@False}{%
+\addtocontents{toc}{\protect\@appendixfalse}
+\addtocontents{lof}{\protect\@appendixfalse}
+\addtocontents{lot}{\protect\@appendixfalse}
+}
+%%
+\newcommand{\@Cts@Quiz@False}{%
+\addtocontents{toc}{\protect\@quizfalse}
+\addtocontents{lof}{\protect\@quizfalse}
+\addtocontents{lot}{\protect\@quizfalse}
+}
+%%
+\newcommand{\@Cts@Topic@False}{
+\addtocontents{toc}{\protect\@topicfalse}
+\addtocontents{lof}{\protect\@topicfalse}
+\addtocontents{lot}{\protect\@topicfalse}
+}
+%%
+\newcommand{\@Cts@Project@False}{%
+\addtocontents{toc}{\protect\@projectfalse}
+\addtocontents{lof}{\protect\@projectfalse}
+\addtocontents{lot}{\protect\@projectfalse}
+}
+%%环境层级计数器：数值为1对应chapter，数值为2对应section%%
+\newcounter{@Environment@Depth}
+\setcounter{@Environment@Depth}{0}
+%%%%
+%%设置附录环境%%
+\newcounter{@Outer@Appendix@Chapter}%储存环境前的章计数器数值
+\newcounter{@Inner@Appendix@Chapter}%储存环境中的章计数器数值
+\setcounter{@Inner@Appendix@Chapter}{0}%将环境中的章计数器值置零
+%%
+\newenvironment{Appendix}{%
+%%判断环境所在位置的环境层级计数器的数值，若为2，则说明本环境嵌套于一个section层级的环境中，需要报错；若为1，则说明本环境嵌套于另一个chapter层级的环境中，需要报错；若为0，则说明本环境不嵌套于任何一个类似的环境中，可以运行%%
+\ifnum\value{@Environment@Depth}=2
+\ClassError{textbook-cn}{Appendix environment must not be used in quiz, project and topic environment!}
+\else
+\ifnum\value{@Environment@Depth}=1
+\ClassError{textbook-cn}{Appendix environment must not be used in another appendix environment!}
+\else
+\relax
+\fi\fi
+%%设置环境层级
+\setcounter{@Environment@Depth}{1}
+%%设置环境内的布尔变量值
+\@appendixtrue
+%%在目录文件中写入布尔变量，确保目录正确生成
+\@Cts@Appendix@True
+%修改章计数器样式为大写字母
+\renewcommand{\thechapter}{\Alph{chapter}}
+%修改节计数器样式为小写字母
+\renewcommand{\thesection}{\alph{section}}
+%修改小节计数器样式为小写字母
+\renewcommand{\thesubsection}{\arabic{subsection}}
+%修改小小节计数器样式为阿拉伯数字
+\renewcommand{\thesubsubsection}{\arabic{subsubsection}}
+%修改页眉页脚章标签
+\renewcommand{\chapterlabelfront}{附录~}
+\renewcommand{\chapterlabelback}{}
+%修改页眉页脚节标签
+\renewcommand{\sectionlabelfront}{第}
+\renewcommand{\sectionlabelback}{节}
+%修改小节标签
+\renewcommand{\subsectionlabelfront}{小节}
+\renewcommand{\subsectionlabelback}{}
+%修改环境标识
+\def\@Environment@Mark{}
+%%%%
+%将环境前的章计数器值储存在beforecounter中
+\setcounter{@Outer@Appendix@Chapter}{\value{chapter}}
+%将章计数器置为环境中章计数器值
+\setcounter{chapter}{\value{@Inner@Appendix@Chapter}}
+%%%%
+%确保hyperref知道计数器变化
+\hypersetup{pageanchor=true}
+%修改超链接的唯一标识
+\renewcommand{\theHchapter}{\chapterlabelfront\thechapter\chapterlabelback}
+\renewcommand{\theHsection}{\sectionlabelfront\thesection\sectionlabelback}
+\renewcommand{\theHsubsection}{\subsectionlabelfront\thesubsection\subsectionlabelback}
+}{%
+%%将环境层次计数器归零
+\setcounter{@Environment@Depth}{0}
+%%重置布尔变量
+\@appendixfalse
+\@Cts@Appendix@False
+%将环境中的章计数器值储存在innercounter中
+\setcounter{@Inner@Appendix@Chapter}{\value{chapter}}
+%将章计数器值恢复为环境前的值
+\setcounter{chapter}{\value{@Outer@Appendix@Chapter}}
+%恢复原始超链接设置
+\hypersetup{pageanchor=false}
+}
+%%
+%%设置测试环境%%
+\newcounter{@Outer@Quiz@Section}%储存环境前的节计数器数值
+\newcounter{@Inner@Quiz@Section}%储存环境中的节计数器数值
+\setcounter{@Inner@Quiz@Section}{0}%将环境中的节计数器值置零
+\newenvironment{Quiz}{%
+%%判断环境所在位置的环境层级计数器的数值，若为2，则说明本环境嵌套于另一个同为section层级的环境中，需要报错；若为1，则说明本环境嵌套于另一个chapter层级的环境中，正常运行%%
+\ifnum\value{@Environment@Depth}=2
+\ClassError{textbook-cn}{Quiz environment must not be used in project, topic and another quiz environment!}
+\else
+\relax
+\fi
+%%设置环境层级
+\setcounter{@Environment@Depth}{2}
+%%设置环境内的布尔变量值
+\@quiztrue
+%%在目录文件中写入布尔变量，确保目录正确生成
+\@Cts@Quiz@True
+%%%%
+%修改节计数器样式为阿拉伯数字
+\renewcommand{\thesection}{\arabic{section}}
+%修改小节计数器样式为罗马数字
+\renewcommand{\thesubsection}{\Roman{subsection}}
+%修改小小节计数器样式为阿拉伯数字
+\renewcommand{\thesubsubsection}{\arabic{subsubsection}}
+%移除section对chapter的依赖
+\@removefromreset{section}{chapter}
+%移除subsubsection对subsection的依赖
+\@removefromreset{subsubsection}{subsection}
+%添加subsubsection对section的依赖
+\@addtoreset{subsubsection}{section}
+%修改页眉页脚标签
+\renewcommand{\sectionlabelfront}{测试}
+\renewcommand{\sectionlabelback}{}
+%修改小节标签
+\renewcommand{\subsectionlabelfront}{题组}
+\renewcommand{\subsectionlabelback}{}
+%修改环境标识
+\def\@Environment@Mark{Q}
+%修改subsubsection样式
+\titleformat{\subsubsection}[hang]{%
+\SubsubsectionFont\color{ColorB}%
+\def\@Subsubsection@LabelRadius{0.6em}}{%
+\tikz[baseline=-0.4em]{%
+\node[outer sep=0mm,inner sep=0mm]{\@HalfCircle@Label{ColorB}{\@Subsubsection@LabelRadius}};}%
+\hspace*{\@Subsubsection@LabelNameXSep}第~{\sffamily\arabic{subsubsection}}~题%
+}{\@Subsubsection@LabelNameXSep}{##1}
+%%%%
+%%简化序号命令%%
+\renewcommand{\the@prenumber}{\thesection}
+%%%%
+%将环境前的节计数器值储存在beforecounter中
+\setcounter{@Outer@Quiz@Section}{\value{section}}
+%将节计数器置为环境中节计数器值
+\setcounter{section}{\value{@Inner@Quiz@Section}}
+%%%%
+%确保hyperref知道计数器变化
+\hypersetup{pageanchor=true}
+%修改超链接的唯一标识
+\renewcommand{\theHsection}{\sectionlabelfront\thesection\sectionlabelback}
+\renewcommand{\theHsubsection}{\subsectionlabelfront\thesubsection\subsectionlabelback}
+}{%
+%%将环境层次计数器归零
+\setcounter{@Environment@Depth}{0}
+%%重置布尔变量
+\@quizfalse
+\@Cts@Quiz@False
+%将环境中的节计数器值储存在innercounter中
+\setcounter{@Inner@Quiz@Section}{\value{section}}
+%将节计数器值恢复为环境前的值
+\setcounter{section}{\value{@Outer@Quiz@Section}}
+%恢复原始超链接设置
+\hypersetup{pageanchor=false}
+%移除subsubsection对section的依赖
+\@removefromreset{subsubsection}{section}
+%添加subsubsection对subsection的依赖
+\@addtoreset{subsubsection}{subsection}
+%添加section对chapter的依赖
+\@addtoreset{section}{chapter}
+}
+%%%%
+
+%%设置专题环境%%
+\newcounter{@Outer@Topic@Section}%储存环境前的节计数器数值
+\newcounter{@Inner@Topic@Section}%储存环境中的节计数器数值
+\setcounter{@Inner@Topic@Section}{0}%将环境中计数器值置零
+\newenvironment{Topic}{%
+%%判断环境所在位置的环境层级计数器的数值，若为2，则说明本环境嵌套于另一个同为section层级的环境中，需要报错；若为1，则说明本环境嵌套于另一个chapter层级的环境中，正常运行%%
+\ifnum\value{@Environment@Depth}=2
+\ClassError{textbook-cn}{Topic environment must not be used in quiz, project and another topic environment!}
+\else
+\relax
+\fi
+%%设置环境层级
+\setcounter{@Environment@Depth}{2}
+%%设置环境内的布尔变量值
+\@topictrue
+%%在目录文件中写入布尔变量，确保目录正确生成
+\@Cts@Topic@True
+%修改节计数器样式为阿拉伯数字
+\renewcommand{\thesection}{\arabic{section}}
+%修改小节计数器样式为阿拉伯数字
+\renewcommand{\thesubsection}{\arabic{subsection}}
+%修改小小节计数器样式为阿拉伯数字
+\renewcommand{\thesubsubsection}{\arabic{subsubsection}}
+%修改页眉页脚标签
+\renewcommand{\sectionlabelfront}{专题}
+\renewcommand{\sectionlabelback}{}
+%修改小节标签
+\renewcommand{\subsectionlabelfront}{考点}
+\renewcommand{\subsectionlabelback}{}
+%移除section对chapter的依赖
+\@removefromreset{section}{chapter}
+%修改环境标识
+\def\@Environment@Mark{T}
+%%%%
+%%简化序号命令%%
+\renewcommand{\the@prenumber}{\thesection}
+%%%%
+%将环境前的节计数器值储存在beforecounter中
+\setcounter{@Outer@Topic@Section}{\value{section}}
+%将节计数器置为环境中节计数器值
+\setcounter{section}{\value{@Inner@Topic@Section}}
+%%%%
+%确保hyperref知道计数器变化
+\hypersetup{pageanchor=true}
+%修改超链接的唯一标识
+\renewcommand{\theHsection}{\sectionlabelfront\thesection\sectionlabelback}
+\renewcommand{\theHsubsection}{\subsectionlabelfront\thesubsection\subsectionlabelback}
+}{%
+%%将环境层次计数器归零
+\setcounter{@Environment@Depth}{0}
+%%重置布尔变量
+\@topicfalse
+\@Cts@Topic@False
+%将环境中的节计数器值储存在innercounter中
+\setcounter{@Inner@Topic@Section}{\value{section}}
+%将节计数器值恢复为环境前的值
+\setcounter{section}{\value{@Outer@Topic@Section}}
+%恢复原始超链接设置
+\hypersetup{pageanchor=false}
+%添加section对chapter的依赖
+\@addtoreset{section}{chapter}
+}
+%%%%
+%%设置课题环境%%
+\newcounter{@Outer@Project@Section}%储存环境前的节计数器数值
+\newcounter{@Inner@Project@Section}%储存环境中的节计数器数值
+\setcounter{@Inner@Project@Section}{0}%将环境中计数器值置零
+\newenvironment{Project}{%
+%%判断环境所在位置的环境层级计数器的数值，若为2，则说明本环境嵌套于另一个同为section层级的环境中，需要报错；若为1，则说明本环境嵌套于另一个chapter层级的环境中，正常运行%%
+\ifnum\value{@Environment@Depth}=2
+\ClassError{textbook-cn}{Project environment must not be used in quiz, topic and another project environment!}
+\else
+\relax
+\fi
+%%设置环境层级
+\setcounter{@Environment@Depth}{2}
+%%设置环境内的布尔变量值
+\@projecttrue
+%%在目录文件中写入布尔变量，确保目录正确生成
+\@Cts@Project@True
+%%%%
+%修改节计数器样式为阿拉伯数字
+\renewcommand{\thesection}{\arabic{section}}
+%修改小节计数器样式为阿拉伯数字
+\renewcommand{\thesubsection}{\arabic{subsection}}
+%修改小小节计数器样式为阿拉伯数字
+\renewcommand{\thesubsubsection}{\arabic{subsubsection}}
+%修改页眉页脚标签
+\renewcommand{\sectionlabelfront}{课题}
+\renewcommand{\sectionlabelback}{}
+%修改小节标签
+\renewcommand{\subsectionlabelfront}{活动}
+\renewcommand{\subsectionlabelback}{}
+%移除section对chapter的依赖
+\@removefromreset{section}{chapter}
+%修改环境标识
+\def\@Environment@Mark{P}
+%%%%
+%%简化序号命令%%
+\renewcommand{\the@prenumber}{\thesection}
+%%%%
+%将环境前的节计数器值储存在beforecounter中
+\setcounter{@Outer@Project@Section}{\value{section}}
+%将节计数器置为环境中节计数器值
+\setcounter{section}{\value{@Inner@Project@Section}}
+%%%%
+%确保hyperref知道计数器变化
+\hypersetup{pageanchor=true}
+%修改超链接的唯一标识
+\renewcommand{\theHsection}{\sectionlabelfront\thesection\sectionlabelback}
+\renewcommand{\theHsubsection}{\subsectionlabelfront\thesubsection\subsectionlabelback}
+}{%
+%%将环境层次计数器归零
+\setcounter{@Environment@Depth}{0}
+%%重置布尔变量
+\@projectfalse
+\@Cts@Project@False
+%将环境中的节计数器值储存在innercounter中
+\setcounter{@Inner@Project@Section}{\value{section}}
+%将节计数器值恢复为环境前的值
+\setcounter{section}{\value{@Outer@Project@Section}}
+%恢复原始超链接设置
+\hypersetup{pageanchor=false}
+%添加section对chapter的依赖
+\@addtoreset{section}{chapter}
+}
+%%%%
 %%目录页码右侧空格%%
 \contentsmargin{3.5mm}
-\makeatletter
 %%标签绘制%%
 \newlength{\@PartToc@LabelCriticWidth}
 \setlength{\@PartToc@LabelCriticWidth}{6.0cm}
@@ -2020,13 +2427,13 @@ shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,deco
 %%
 \begin{pgfonlayer}{@PartToc@Bottom}
 \ifdim\@PartToc@NameHeight>\@PartToc@LabelHeight
-\draw[ColorB!7.5,line width=0.1pt,fill=ColorB!7.5](N.north east)[sharp corners]--(N.north west)--(N.south west)[rounded corners=\@PartToc@Radius]--(N.south east)--cycle;
+\path[fill=ColorB!7.5](N.north east)[sharp corners]--(N.north west)--(N.south west)[rounded corners=\@PartToc@Radius]--(N.south east)--cycle;
 %
-\draw[ColorA,line width=0.1pt,fill=ColorA](L.north west)[sharp corners]--(L.north east)--(N.south west)[rounded corners=\@PartToc@Radius]--([xshift=-\@PartToc@LabelWidth]N.south west)--([xshift=-\@PartToc@LabelWidth,yshift=\@PartToc@LabelHeight]N.south west)--cycle;
+\path[fill=ColorA](L.north west)[sharp corners]--(L.north east)--(N.south west)[rounded corners=\@PartToc@Radius]--([xshift=-\@PartToc@LabelWidth]N.south west)--([xshift=-\@PartToc@LabelWidth,yshift=\@PartToc@LabelHeight]N.south west)--cycle;
 \else
-\draw[ColorB!7.5,line width=0.1pt,fill=ColorB!7.5](N.north east)[sharp corners]--(N.north west)--(L.south east)[rounded corners=\@PartToc@Radius]--([yshift=-\@PartToc@LabelHeight]N.north east)--cycle;
+\path[fill=ColorB!7.5](N.north east)[sharp corners]--(N.north west)--(L.south east)[rounded corners=\@PartToc@Radius]--([yshift=-\@PartToc@LabelHeight]N.north east)--cycle;
 %
-\draw[ColorA,line width=0.1pt,fill=ColorA](L.south west)[sharp corners]--(L.south east)--(L.north east)[rounded corners=\@PartToc@Radius]--(L.north west)--cycle;
+\path[fill=ColorA](L.south west)[sharp corners]--(L.south east)--(L.north east)[rounded corners=\@PartToc@Radius]--(L.north west)--cycle;
 \fi
 \end{pgfonlayer}
 \end{tikzpicture}
@@ -2034,7 +2441,7 @@ shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,deco
 
 %%
 %%编号部分目录样式%%
-\NewDocumentCommand{\@Toc@Part@Numbered}{+m}{\contentslabel[\@PartTocStyle{\partlabelfront~{\sffamily\thecontentslabel}~\partlabelback}{#1\hfill\sffamily\thecontentspage}]{1.25cm}}
+\NewDocumentCommand{\@Toc@Part@Numbered}{+m}{\contentslabel[\@PartTocStyle{\partlabelfront{\sffamily\thecontentslabel}\partlabelback}{#1\hfill\sffamily\thecontentspage}]{1.25cm}}
 %%
 %%不编号部分目录样式%%
 \NewDocumentCommand{\@Toc@Part@Unnumbered}{+m}{\contentslabel[\@PartTocStyle{#1}{\hfill\sffamily\thecontentspage}]{1.25cm}}
@@ -2048,13 +2455,10 @@ shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,deco
 %%章目录样式%%
 \gdef\@Chapter@Toc@Label{%
 \if@appendix%如果章在相应环境里，则修改目录前缀
-附录~{\sffamily\thecontentslabel}~%
+附录{\sffamily\thecontentslabel}%
 \else%
-\if@test%
-试题~{\sffamily\thecontentslabel}~%
-\else%
-第~{\sffamily\thecontentslabel}~章%
-\fi\fi}
+第{\sffamily\thecontentslabel}章%
+\fi}
 %%%%
 \newlength{\@Toc@ChapterContents@XSep}
 \setlength{\@Toc@ChapterContents@XSep}{2.45cm}
@@ -2068,23 +2472,20 @@ shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,deco
 {\titlerule*[6pt]{ }\color{ColorA}\ContentPageNumFont\thecontentspage}
 %%%%
 \gdef\@Section@Toc@Label{%
-\if@appendix%如果节在相应环境里，则修改目录前缀
-列表~{\sffamily\thecontentslabel}~%
-\else%
-\if@test%
-题类~{\sffamily\thecontentslabel}~%
-\else%
-\if@topic%
-专题~{\sffamily\thecontentslabel}~%
+\if@topic%如果节在相应环境里，则修改目录前缀
+专题{\sffamily\thecontentslabel}%
 \else%
 \if@project%
-课题~{\sffamily\thecontentslabel}~%
+课题{\sffamily\thecontentslabel}%
 \else%
 \if@quiz%
-测试~{\sffamily\thecontentslabel}~%
+测试{\sffamily\thecontentslabel}%
 \else%
-第~{\sffamily\thecontentslabel}~节%
-\fi\fi\fi\fi\fi}
+\if@appendix%务必放在section层次环境后
+第{\sffamily\thecontentslabel}节%
+\else%
+第{\sffamily\thecontentslabel}节%
+\fi\fi\fi\fi}
 %%%%
 \newlength{\@Toc@SectionContents@XSep}
 \setlength{\@Toc@SectionContents@XSep}{2.45cm}
@@ -2099,23 +2500,22 @@ shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,deco
 {\titlerule*[6pt]{ }\ContentPageNumFont\thecontentspage}
 %%%%
 \gdef\@Subsection@Toc@Label{%
-\if@appendix%如果节在相应环境里，则修改目录前缀
-条目~{\sffamily\thecontentslabel}~%
-\else%
-\if@test%
-题目~{\sffamily\thecontentslabel}~%
-\else%
-\if@topic%
-考点~{\sffamily\thecontentslabel}~%
+\if@topic%如果节在相应环境里，则修改目录前缀
+考点%
 \else%
 \if@project%
-项目~{\sffamily\thecontentslabel}~%
+活动%
 \else%
 \if@quiz%
-题组~{\sffamily\thecontentslabel}~%
+题组%
 \else%
-课时~{\sffamily\thecontentslabel}~%
-\fi\fi\fi\fi\fi}
+\if@appendix%务必放在section层次环境后
+小节%
+\else%
+课时%
+\fi\fi\fi\fi%
+{\sffamily\thecontentslabel}
+}
 %%%%
 \newlength{\@Toc@SubsecContents@XSep}
 \setlength{\@Toc@SubsecContents@XSep}{4.3cm}
@@ -2130,42 +2530,42 @@ shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,deco
 {\titlerule*[6pt]{ }\ContentPageNumFont\color{ColorC}\thecontentspage}
 %%%%
 \gdef\@Figure@Toc@Label{%
-\if@appendix%如果节在相应环境里，则修改目录前缀
-附录~图~{\sffamily\thecontentslabel}~%
-\else%
-\if@test%
-试题~图~{\sffamily\thecontentslabel}~%
-\else%
-\if@topic%
-专题~图~{\sffamily\thecontentslabel}~%
+\figurename%
+\if@topic%如果节在相应环境里，则修改目录前缀
+{\sffamily T}%
 \else%
 \if@project%
-课题~图~{\sffamily\thecontentslabel}~%
+{\sffamily P}%
 \else%
 \if@quiz%
-测试~图~{\sffamily\thecontentslabel}~%
+{\sffamily Q}%
 \else%
-图~{\sffamily\thecontentslabel}~%
-\fi\fi\fi\fi\fi}
+\if@appendix%务必放在section层次环境后
+{\sffamily A}%
+\else%
+\relax%
+\fi\fi\fi\fi%
+{\sffamily\thecontentslabel}
+}
 %%
 \gdef\@Table@Toc@Label{%
-\if@appendix%如果节在相应环境里，则修改目录前缀
-附录~表~{\sffamily\thecontentslabel}~%
-\else%
-\if@test%
-试题~表~{\sffamily\thecontentslabel}~%
-\else%
-\if@topic%
-专题~表~{\sffamily\thecontentslabel}~%
+\tablename%
+\if@topic%如果节在相应环境里，则修改目录前缀
+{\sffamily T}%
 \else%
 \if@project%
-课题~表~{\sffamily\thecontentslabel}~%
+{\sffamily P}%
 \else%
 \if@quiz%
-测试~表~{\sffamily\thecontentslabel}~%
+{\sffamily Q}%
 \else%
-表~{\sffamily\thecontentslabel}~%
-\fi\fi\fi\fi\fi}
+\if@appendix%务必放在section层次环境后
+{\sffamily A}%
+\else%
+\relax%
+\fi\fi\fi\fi%
+{\sffamily\thecontentslabel}
+}
 %%
 \newlength{\@Toc@FTListContents@XSep}
 \setlength{\@Toc@FTListContents@XSep}{3.95cm}
@@ -2203,8 +2603,10 @@ shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,deco
 {}
 \makeatother
 
-%%%%%%%%%%%%%%%%%% 环境定义和命令定义 %%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%% 例题与盒子定义 %%%%%%%%%%%%%%%%%%%%%%%%
 \makeatletter
+%%设置例题和定义盒子序号前缀%%
+\def\@Environment@Mark{}
 %%设置例题命令%%
 \newlength{\@Example@LabelCriticWidth}
 \newlength{\@Example@NameCriticWidth}
@@ -2289,7 +2691,7 @@ shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,deco
 \medskip%
 \if@mainmatter%
 \stepcounter{@egnum}%
-\@ExampleStyle{\@Example@Name}{\@Example@Label}{ColorA}%
+\@ExampleStyle{\@Example@Name}{\@Environment@Mark\@Example@Label}{ColorA}%
 \else%
 \@AnswerStyle{\@Example@Name}{ColorA}%
 \fi%
@@ -2310,7 +2712,7 @@ shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,deco
 \medskip%
 \if@mainmatter%
 \stepcounter{@varnum}%
-\@ExampleStyle{\@Variant@Name}{\@Variant@Label}{ColorB}%
+\@ExampleStyle{\@Variant@Name}{\@Environment@Mark\@Variant@Label}{ColorB}%
 \else%
 \@AnswerStyle{\@Variant@Name}{ColorB}%
 \fi%
@@ -2323,570 +2725,6 @@ shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,deco
 \hspace*{0.5em}\vspace*{0.25em}%
 }{\medskip}
 
-%%%%
-%%以下为本文档类内置栏目，请谨慎修改%%
-%设置环境布尔变量
-\newif\if@appendix
-\newif\if@quiz
-\newif\if@test
-\newif\if@project
-\newif\if@topic
-%%设置附录环境%%
-\newcounter{@Outer@Appendix@Chapter}%储存环境前的章计数器数值
-\newcounter{@Inner@Appendix@Chapter}%储存环境中的章计数器数值
-\setcounter{@Inner@Appendix@Chapter}{0}%将环境中的章计数器值置零
-
-\newenvironment{Appendix}{
-\@appendixtrue
-%在toc文件中写入\@appendixtrue，确保目录正确生成
-\addtocontents{toc}{\protect\@appendixtrue}
-\addtocontents{lof}{\protect\@appendixtrue}
-\addtocontents{lot}{\protect\@appendixtrue}
-%修改章计数器样式为大写字母
-\renewcommand{\thechapter}{\Alph{chapter}}
-%修改节计数器样式为小写字母
-\renewcommand{\thesection}{\alph{section}}
-%修改页眉页脚章标签
-\renewcommand{\chapterlabelfront}{附录}
-\renewcommand{\chapterlabelback}{}
-%修改页眉页脚节标签
-\renewcommand{\sectionlabelfront}{列表}
-\renewcommand{\sectionlabelback}{}
-%修改小节标签
-\renewcommand{\subsectionlabelfront}{条目}
-\renewcommand{\subsectionlabelback}{}
-%修改图表标签
-\renewcommand{\figurename}{附录~图}
-\renewcommand{\tablename}{附录~表}
-%修改有编号章样式
-\titleformat{\chapter}
-{}{}{0em}
-{\@Thumb@Update@Rule%
-\@ChapterStarStyle{\chapterlabelfront~{\sffamily\thechapter}~\chapterlabelback}{##1}%章样式
-\enlargethispage{-0.25cm}%修改页面大小
-\thispagestyle{empty}}
-[\global\chaptersubtitle{}%清空\chaptersubtitle
-\global\chapterimage{}]%清空\chapterimage
-%%%%
-%修改有编号节样式
-\titleformat{\section}[hang]{%
-\vspace*{0.5cm}%
-\SectionFont\color{ColorA}%
-\def\@Section@Star@LabelRadius{\baselineskip/2}}{%
-\tikz[baseline=-0.4em]{%
-\draw[ColorA!50,fill=ColorA!50](0,0)circle(\@Section@Star@LabelRadius);
-\draw[white,fill=ColorA,line width=2.75pt](0,0)circle(7*\@Section@Star@LabelRadius/12);
-}%
-\hspace*{\@Section@Star@LabelXSep}%
-\sectionlabelfront~{\sffamily\thesection}~\sectionlabelback%
-}{\@Section@Star@LabelNameXSep}{##1}
-%%%%
-%修改有编号小节样式
-\titleformat{\subsection}
-{}{}{0em}
-{\@SubsectionStarStyle{\subsectionlabelfront~{\sffamily\thesubsection}~\subsectionlabelback}{##1}}
-%%%%
-\def\@Example@Name{附录~例题}
-\def\@Variant@Name{附录~变式}
-%%%%
-\def\@Exercise@Title{拓展练习}
-\def\@Thinking@Title{深入思考}
-%%%%
-\def\@Definiton@Title{附录~定义}
-\def\@Definiton@Label{Def(Appendix).\the@prenumber.\the@def}
-%%%%
-\def\@Theorem@Title{附录~定理}
-\def\@Theorem@Label{Thm(Appendix).\the@prenumber.\the@thm}
-%%%%
-\def\@Axiom@Title{附录~公理}
-\def\@Axiom@Label{Axm(Appendix).\the@prenumber.\the@axm}
-%%%%
-\def\@Lemma@Title{附录~引理}
-\def\@Lemma@Label{Lem(Appendix).\the@prenumber.\the@lem}
-%%%%
-\def\@Corollary@Title{附录~推论}
-\def\@Corollary@Label{Colry(Appendix).\the@prenumber.\the@colry}
-%%%%
-\def\@Propostion@Title{附录~命题}
-\def\@Proposition@Label{Prop(Appendix).\the@prenumber.\the@prop}
-%%%%
-%将环境前的章计数器值储存在beforecounter中
-\setcounter{@Outer@Appendix@Chapter}{\value{chapter}}
-%将章计数器置为环境中章计数器值
-\setcounter{chapter}{\value{@Inner@Appendix@Chapter}}
-%%%%
-%确保hyperref知道计数器变化
-\hypersetup{pageanchor=true}
-%修改超链接的唯一标识
-\renewcommand{\theHchapter}{\chapterlabelfront\thechapter\chapterlabelback}
-\renewcommand{\theHsection}{\sectionlabelfront\thesection\sectionlabelback}
-\renewcommand{\theHsubsection}{\subsectionlabelfront\thesubsection\subsectionlabelback}
-}{\@appendixfalse
-\addtocontents{toc}{\protect\@appendixfalse}
-\addtocontents{lof}{\protect\@appendixfalse}
-\addtocontents{lot}{\protect\@appendixfalse}
-%将环境中的章计数器值储存在innercounter中
-\setcounter{@Inner@Appendix@Chapter}{\value{chapter}}
-%将章计数器值恢复为环境前的值
-\setcounter{chapter}{\value{@Outer@Appendix@Chapter}}
-%恢复原始超链接设置
-\hypersetup{pageanchor=false}
-}
-%%
-%%设置试题环境%%
-\newcounter{@Outer@Test@Chapter}%储存环境前的章计数器数值
-\newcounter{@Inner@Test@Chapter}%储存环境中的章计数器数值
-\setcounter{@Inner@Test@Chapter}{0}%将环境中的章计数器值置零
-\newenvironment{Test}{
-\@testtrue
-%在toc文件中写入\@testtrue，确保目录正确生成
-\addtocontents{toc}{\protect\@testtrue}
-\addtocontents{lof}{\protect\@testtrue}
-\addtocontents{lot}{\protect\@testtrue}
-%修改章计数器样式为大写字母
-\renewcommand{\thechapter}{\Alph{chapter}}
-%修改节计数器样式为大写罗马数字
-\renewcommand{\thesection}{\Roman{section}}
-%修改页眉页脚章标签
-\renewcommand{\chapterlabelfront}{试题}
-\renewcommand{\chapterlabelback}{}
-%修改页眉页脚节标签
-\renewcommand{\sectionlabelfront}{题类}
-\renewcommand{\sectionlabelback}{}
-%修改小节标签
-\renewcommand{\subsectionlabelfront}{题目}
-\renewcommand{\subsectionlabelback}{}
-%修改图表标签
-\renewcommand{\figurename}{试题~图}
-\renewcommand{\tablename}{试题~表}
-%修改有编号章样式
-\titleformat{\chapter}
-{}{}{0em}
-{\@Thumb@Update@Rule%
-\@ChapterStarStyle{\chapterlabelfront~{\sffamily\thechapter}~\chapterlabelback}{##1}%章样式
-\enlargethispage{-0.25cm}%修改页面大小
-\thispagestyle{empty}}
-[\global\chaptersubtitle{}%清空\chaptersubtitle
-\global\chapterimage{}]%清空\chapterimage
-%%%%
-%修改有编号节样式
-\titleformat{\section}[hang]{%
-\vspace*{0.5cm}%
-\SectionFont\color{ColorA}%
-\def\@Section@Star@LabelRadius{\baselineskip/2}}{%
-\tikz[baseline=-0.4em]{%
-\draw[ColorA!50,fill=ColorA!50](0,0)circle(\@Section@Star@LabelRadius);
-\draw[white,fill=ColorA,line width=2.75pt](0,0)circle(7*\@Section@Star@LabelRadius/12);
-}%
-\hspace*{\@Section@Star@LabelXSep}%
-\sectionlabelfront~{\sffamily\thesection}~\sectionlabelback%
-}{\@Section@Star@LabelNameXSep}{##1}
-%%%%
-%修改有编号小节样式
-\titleformat{\subsection}
-{}{}{0em}
-{\@SubsectionStarStyle{\subsectionlabelfront~{\sffamily\thesubsection}~\subsectionlabelback}{##1}}
-%%%%
-\def\@Example@Name{试题~例题}
-\def\@Variant@Name{试题~变式}
-%%%%
-\def\@Exercise@Title{补充习题}
-\def\@Thinking@Title{错题总结}
-%%%%
-\def\@Definiton@Title{试题~定义}
-\def\@Definiton@Label{Def(Test).\the@prenumber.\the@def}
-%%%%
-\def\@Theorem@Title{试题~定理}
-\def\@Theorem@Label{Thm(Test).\the@prenumber.\the@thm}
-%%%%
-\def\@Axiom@Title{试题~公理}
-\def\@Axiom@Label{Axm(Test).\the@prenumber.\the@axm}
-%%%%
-\def\@Lemma@Title{试题~引理}
-\def\@Lemma@Label{Lem(Test).\the@prenumber.\the@lem}
-%%%%
-\def\@Corollary@Title{试题~推论}
-\def\@Corollary@Label{Colry(Test).\the@prenumber.\the@colry}
-%%%%
-\def\@Propostion@Title{试题~命题}
-\def\@Proposition@Label{Prop(Test).\the@prenumber.\the@prop}
-%%%%
-%将环境前的章计数器值储存在beforecounter中
-\setcounter{@Outer@Test@Chapter}{\value{chapter}}
-%将章计数器置为环境中章计数器值
-\setcounter{chapter}{\value{@Inner@Test@Chapter}}
-%%%%
-%确保hyperref知道计数器变化
-\hypersetup{pageanchor=true}
-%修改超链接的唯一标识
-\renewcommand{\theHchapter}{\chapterlabelfront\thechapter\chapterlabelback}
-\renewcommand{\theHsection}{\sectionlabelfront\thesection\sectionlabelback}
-\renewcommand{\theHsubsection}{\subsectionlabelfront\thesubsection\subsectionlabelback}
-}{\@testfalse
-\addtocontents{toc}{\protect\@testfalse}
-\addtocontents{lof}{\protect\@testfalse}
-\addtocontents{lot}{\protect\@testfalse}
-%将环境中的章计数器值储存在innercounter中
-\setcounter{@Inner@Test@Chapter}{\value{chapter}}
-%将章计数器值恢复为环境前的值
-\setcounter{chapter}{\value{@Outer@Test@Chapter}}
-%恢复原始超链接设置
-\hypersetup{pageanchor=false}
-}
-%%
-%%设置测试环境%%
-\newcounter{@Outer@Quiz@Section}%储存环境前的节计数器数值
-\newcounter{@Inner@Quiz@Section}%储存环境中的节计数器数值
-\setcounter{@Inner@Quiz@Section}{0}%将环境中的节计数器值置零
-\newcounter{@Outer@Quiz@Eg}%储存环境前的例题计数器数值
-\newcounter{@Inner@Quiz@Eg}%储存环境中的例题计数器数值
-\setcounter{@Inner@Quiz@Eg}{0}%将环境中例题计数器值置零
-\newcounter{@Outer@Quiz@Var}%储存环境前的变式计数器数值
-\newcounter{@Inner@Quiz@Var}%储存环境中的变式计数器数值
-\setcounter{@Inner@Quiz@Var}{0}%将环境中变式计数器值置零
-\newenvironment{Quiz}{
-\clearpage
-\@quiztrue
-%在toc文件中写入\@quiztrue，确保目录正确生成
-\addtocontents{toc}{\protect\@quiztrue}
-\addtocontents{lof}{\protect\@quiztrue}
-\addtocontents{lot}{\protect\@quiztrue}
-%修改页眉页脚标签
-\renewcommand{\sectionlabelfront}{测试}
-\renewcommand{\sectionlabelback}{}
-%修改小节标签
-\renewcommand{\subsectionlabelfront}{题组}
-\renewcommand{\subsectionlabelback}{}
-%修改图表标签
-\renewcommand{\figurename}{测试~图}
-\renewcommand{\tablename}{测试~表}
-%环境中禁用part
-\renewcommand{\part}{
-\ClassError{textbook-cn}{Forbidden Part in Quiz Environment!}}
-%环境中禁用chapter
-\renewcommand{\chapter}{
-\ClassError{textbook-cn}{Forbidden Chapter in Quiz Environment!}}
-%%废弃的环境内chapter命令%%
-%\RenewDocumentCommand{\chapter}{s O{##3} m}{
-%\IfBooleanTF{##1}
-%{\OriginChapter*{##3\@mkboth{##2}{##2}}}
-%{\setcounter{@Inner@Quiz@Section}{\value{section}}%将当前环境中的节计数器值赋给innerquizcounter
-%\OriginChapter[##2]{##3}
-%\setcounter{section}{\value{@Inner@Quiz@Section}}}
-%\vspace*{\@Chapter@VSpace}}
-%%%%
-%%简化序号命令%%
-\renewcommand{\the@prenumber}{\thesection}
-%%%%
-\def\@Definiton@Title{测试~定义}
-\def\@Definiton@Label{Def(Quiz).\the@prenumber.\the@def}
-%%%%
-\def\@Theorem@Title{测试~定理}
-\def\@Theorem@Label{Thm(Quiz).\the@prenumber.\the@thm}
-%%%%
-\def\@Axiom@Title{测试~公理}
-\def\@Axiom@Label{Axm(Quiz).\the@prenumber.\the@axm}
-%%%%
-\def\@Lemma@Title{测试~引理}
-\def\@Lemma@Label{Lem(Quiz).\the@prenumber.\the@lem}
-%%%%
-\def\@Corollary@Title{测试~推论}
-\def\@Corollary@Label{Colry(Quiz).\the@prenumber.\the@colry}
-%%%%
-\def\@Propostion@Title{测试~命题}
-\def\@Proposition@Label{Prop(Quiz).\the@prenumber.\the@prop}
-%%%%
-\def\@Example@Name{范例}
-\def\@Variant@Name{变例}
-%%%%
-\def\@Exercise@Title{补充习题}
-\def\@Thinking@Title{错题总结}
-%%%%
-%将环境前的节计数器值储存在beforecounter中
-\setcounter{@Outer@Quiz@Section}{\value{section}}
-%将节计数器置为环境中节计数器值
-\setcounter{section}{\value{@Inner@Quiz@Section}}
-%%
-%将环境前的例题计数器值储存在beforecounter中
-\setcounter{@Outer@Quiz@Eg}{\value{@egnum}}
-%将例题计数器置为环境中节计数器值
-\setcounter{@egnum}{\value{@Inner@Quiz@Eg}}
-%%
-%将环境前的变式计数器值储存在beforecounter中
-\setcounter{@Outer@Quiz@Var}{\value{@varnum}}
-%将变式计数器置为环境中节计数器值
-\setcounter{@varnum}{\value{@Inner@Quiz@Var}}
-%%%%
-%确保hyperref知道计数器变化
-\hypersetup{pageanchor=true}
-%修改超链接的唯一标识
-\renewcommand{\theHsection}{\sectionlabelfront\thesection\sectionlabelback}
-\renewcommand{\theHsubsection}{\subsectionlabelfront\thesubsection\subsectionlabelback}
-}{\@quizfalse
-\addtocontents{toc}{\protect\@quizfalse}
-\addtocontents{lof}{\protect\@quizfalse}
-\addtocontents{lot}{\protect\@quizfalse}
-%将环境中的节计数器值储存在innercounter中
-\setcounter{@Inner@Quiz@Section}{\value{section}}
-%将节计数器值恢复为环境前的值
-\setcounter{section}{\value{@Outer@Quiz@Section}}
-%%
-%将环境中的例题计数器值储存在innercounter中
-\setcounter{@Inner@Quiz@Eg}{\value{@egnum}}
-%将例题计数器值恢复为环境前的值
-\setcounter{@egnum}{\value{@Outer@Quiz@Eg}}
-%%
-%将环境中的变式计数器值储存在innercounter中
-\setcounter{@Inner@Quiz@Var}{\value{@varnum}}
-%将变式计数器值恢复为环境前的值
-\setcounter{@varnum}{\value{@Outer@Quiz@Var}}
-%恢复原始超链接设置
-\hypersetup{pageanchor=false}
-}
-%%%%
-
-%%设置专题环境%%
-\newcounter{@Outer@Topic@Section}%储存环境前的节计数器数值
-\newcounter{@Inner@Topic@Section}%储存环境中的节计数器数值
-\setcounter{@Inner@Topic@Section}{0}%将环境中计数器值置零
-\newcounter{@Outer@Topic@Eg}%储存环境前的例题计数器数值
-\newcounter{@Inner@Topic@Eg}%储存环境中的例题计数器数值
-\setcounter{@Inner@Topic@Eg}{0}%将环境中例题计数器值置零
-\newcounter{@Outer@Topic@Var}%储存环境前的变式计数器数值
-\newcounter{@Inner@Topic@Var}%储存环境中的变式计数器数值
-\setcounter{@Inner@Topic@Var}{0}%将环境中变式计数器值置零
-\newenvironment{Topic}{
-\clearpage
-\@topictrue
-%在toc文件中写入\@topictrue，确保目录正确生成
-\addtocontents{toc}{\protect\@topictrue}
-\addtocontents{lof}{\protect\@topictrue}
-\addtocontents{lot}{\protect\@topictrue}
-%修改页眉页脚标签
-\renewcommand{\sectionlabelfront}{专题}
-\renewcommand{\sectionlabelback}{}
-%修改小节标签
-\renewcommand{\subsectionlabelfront}{考点}
-\renewcommand{\subsectionlabelback}{}
-%修改图表标签
-\renewcommand{\figurename}{专题~图}
-\renewcommand{\tablename}{专题~表}
-%环境中禁用part
-\renewcommand{\part}{
-\ClassError{textbook-cn}{Forbidden Part in Topic Environment!}}
-%环境中禁用chapter
-\renewcommand{\chapter}{
-\ClassError{textbook-cn}{Forbidden Chapter in Topic Environment!}}
-%%废弃的环境内chapter命令%%
-%\RenewDocumentCommand{\chapter}{s O{##3} m}{
-%\IfBooleanTF{##1}
-%{\OriginChapter*{##3\@mkboth{##2}{##2}}}
-%{\setcounter{@Inner@Topic@Section}{\value{section}}%将当前环境中的节计数器值赋给innertopiccounter
-%\OriginChapter[##2]{##3}
-%\setcounter{section}{\value{@Inner@Topic@Section}}}
-%\vspace*{\@Chapter@VSpace}}
-%%%%
-%%简化序号命令%%
-\renewcommand{\the@prenumber}{\thesection}
-%%%%
-\def\@Definiton@Title{专题~定义}
-\def\@Definiton@Label{Def(Topic).\the@prenumber.\the@def}
-%%%%
-\def\@Theorem@Title{专题~定理}
-\def\@Theorem@Label{Thm(Topic).\the@prenumber.\the@thm}
-%%%%
-\def\@Axiom@Title{专题~公理}
-\def\@Axiom@Label{Axm(Topic).\the@prenumber.\the@axm}
-%%%%
-\def\@Lemma@Title{专题~引理}
-\def\@Lemma@Label{Lem(Topic).\the@prenumber.\the@lem}
-%%%%
-\def\@Corollary@Title{专题~推论}
-\def\@Corollary@Label{Colry(Topic).\the@prenumber.\the@colry}
-%%%%
-\def\@Propostion@Title{专题~命题}
-\def\@Proposition@Label{Prop(Topic).\the@prenumber.\the@prop}
-%%%%
-\def\@Example@Name{典例}
-\def\@Variant@Name{延拓}
-%%%%
-\def\@Exercise@Title{针对练习}
-\def\@Thinking@Title{方法提炼}
-%%%%
-%将环境前的节计数器值储存在beforecounter中
-\setcounter{@Outer@Topic@Section}{\value{section}}
-%将节计数器置为环境中节计数器值
-\setcounter{section}{\value{@Inner@Topic@Section}}
-%%
-%将环境前的例题计数器值储存在beforecounter中
-\setcounter{@Outer@Topic@Eg}{\value{@egnum}}
-%将例题计数器置为环境中节计数器值
-\setcounter{@egnum}{\value{@Inner@Topic@Eg}}
-%%
-%将环境前的变式计数器值储存在beforecounter中
-\setcounter{@Outer@Topic@Var}{\value{@varnum}}
-%将变式计数器置为环境中节计数器值
-\setcounter{@varnum}{\value{@Inner@Topic@Var}}
-%%%%
-%确保hyperref知道计数器变化
-\hypersetup{pageanchor=true}
-%修改超链接的唯一标识
-\renewcommand{\theHsection}{\sectionlabelfront\thesection\sectionlabelback}
-\renewcommand{\theHsubsection}{\subsectionlabelfront\thesubsection\subsectionlabelback}
-}{\@topicfalse
-\addtocontents{toc}{\protect\@topicfalse}
-\addtocontents{lof}{\protect\@topicfalse}
-\addtocontents{lot}{\protect\@topicfalse}
-%将环境中的节计数器值储存在innercounter中
-\setcounter{@Inner@Topic@Section}{\value{section}}
-%将节计数器值恢复为环境前的值
-\setcounter{section}{\value{@Outer@Topic@Section}}
-%%
-%将环境中的例题计数器值储存在innercounter中
-\setcounter{@Inner@Topic@Eg}{\value{@egnum}}
-%将例题计数器值恢复为环境前的值
-\setcounter{@egnum}{\value{@Outer@Topic@Eg}}
-%%
-%将环境中的变式计数器值储存在innercounter中
-\setcounter{@Inner@Topic@Var}{\value{@varnum}}
-%将变式计数器值恢复为环境前的值
-\setcounter{@varnum}{\value{@Outer@Topic@Var}}
-%恢复原始超链接设置
-\hypersetup{pageanchor=false}
-}
-%%%%
-%%设置实验环境%%
-\newcounter{@Outer@Project@Section}%储存环境前的节计数器数值
-\newcounter{@Inner@Project@Section}%储存环境中的节计数器数值
-\setcounter{@Inner@Project@Section}{0}%将环境中计数器值置零
-\newcounter{@Outer@Project@Eg}%储存环境前的例题计数器数值
-\newcounter{@Inner@Project@Eg}%储存环境中的例题计数器数值
-\setcounter{@Inner@Project@Eg}{0}%将环境中例题计数器值置零
-\newcounter{@Outer@Project@Var}%储存环境前的变式计数器数值
-\newcounter{@Inner@Project@Var}%储存环境中的变式计数器数值
-\setcounter{@Inner@Project@Var}{0}%将环境中变式计数器值置零
-\newenvironment{Project}{
-\clearpage
-\@projecttrue
-%在toc文件中写入\@experimenttrue，确保目录正确生成
-\addtocontents{toc}{\protect\@projecttrue}
-\addtocontents{lof}{\protect\@projecttrue}
-\addtocontents{lot}{\protect\@projecttrue}
-%修改页眉页脚标签
-\renewcommand{\sectionlabelfront}{课题}
-\renewcommand{\sectionlabelback}{}
-%修改小节标签
-\renewcommand{\subsectionlabelfront}{项目}
-\renewcommand{\subsectionlabelback}{}
-%修改图表标签
-\renewcommand{\figurename}{课题~图}
-\renewcommand{\tablename}{课题~表}
-%环境中禁用part
-\renewcommand{\part}{
-\ClassError{textbook-cn}{Forbidden Part in Project Environment!}}
-%环境中禁用chapter
-\renewcommand{\chapter}{
-\ClassError{textbook-cn}{Forbidden Chapter in Project Environment!}}
-%%废弃的环境内chapter命令%%
-%\RenewDocumentCommand{\chapter}{s O{##3} m}{
-%\IfBooleanTF{##1}
-%{\OriginChapter*{##3\@mkboth{##2}{##2}}}
-%{\setcounter{@Inner@Project@Section}{\value{section}}%将当前环境中的节计数器值赋给innerprojectcounter
-%\OriginChapter[##2]{##3}
-%\setcounter{section}{\value{@Inner@Project@Section}}}
-%\vspace*{\@Chapter@VSpace}}
-%%%%
-%%简化序号命令%%
-\renewcommand{\the@prenumber}{\thesection}
-%%%%
-\def\@Definiton@Title{课题~定义}
-\def\@Definiton@Label{Def(Project).\the@prenumber.\the@def}
-%%%%
-\def\@Theorem@Title{课题~定理}
-\def\@Theorem@Label{Thm(Project).\the@prenumber.\the@thm}
-%%%%
-\def\@Axiom@Title{课题~公理}
-\def\@Axiom@Label{Axm(Project).\the@prenumber.\the@axm}
-%%%%
-\def\@Lemma@Title{课题~引理}
-\def\@Lemma@Label{Lem(Project).\the@prenumber.\the@lem}
-%%%%
-\def\@Corollary@Title{课题~推论}
-\def\@Corollary@Label{Colry(Project).\the@prenumber.\the@colry}
-%%%%
-\def\@Propostion@Title{课题~命题}
-\def\@Proposition@Label{Prop(Project).\the@prenumber.\the@prop}
-%%%%
-\def\@Example@Name{示例}
-\def\@Variant@Name{改进}
-%%%%
-\def\@Exercise@Title{实践}
-\def\@Thinking@Title{思考}
-%%%%
-%将环境前的节计数器值储存在beforecounter中
-\setcounter{@Outer@Project@Section}{\value{section}}
-%将节计数器置为环境中节计数器值
-\setcounter{section}{\value{@Inner@Project@Section}}
-%%
-%将环境前的例题计数器值储存在beforecounter中
-\setcounter{@Outer@Project@Eg}{\value{@egnum}}
-%将例题计数器置为环境中节计数器值
-\setcounter{@egnum}{\value{@Inner@Project@Eg}}
-%%
-%将环境前的变式计数器值储存在beforecounter中
-\setcounter{@Outer@Project@Var}{\value{@varnum}}
-%将变式计数器置为环境中节计数器值
-\setcounter{@varnum}{\value{@Inner@Project@Var}}
-%%%%
-%确保hyperref知道计数器变化
-\hypersetup{pageanchor=true}
-%修改超链接的唯一标识
-\renewcommand{\theHsection}{\sectionlabelfront\thesection\sectionlabelback}
-\renewcommand{\theHsubsection}{\subsectionlabelfront\thesubsection\subsectionlabelback}
-}{\@projectfalse
-\addtocontents{toc}{\protect\@projectfalse}
-\addtocontents{lof}{\protect\@projectfalse}
-\addtocontents{lot}{\protect\@projectfalse}
-%将环境中的节计数器值储存在innercounter中
-\setcounter{@Inner@Project@Section}{\value{section}}
-%将节计数器值恢复为环境前的值
-\setcounter{section}{\value{@Outer@Project@Section}}
-%%
-%将环境中的例题计数器值储存在innercounter中
-\setcounter{@Inner@Project@Eg}{\value{@egnum}}
-%将例题计数器值恢复为环境前的值
-\setcounter{@egnum}{\value{@Outer@Project@Eg}}
-%%
-%将环境中的变式计数器值储存在innercounter中
-\setcounter{@Inner@Project@Var}{\value{@varnum}}
-%将变式计数器值恢复为环境前的值
-\setcounter{@varnum}{\value{@Outer@Project@Var}}
-%恢复原始超链接设置
-\hypersetup{pageanchor=false}
-}
-
-%%重定义\frontmatter%%
-\renewcommand{\frontmatter}[1][roman]{
-\cleardoublepage
-\pagestyle{MainPage}
-\@mainmatterfalse
-\pagenumbering{#1}}
-%%重定义\mainmatter%%
-\renewcommand{\mainmatter}{
-\cleardoublepage
-\pagestyle{MainPage}
-\@mainmattertrue
-\pagenumbering{arabic}}
-%%重定义\backmatter%%
-\renewcommand{\backmatter}[1][Roman]{
-\cleardoublepage
-\pagestyle{MainPage}
-\@mainmatterfalse
-\pagenumbering{#1}}
-\makeatother
-
-%%%%%%%%%%%%%%%%%% 盒子定义 %%%%%%%%%%%%%%%%%%%%%%%%
-\makeatletter
 %%%%
 \newlength{\@Box@CriticTitleWidth}
 \setlength{\@Box@CriticTitleWidth}{2\linewidth/3}
@@ -3064,10 +2902,10 @@ underlay boxed title={
 #1}
 
 %%%%
-\DeclareDocumentEnvironment{Warning}{ +O{} +D<>{} }{\begin{box1}{易错点警示}[#1][#2][ColorF][\faExclamation]}{\end{box1}}
-\DeclareDocumentEnvironment{Discussion}{ +O{} +D<>{}}{\begin{box1}[lowerbox=ignored]{思考与讨论}[#1][#2][ColorC][\faQuestion]}
+\DeclareDocumentEnvironment{Warning}{ +O{} +O{} }{\begin{box1}{易错点警示}[#1][#2][ColorF][\faExclamation]}{\end{box1}}
+\DeclareDocumentEnvironment{Discussion}{ +O{} +O{}}{\begin{box1}[lowerbox=ignored]{思考与讨论}[#1][#2][ColorC][\faQuestion]}
 {\end{box1}}
-\DeclareDocumentEnvironment{Check}{ +O{} +D<>{} }{\begin{box1}[step=@check]{随堂练习~{\sffamily\the@check}}[#1][#2][ColorI][\faCheck]}
+\DeclareDocumentEnvironment{Check}{ +O{} +O{} }{\begin{box1}[step=@check]{随堂练习~{\sffamily\the@check}}[#1][#2][ColorI][\faCheck]}
 {\end{box1}}
 
 %%设置演示盒子%%
@@ -3102,9 +2940,9 @@ underlay boxed title={
 #1}
 
 %%%%
-\DeclareDocumentEnvironment{Display}{ +O{} +D<>{} }{\begin{box2}{演示与实验}[#1][#2][ColorB][\faLayerGroup]}{\end{box2}}
-\DeclareDocumentEnvironment{Method}{ +O{} +D<>{} }{\begin{box2}{方法与技巧}[#1][#2][ColorD][\faPodcast]}{\end{box2}}
-\DeclareDocumentEnvironment{Mind}{ +O{} +D<>{} }{\begin{box2}{科学思维}[#1][#2][ColorC][\faAtom]}{\end{box2}}
+\DeclareDocumentEnvironment{Display}{ +O{} +O{} }{\begin{box2}{演示与实验}[#1][#2][ColorB][\faLayerGroup]}{\end{box2}}
+\DeclareDocumentEnvironment{Method}{ +O{} +O{} }{\begin{box2}{方法与技巧}[#1][#2][ColorD][\faPodcast]}{\end{box2}}
+\DeclareDocumentEnvironment{Mind}{ +O{} +O{} }{\begin{box2}{科学思维}[#1][#2][ColorC][\faAtom]}{\end{box2}}
 
 %%简化序号命令%%
 \newcommand{\the@prenumber}{\thechapter.\thesection}
@@ -3129,59 +2967,50 @@ underlay boxed title={
 
 %%%%
 \def\@Definiton@Title{定义}
-\def\@Definiton@Label{Def.\the@prenumber.\the@def}
+\def\@Definiton@Number{\the@prenumber.\the@def}
 %%%%
 \def\@Theorem@Title{定理}
-\def\@Theorem@Label{Thm.\the@prenumber.\the@thm}
+\def\@Theorem@Number{\the@prenumber.\the@thm}
 %%%%
 \def\@Axiom@Title{公理}
-\def\@Axiom@Label{Axm.\the@prenumber.\the@axm}
+\def\@Axiom@Number{\the@prenumber.\the@axm}
 
 %%编号定义盒子%%
-\DeclareDocumentEnvironment{Definition}{ +O{} +D<>{} D(){} }{\begin{box3}[phantom={
+\DeclareDocumentEnvironment{Definition}{ +O{} +O{} }{\begin{box3}[phantom={
 \if@mainmatter
 \refstepcounter{@def}
-\label{\@Definiton@Label}
-\else
-\phantomsection\label{#3}
 \fi}]{%
 \@Definiton@Title%
 \if@mainmatter%
-~\sffamily\the@prenumber.\the@def%
+{~\sffamily\@Environment@Mark\@Definiton@Number}%
 \fi}
 [#1][#2][ColorA][\faCrosshairs]}{\end{box3}}
 %%%%
-\DeclareDocumentEnvironment{Theorem}{ +O{} +D<>{} D(){} }{\begin{box3}[phantom={
+\DeclareDocumentEnvironment{Theorem}{ +O{} +O{} }{\begin{box3}[phantom={
 \if@mainmatter
 \refstepcounter{@thm}
-\label{\@Theorem@Label}
-\else
-\phantomsection\label{#3}
 \fi}]{%
 \@Theorem@Title%
 \if@mainmatter%
-~\sffamily\the@prenumber.\the@thm%
+{~\sffamily\@Environment@Mark\@Theorem@Number}%
 \fi}
 [#1][#2][ColorB][\faCrosshairs]}{\end{box3}}
 %%%%
-\DeclareDocumentEnvironment{Axiom}{ +O{} +D<>{} D(){} }{\begin{box3}[phantom={
+\DeclareDocumentEnvironment{Axiom}{ +O{} +O{} }{\begin{box3}[phantom={
 \if@mainmatter
 \refstepcounter{@axm}
-\label{\@Axiom@Label}
-\else
-\phantomsection\label{#3}
 \fi}]{%
 \@Axiom@Title%
 \if@mainmatter%
-~\sffamily\the@prenumber.\the@axm%
+{~\sffamily\@Environment@Mark\@Axiom@Number}%
 \fi}
 [#1][#2][ColorI][\faCompactDisc]}{\end{box3}}
 %%%%
 
 %%不编号定义盒子%%
-\DeclareDocumentEnvironment{Definition*}{ +O{} +D<>{} D(){} }{\begin{box3}[phantomlabel={#3}]{\@Theorem@Title}[#1][#2][ColorA][\faCrosshairs]}{\end{box3}}
-\DeclareDocumentEnvironment{Theorem*}{ +O{} +D<>{} D(){} }{\begin{box3}[phantomlabel={#3}]{\@Theorem@Title}[#1][#2][ColorB][\faCrosshairs]}{\end{box3}}
-\DeclareDocumentEnvironment{Axiom*}{ +O{} +D<>{} D(){} }{\begin{box3}[phantomlabel={#3}]{\@Axiom@Title}[#1][#2][ColorI][\faCompactDisc]}{\end{box3}}
+\DeclareDocumentEnvironment{Definition*}{ +O{} +O{} }{\begin{box3}{\@Theorem@Title}[#1][#2][ColorA][\faCrosshairs]}{\end{box3}}
+\DeclareDocumentEnvironment{Theorem*}{ +O{} +O{} }{\begin{box3}{\@Theorem@Title}[#1][#2][ColorB][\faCrosshairs]}{\end{box3}}
+\DeclareDocumentEnvironment{Axiom*}{ +O{} +O{} }{\begin{box3}{\@Axiom@Title}[#1][#2][ColorI][\faCompactDisc]}{\end{box3}}
 %%%%
 %%设置引理盒子%%
 \DeclareTColorBox{box4}{+O{} +m +O{} +O{} O{ColorA} O{\faDiceD20}}{
@@ -3199,60 +3028,51 @@ underlay boxed title={
 
 %%%%
 \def\@Lemma@Title{引理}
-\def\@Lemma@Label{Lem.\the@prenumber.\the@lem}
+\def\@Lemma@Number{\the@prenumber.\the@lem}
 %%%%
 \def\@Corollary@Title{推论}
-\def\@Corollary@Label{Colry.\the@prenumber.\the@colry}
+\def\@Corollary@Number{\the@prenumber.\the@colry}
 %%%%
 \def\@Propostion@Title{命题}
-\def\@Proposition@Label{Prop.\the@prenumber.\the@prop}
+\def\@Proposition@Number{\the@prenumber.\the@prop}
 
 %%编号引理盒子%%
-\DeclareDocumentEnvironment{Lemma}{ +O{} +D<>{} D(){} }{\begin{box4}[phantom={
+\DeclareDocumentEnvironment{Lemma}{ +O{} +O{}}{\begin{box4}[phantom={
 \if@mainmatter
 \refstepcounter{@lem}
-\label{\@Lemma@Label}
-\else
-\phantomsection\label{#3}
 \fi}]{%
 \@Lemma@Title%
 \if@mainmatter%
-~\sffamily\the@prenumber.\the@lem%
+{~\sffamily\@Environment@Mark\@Lemma@Number}%
 \fi}
 [#1][#2][ColorE][\faGlobe]}{\end{box4}}
 %%%%
-\DeclareDocumentEnvironment{Corollary}{ +O{} +D<>{} D(){} }{\begin{box4}[phantom={
+\DeclareDocumentEnvironment{Corollary}{ +O{} +O{} }{\begin{box4}[phantom={
 \if@mainmatter
 \refstepcounter{@colry}
-\label{\@Corollary@Label}
-\else
-\phantomsection\label{#3}
 \fi
 }]{%
 \@Corollary@Title%
 \if@mainmatter%
-~\sffamily\the@prenumber.\the@colry%
+{~\sffamily\@Environment@Mark\@Corollary@Number}%
 \fi}
 [#1][#2][ColorG][\faCompactDisc]}{\end{box4}}
 %%%%
-\DeclareDocumentEnvironment{Proposition}{ +O{} +D<>{} D(){} }{\begin{box4}[phantom={
+\DeclareDocumentEnvironment{Proposition}{ +O{} +O{} }{\begin{box4}[phantom={
 \if@mainmatter
 \refstepcounter{@prop}
-\label{\@Proposition@Label}
-\else
-\phantomsection\label{#3}
 \fi
 }]{%
 \@Propostion@Title%
 \if@mainmatter%
-~\sffamily\the@prenumber.\the@prop%
+{~\sffamily\@Environment@Mark\@Proposition@Number}%
 \fi}
 [#1][#2][ColorH][\faGlobe]}{\end{box4}}
 %%%%
 %%不编号引理盒子%%
-\DeclareDocumentEnvironment{Lemma*}{ +O{} +D<>{} D(){} }{\begin{box4}[phantomlabel={#3}]{\@Lemma@Title}[#1][#2][ColorE][\faGlobe]}{\end{box4}}
-\DeclareDocumentEnvironment{Corollary*}{ +O{} +D<>{} D(){} }{\begin{box4}[phantomlabel={#3}]{\@Corollary@Title}[#1][#2][ColorG][\faCompactDisc]}{\end{box4}}
-\DeclareDocumentEnvironment{Proposition*}{ +O{} +D<>{} D(){} }{\begin{box4}[phantomlabel={#3}]{\@Propostion@Title}[#1][#2][ColorH][\faGlobe]}{\end{box4}}
+\DeclareDocumentEnvironment{Lemma*}{ +O{} +O{} }{\begin{box4}{\@Lemma@Title}[#1][#2][ColorE][\faGlobe]}{\end{box4}}
+\DeclareDocumentEnvironment{Corollary*}{ +O{} +O{} }{\begin{box4}{\@Corollary@Title}[#1][#2][ColorG][\faCompactDisc]}{\end{box4}}
+\DeclareDocumentEnvironment{Proposition*}{ +O{} +O{} }{\begin{box4}{\@Propostion@Title}[#1][#2][ColorH][\faGlobe]}{\end{box4}}
 %%%%
 %设置拓展盒子%%
 \DeclareTColorBox{box5}{+O{} +m +O{} +O{} O{ColorA} O{\faLink}}{
@@ -3268,10 +3088,10 @@ underlay boxed title={
 \node[circle,align=center,inner sep=0mm,font=\BoxLogoFont,text=#5] at([xshift=\@BoxTitle@Radius,yshift=-\@BoxTitle@Radius]title.north west){#6};},
 #1}
 
-\DeclareDocumentEnvironment{Link}{ +O{} +D<>{} }{\begin{box5}{拓展链接}[#1][#2][ColorE][\faLink]}{\end{box5}}
-\DeclareDocumentEnvironment{History}{ +O{} +D<>{} }{\begin{box5}{科学发展史}[#1][#2][ColorC][\faCalendar*]}
+\DeclareDocumentEnvironment{Link}{ +O{} +O{} }{\begin{box5}{拓展链接}[#1][#2][ColorE][\faLink]}{\end{box5}}
+\DeclareDocumentEnvironment{History}{ +O{} +O{} }{\begin{box5}{科学发展史}[#1][#2][ColorC][\faCalendar*]}
 {\end{box5}}
-\DeclareDocumentEnvironment{STS}{ +O{} +D<>{} }{\begin{box5}{科学·技术·社会}[#1][#2][ColorH][\faCog]}
+\DeclareDocumentEnvironment{STS}{ +O{} +O{} }{\begin{box5}{科学·技术·社会}[#1][#2][ColorH][\faCog]}
 {\end{box5}}
 
 %%设置案例盒子%%
@@ -3305,9 +3125,9 @@ underlay boxed title={
 \node[circle,align=center,inner sep=0mm,font=\BoxLogoFont,text=#5](T)at([xshift=\@BoxTitle@Radius,yshift=-\@BoxTitle@Radius]title.north west){#6};},
 #1}
 
-\DeclareDocumentEnvironment{Information}{ +O{} +D<>{} }{\begin{box6}{资料卡片}[#1][#2][ColorI][\faFile*]}{\end{box6}}
-\DeclareDocumentEnvironment{Application}{ +O{} +D<>{} }{\begin{box6}{案例分析}[#1][#2][ColorA][\faTools]}{\end{box6}}
-\DeclareDocumentEnvironment{Review}{ +O{} +D<>{} }{\begin{box6}{知识回顾}[#1][#2][ColorC][\faFan]}{\end{box6}}
+\DeclareDocumentEnvironment{Information}{ +O{} +O{} }{\begin{box6}{资料卡片}[#1][#2][ColorI][\faFile*]}{\end{box6}}
+\DeclareDocumentEnvironment{Application}{ +O{} +O{} }{\begin{box6}{案例分析}[#1][#2][ColorA][\faTools]}{\end{box6}}
+\DeclareDocumentEnvironment{Review}{ +O{} +O{} }{\begin{box6}{知识回顾}[#1][#2][ColorC][\faFan]}{\end{box6}}
 
 %%%%
 \DeclareTColorBox{box7}{ +O{} +O{} }{BlockBox=#2,#1}
@@ -3321,13 +3141,13 @@ underlay boxed title={
 %%%%
 \DeclareTColorBox{box8}{+O{} +m +O{} +O{} O{ColorA} O{}}{CodeBox=#2/#3/#4/#5/#6,#1}
 
-\NewDocumentEnvironment{Reading}{ +O{} +D<>{} }{\begin{box8}[step=@reading]{阅读理解~{\sffamily\the@reading}}[#1][#2][ColorB]}{\end{box8}}
+\NewDocumentEnvironment{Reading}{ +O{} +O{} }{\begin{box8}[step=@reading]{阅读理解~{\sffamily\the@reading}}[#1][#2][ColorB]}{\end{box8}}
 %%
-\NewDocumentEnvironment{Cloze}{ +O{} +D<>{} }{\begin{box8}[step=@cloze]{完形填空~{\sffamily\the@cloze}}[#1][#2][ColorA]}{\end{box8}}
+\NewDocumentEnvironment{Cloze}{ +O{} +O{} }{\begin{box8}[step=@cloze]{完形填空~{\sffamily\the@cloze}}[#1][#2][ColorA]}{\end{box8}}
 %%
-\NewDocumentEnvironment{Article}{ +O{} +D<>{} }{\begin{box8}{文本解读}[#1][#2][ColorC]}{\end{box8}}
+\NewDocumentEnvironment{Article}{ +O{} +O{} }{\begin{box8}{文本解读}[#1][#2][ColorC]}{\end{box8}}
 %%
-\NewDocumentEnvironment{Vocabulary}{ +O{} +D<>{} }{\begin{box8}{词汇解析}[#1][#2][ColorE]}{\end{box8}}
+\NewDocumentEnvironment{Vocabulary}{ +O{} +O{} }{\begin{box8}{词汇解析}[#1][#2][ColorE]}{\end{box8}}
 %%%%
 %%修改代码盒子左侧行数样式%%
 \renewcommand{\theFancyVerbLine}{\LineNumFont\color{ColorA}{\arabic{FancyVerbLine}}}
@@ -3424,7 +3244,7 @@ rounded corners,arc=5.0pt,colupper=ColorA,#1}
 \coordinate(G)at([xshift=-1.0cm,yshift=1.0cm]current page.south east);
 \coordinate(H)at([yshift=1.0cm]current page.south west);
 %%背景%%
-\draw[ColorB!5,fill=ColorB!5,sharp corners](D)rectangle(B);
+\draw[ColorB!7.5,fill=ColorB!7.5,sharp corners](D)rectangle(B);
 \draw[ColorA!25,fill=ColorA!25](A)--(B)--(C)--(D)--(H)[rounded corners=5.0mm]--(G)[rounded corners=5.0mm]--(F)[sharp corners]--(E)--cycle;
 \end{tikzpicture}%
 \centering\color{ColorA}\bfseries%
