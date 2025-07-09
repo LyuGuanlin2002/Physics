@@ -2157,8 +2157,8 @@ shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,deco
 \renewcommand{\chapterlabelfront}{附录~}
 \renewcommand{\chapterlabelback}{}
 %修改页眉页脚节标签
-\renewcommand{\sectionlabelfront}{第}
-\renewcommand{\sectionlabelback}{节}
+\renewcommand{\sectionlabelfront}{附节}
+\renewcommand{\sectionlabelback}{}
 %修改小节标签
 \renewcommand{\subsectionlabelfront}{小节}
 \renewcommand{\subsectionlabelback}{}
@@ -2482,7 +2482,7 @@ shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,deco
 测试{\sffamily\thecontentslabel}%
 \else%
 \if@appendix%务必放在section层次环境后
-第{\sffamily\thecontentslabel}节%
+附节{\sffamily\thecontentslabel}%
 \else%
 第{\sffamily\thecontentslabel}节%
 \fi\fi\fi\fi}
