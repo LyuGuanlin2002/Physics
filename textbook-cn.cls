@@ -923,12 +923,11 @@ shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,deco
 %%%%%%%%%%%%%%%%%% 页面样式 %%%%%%%%%%%%%%%%%%%%%%%%
 %%BookPressLogo%%
 \newcommand{\BookPressLogo}{%
-\tikz{%
 \path[fill=ColorB,even odd rule]
 (26.1,7.4)--(24.3,-0.5)--(16.9,-0.4)..controls(16.8,-0.2)and(16.8,0.0)..(16.7,0.2)--(23.6,0.3)--(25.4,7.2)--cycle;
 %%%%
 \path[fill=ColorA,even odd rule]
-(24.2,9.4)--(24.1,8.9)..controls(23.8,7.7)and(23.5,6.7)..(23.2,5.4)..controls(22.6,3.5)and(22.7,2.9)..(21.5,2.2)..controls(20.2,1.7)and(19.2,1.5)..(16.1,0.8)--(16.4,-0.9)--(25.0,-1.8)--(26.4,4.7)--(27.1,4.6)--(25.6,-2.6)--(24.9,-2.5)..controls(21.6,-2.1)and(19.5,-1.9)..(16.1,-1.2)--(15.9,-0.9)..controls(15.5,-0.1)and(15.4,0.3)..(15.5,0.7)--(17.8,5.4)--(17.9,5.4)..controls(19.1,5.7)and(22.4,8.0)..(24.2,9.4)--cycle;}
+(24.2,9.4)--(24.1,8.9)..controls(23.8,7.7)and(23.5,6.7)..(23.2,5.4)..controls(22.6,3.5)and(22.7,2.9)..(21.5,2.2)..controls(20.2,1.7)and(19.2,1.5)..(16.1,0.8)--(16.4,-0.9)--(25.0,-1.8)--(26.4,4.7)--(27.1,4.6)--(25.6,-2.6)--(24.9,-2.5)..controls(21.6,-2.1)and(19.5,-1.9)..(16.1,-1.2)--(15.9,-0.9)..controls(15.5,-0.1)and(15.4,0.3)..(15.5,0.7)--(17.8,5.4)--(17.9,5.4)..controls(19.1,5.7)and(22.4,8.0)..(24.2,9.4)--cycle;
 }
 %%定义部分总数（序言、前言视作一个部分，目录、插图目录、表格目录视作一个部分，绪论、有编号部分、无编号部分以及后记）,编译两次可以得到正确的页面框架%%
 \makeatletter
@@ -984,6 +983,8 @@ shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,deco
 \edef\currentpart{\thepart}
 \newcommand{\@Main@PageStyle}{
 \begin{tikzpicture}[remember picture,overlay]
+\pgfdeclarelayer{@MainPage@Top}%
+\pgfsetlayers{main,@MainPage@Top}%
 %%根据页数的奇偶生成%%
 \ifodd\value{page}
 \coordinate(A)at(current page.north west);
@@ -999,19 +1000,44 @@ shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,deco
 \draw[fill=ColorB!7.5,ColorB!7.5,sharp corners]
 (A)--(B)--(C)--(D)--(E)[rounded corners=5.0mm]--(F)[rounded corners=5.0mm]--(G)[sharp corners]--(H)--cycle;
 %%绘制页码%%
-\draw[ColorA,fill=ColorA,line width=1.0pt]
+\path[fill=ColorA!60!ColorB]
 ([xshift=-\@outerlen+0.25cm]B)[rounded corners=1.5mm]--
 ([xshift=-\@outerlen+0.25cm,yshift=-\@PageNumWidth]B)[rounded corners=1.5mm]--
 ([xshift=-\@FrameWidth+0.15cm,yshift=-\@PageNumWidth]B)[sharp corners]--
 ([xshift=-\@FrameWidth+0.15cm]B)--cycle;
+%%%%
+\path[pattern={Lines[angle=45,distance=6.0pt,line width=4.0pt]},pattern color=ColorA]
+([xshift=-\@outerlen+0.25cm]B)[rounded corners=1.5mm]--
+([xshift=-\@outerlen+0.25cm,yshift=-\@PageNumWidth]B)[rounded corners=1.5mm]--
+([xshift=-\@FrameWidth+0.15cm,yshift=-\@PageNumWidth]B)[sharp corners]--
+([xshift=-\@FrameWidth+0.15cm]B)--cycle;
+%%%%
 \node[font=\PageNumberFont,text=white,anchor=south,align=center,inner ysep=2.0mm](P)at([xshift=-\@outerlen/2-\@FrameWidth/2+0.2cm,yshift=-\@PageNumWidth]B){\maxsizebox{0.8cm}{!}{\thepage}};
 %%绘制侧标%%
-\draw[ColorA,fill=ColorA,sharp corners,line width=1.0pt]node[append after command={(T.north west)--(T.north east)--(T.south east)[rounded corners=1.75mm]--(T.south west)[rounded corners=1.75mm]--cycle},font=\ThumbFont,text=white,align=center,outer sep=0mm,inner xsep=2.5mm,inner ysep=3.5mm,anchor=east](T)at([yshift=\MarkY]B){\rotatebox[origin=c]{90}{\begin{varwidth}{\DeltaH}
+\begin{pgfonlayer}{@MainPage@Top}
+\node[font=\ThumbFont,text=white,align=center,outer sep=0mm,inner xsep=2.5mm,inner ysep=3.5mm,anchor=east](T)at([yshift=\MarkY]B){%
+\rotatebox[origin=c]{90}{%
+\begin{varwidth}{\DeltaH}
 \strut\@title\strut
-\end{varwidth}}};
+\end{varwidth}}%
+};
+\end{pgfonlayer}
+%%%%
+\path[fill=ColorA!60!ColorB](T.north west)--(T.north east)--(T.south east)[rounded corners=1.75mm]--(T.south west)[rounded corners=1.75mm]--cycle;
+%%%%
+\path[pattern={Lines[angle=45,distance=6.0pt,line width=4.0pt]},pattern color=ColorA](T.north west)--(T.north east)--(T.south east)[rounded corners=1.75mm]--(T.south west)[rounded corners=1.75mm]--cycle;
+%%%%
 \if@partnumbermark
 %%绘制部分序号标签%%
-\draw[ColorA,fill=ColorA,sharp corners,line width=1.0pt]node[append after command={([yshift=-0.1cm]PTN.south west)[rounded corners=2.0mm]--(PTN.north west)[rounded corners=2.0mm]--(PTN.north east)[sharp corners]--([yshift=-0.1cm]PTN.south east)--cycle},font=\PartNumberFont,text=white,align=center,outer sep=0mm,inner xsep=3.5mm,inner ysep=2.5mm,anchor=south](PTN)at([yshift=0.1cm]I){\maxsizebox{2.4cm}{!}{\strut\firstrightxmark\strut}};
+\begin{pgfonlayer}{@MainPage@Top}
+\node[font=\PartNumberFont,text=white,align=center,outer sep=0mm,inner xsep=3.5mm,inner ysep=2.5mm,anchor=south](PTN)at([yshift=0.1cm]I){%
+\maxsizebox{2.4cm}{!}{\strut\firstleftxmark\strut}%
+};
+\end{pgfonlayer}
+%%%%
+\path[fill=ColorA!60!ColorB]([yshift=-0.1cm]PTN.south west)[rounded corners=2.0mm]--(PTN.north west)[rounded corners=2.0mm]--(PTN.north east)[sharp corners]--([yshift=-0.1cm]PTN.south east)--cycle;
+%%%%
+\path[pattern={Lines[angle=45,distance=6.0pt,line width=4.0pt]},pattern color=ColorA]([yshift=-0.1cm]PTN.south west)[rounded corners=2.0mm]--(PTN.north west)[rounded corners=2.0mm]--(PTN.north east)[sharp corners]--([yshift=-0.1cm]PTN.south east)--cycle;
 \fi
 %%%%
 \else
@@ -1028,23 +1054,49 @@ shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,deco
 \draw[fill=ColorB!7.5,ColorB!7.5,sharp corners]
 (A)--(B)--(C)--(D)--(E)[rounded corners=5.0mm]--(F)[rounded corners=5.0mm]--(G)[sharp corners]--(H)--cycle;
 %%绘制页码%%
-\draw[ColorA,fill=ColorA,line width=1.0pt]
+\path[fill=ColorA!60!ColorB]
 ([xshift=\@outerlen-0.25cm]B)[rounded corners=1.5mm]--
 ([xshift=\@outerlen-0.25cm,yshift=-\@PageNumWidth]B)[rounded corners=1.5mm]--
 ([xshift=\@FrameWidth-0.15cm,yshift=-\@PageNumWidth]B)[sharp corners]--
 ([xshift=\@FrameWidth-0.15cm]B)--cycle;
+%%%%
+\path[pattern={Lines[angle=-45,distance=6.0pt,line width=4.0pt]},pattern color=ColorA]
+([xshift=\@outerlen-0.25cm]B)[rounded corners=1.5mm]--
+([xshift=\@outerlen-0.25cm,yshift=-\@PageNumWidth]B)[rounded corners=1.5mm]--
+([xshift=\@FrameWidth-0.15cm,yshift=-\@PageNumWidth]B)[sharp corners]--
+([xshift=\@FrameWidth-0.15cm]B)--cycle;
+%%%%
 \node[font=\PageNumberFont,text=white,anchor=south,align=center,inner ysep=2.0mm](P)at([xshift=\@FrameWidth/2+\@outerlen/2-0.2cm,yshift=-\@PageNumWidth]B){\maxsizebox{0.8cm}{!}{\thepage}};
 %%绘制侧标%%
-\draw[ColorA,fill=ColorA,sharp corners,line width=1.0pt]node[append after command={(T.north west)[rounded corners=1.75mm]--(T.north east)[rounded corners=1.75mm]--(T.south east)[sharp corners]--(T.south west)--cycle},font=\ThumbFont,text=white,align=center,outer sep=0mm,inner xsep=2.5mm,inner ysep=3.5mm,anchor=west](T)at([yshift=\MarkY]B){\rotatebox[origin=c]{270}{\begin{varwidth}{\DeltaH}
+\begin{pgfonlayer}{@MainPage@Top}
+\node[font=\ThumbFont,text=white,align=center,outer sep=0mm,inner xsep=2.5mm,inner ysep=3.5mm,anchor=west](T)at([yshift=\MarkY]B){%
+\rotatebox[origin=c]{-90}{%
+\begin{varwidth}{\DeltaH}
 \strut\@title\strut
-\end{varwidth}}};
+\end{varwidth}}%
+};
+\end{pgfonlayer}
+%%%%
+\path[fill=ColorA!60!ColorB](T.north west)[rounded corners=1.75mm]--(T.north east)[rounded corners=1.75mm]--(T.south east)[sharp corners]--(T.south west)--cycle;
+%%%%
+\path[pattern={Lines[angle=-45,distance=6.0pt,line width=4.0pt]},pattern color=ColorA](T.north west)[rounded corners=1.75mm]--(T.north east)[rounded corners=1.75mm]--(T.south east)[sharp corners]--(T.south west)--cycle;
+%%%%
 \if@partnumbermark
 %%绘制部分序号标签%%
-\draw[ColorA,fill=ColorA,sharp corners,line width=1.0pt]node[append after command={([yshift=-0.1cm]PTN.south west)[rounded corners=2.0mm]--(PTN.north west)[rounded corners=2.0mm]--(PTN.north east)[sharp corners]--([yshift=-0.1cm]PTN.south east)--cycle},font=\PartNumberFont,text=white,align=center,outer sep=0mm,inner xsep=3.5mm,inner ysep=2.5mm,anchor=south](PTN)at([yshift=0.1cm]I){\maxsizebox{2.4cm}{!}{\strut\firstleftxmark\strut}};
+\begin{pgfonlayer}{@MainPage@Top}
+\node[font=\PartNumberFont,text=white,align=center,outer sep=0mm,inner xsep=3.5mm,inner ysep=2.5mm,anchor=south](PTN)at([yshift=0.1cm]I){%
+\maxsizebox{2.4cm}{!}{\strut\firstleftxmark\strut}%
+};
+\end{pgfonlayer}
+%%%%
+\path[fill=ColorA!60!ColorB]([yshift=-0.1cm]PTN.south west)[rounded corners=2.0mm]--(PTN.north west)[rounded corners=2.0mm]--(PTN.north east)[sharp corners]--([yshift=-0.1cm]PTN.south east)--cycle;
+%%%%
+\path[pattern={Lines[angle=-45,distance=6.0pt,line width=4.0pt]},pattern color=ColorA]([yshift=-0.1cm]PTN.south west)[rounded corners=2.0mm]--(PTN.north west)[rounded corners=2.0mm]--(PTN.north east)[sharp corners]--([yshift=-0.1cm]PTN.south east)--cycle;
 \fi
 %%
 \fi
-\end{tikzpicture}}
+\end{tikzpicture}%
+}
 %%
 %%定义主页面样式%%
 \fancypagestyle{MainPage}{
@@ -1058,7 +1110,7 @@ shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,deco
 \AtPageLowerLeft{%
 \begin{tikzpicture}[remember picture]
 \draw[ColorB!7.5,fill=ColorB!7.5](0,0)rectangle(\paperwidth,\paperheight);
-\node[opacity=0.075](L)at(current page.center){\BookPressLogo};
+\node[opacity=0.075](L)at(current page.center){\tikz{\BookPressLogo}};
 \end{tikzpicture}}}
 }
 %%
