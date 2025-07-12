@@ -420,285 +420,6 @@ marginparsep=\@marginparseplen,marginparwidth=\@marginparwidthlen,reversemarginp
 \endgroup}
 \makeatother
 
-%%%%%%%%%%%%%%%%%%%% 参考文献宏包 %%%%%%%%%%%%%%%%%%%%
-%%参考文献编译方式：先用XeLaTeX编译主文件.tex一次；再用BibTeX编译主文件（或各子文件）.tex一次；然后用XeLaTeX编译主文件.tex两次%%
-\RequirePackage[numbers,sectionbib]{natbib}%参考文献格式
-\renewcommand{\bibnumfmt}[1]{\protect\NumberedLabel{#1}}%修改参考文献序号样式
-\renewcommand{\citenumfont}[1]{\color{ColorA}\CiteNumFont#1}%修改引用样式
-\bibpunct{\color{ColorA}{[}}{\color{ColorA}{]}}{,}{n}{}{;}%修改方括号颜色
-\renewcommand{\bibname}{参考文献}%修改参考文献标题
-%%根据类布尔参数splitbib的存在与否来判断是否加载宏包chapterbib%%
-\makeatletter
-\ifTextBook@splitbib
-\RequirePackage{chapterbib}%分章节显示参考文献，且参考文献编号各自独立
-\fi
-%%设置参考文献输出命令键%%
-\define@boolkey{printbib}{intoc}[true]{}
-\def\prtbib@envbiblevel{\@ifundefined{chapter}{\section}{\chapter}*}
-\define@key{printbib}{envlevel}{\def\prtbib@envbiblevel{#1}}
-\def\prtbib@biblevel{\@ifundefined{chapter}{\section}{\chapter}*}
-\define@key{printbib}{level}{\def\prtbib@biblevel{#1}}
-\def\prtbib@toclevel{\@ifundefined{chapter}{section}{chapter}}
-\define@key{printbib}{toclevel}{\def\prtbib@toclevel{#1}}
-\def\prtbib@envtoclevel{\@ifundefined{chapter}{section}{chapter}}
-\define@key{printbib}{envtoclevel}{\def\prtbib@envtoclevel{#1}}
-%%设置默认键值%%
-\setkeys{printbib}{level=\chapter*,envlevel=\chapter,toclevel=chapter,envtoclevel=chapter}
-%%参考文献样式设置命令%%
-\newcommand{\bibsetup}[1]{\setkeys{printbib}{#1}}
-%%参考文献输出设置%%
-\newcommand{\printbib}[1]{
-\colorlet{ListColor}{ColorA}
-\if@appendix
-\renewcommand{\bibsection}{
-\prtbib@envbiblevel{\bibname}
-\ifKV@printbib@intoc\phantomsection
-\addcontentsline{toc}{\prtbib@envtoclevel}{\bibname}\fi}
-\else
-\renewcommand{\bibsection}{
-\prtbib@biblevel{\bibname}
-\ifKV@printbib@intoc\phantomsection
-\addcontentsline{toc}{\prtbib@toclevel}{\bibname}\fi}
-\fi
-\bibliographystyle{plain}
-\bibliography{#1}}
-\makeatother
-
-%%%%%%%%%%%%%%%%%%%% 索引宏包 %%%%%%%%%%%%%%%%%%%%
-\RequirePackage{filecontents}%在tex内编写数据文件
-\RequirePackage[splitindex]{imakeidx}%索引设置，splitindex参数自动分割索引\\Large
-%%索引风格文件indexstyle.ist%%
-\begin{filecontents}[overwrite]{indexstyle.ist}
-headings_flag 1
-heading_prefix "\n\\centering\\bfseries\\color{ColorA}"
-heading_suffix "\\normalfont\\color{black}\\nopagebreak\n"
-delim_0 " \\hfill " 
-delim_1 " \\hfill "
-delim_2 " \\hfill "
-\end{filecontents}
-
-\makeatletter
-%%添加新关键字envlevel（环境中索引层次）%%
-\def\imki@envindexlevel{\@ifundefined{chapter}{\section}{\chapter}*}
-\define@key{imkiindex}{envlevel}{\def\imki@envindexlevel{#1}}
-%%添加新关键字envtoclevel（环境中索引的目录层次）%%
-\def\imki@envtoclevel{\@ifundefined{chapter}{section}{chapter}}
-\define@key{imkiindex}{envtoclevel}{\def\imki@envtoclevel{#1}}
-%%设置默认键值（不要引入noclearpage选项，否则会出现目录页码错误）%%
-\setkeys{imkiindex}{level=\chapter*,envlevel=\chapter,toclevel=chapter,envtoclevel=chapter}
-%%修改索引环境%%
-\ifimki@original
-\expandafter\def\expandafter\theindex\expandafter{\expandafter
-\imki@maybeaddtotoc\theindex}
-\else
-\global\let\imki@idxprologue\relax
-\renewenvironment{theindex}{
-%%%%%%%%%% 修改部分开始 %%%%%%%%%%
-\if@appendix%判断索引所在环境
-\imki@envindexlevel{\indexname}
-\else
-\imki@indexlevel{\indexname}
-\fi
-\imki@maybeaddtotoc%添加目录
-%\imki@indexheaders%注释掉页眉设置
-%\thispagestyle{\imki@firstpagestyle}%注释掉首页页面样式
-%%%%%%%%%% 修改部分结束 %%%%%%%%%%
-\ifnum\imki@columns>\@ne
-\columnsep\imki@columnsep
-\ifx\imki@idxprologue\relax
-\begin{multicols}{\imki@columns}
-\else
-\begin{multicols}{\imki@columns}[\imki@idxprologue]
-\fi
-\else
-\imki@idxprologue
-\fi
-\global\let\imki@idxprologue\relax
-\parindent\z@
-\parskip\z@\@plus0.3\p@\relax
-\columnseprule
-\ifKV@imki@columnseprule0.4\p@\else\z@\fi
-\raggedright
-\let\item\@idxitem
-\imki@othercode}{
-\ifnum\imki@columns>\@ne
-\end{multicols}
-\fi}
-\fi
-
-%%修改目录添加%%
-\def\imki@putindexsplit#1{
-\ifimki@nonewpage\else
-\imki@clearpage
-\ifimki@disableautomatic\else
-\immediate\closeout\csname #1@idxfile\endcsname
-\fi\fi
-\let\imki@indexname\indexname
-\@nameuse{imki@set@#1}\imki@decide
-\if@tempswa
-\imki@exec{\imki@program\imki@options#1.idx}
-\else
-\imki@finalmessage{#1}
-\fi
-%%%%%%%%%% 修改部分开始 %%%%%%%%%%
-\ifKV@imki@intoc
-\if@appendix
-\def\imki@maybeaddtotoc{\@nameuse{phantomsection}
-\addcontentsline{toc}{\imki@envtoclevel}{\imki@title}}
-\else
-\def\imki@maybeaddtotoc{\@nameuse{phantomsection}
-\addcontentsline{toc}{\imki@toclevel}{\imki@title}}
-\fi
-\else
-\def\imki@maybeaddtotoc{}
-\fi
-%%%%%%%%%% 修改部分结束 %%%%%%%%%%
-\ifx\imki@title\imki@check@indexname\else
-\def\indexname{\imki@title}
-\fi
-\@input@{#1.ind}
-\let\indexname\imki@indexname}
-%%%%
-\def\imki@putindexunique#1{
-\ifimki@nonewpage\else
-\imki@clearpage
-\fi
-\let\imki@indexname\indexname
-\@nameuse{imki@set@#1}\imki@decide
-\if@tempswa
-\ifimki@splitdone\else
-\ifimki@disableautomatic\else
-\immediate\closeout\@indexfile
-\fi
-\imki@exec{splitindex \imki@splitindexoptions\space\imki@jobname.idx}
-\global\imki@splitdonetrue
-\fi
-\else
-\ifimki@splitdone\else
-\imki@splitindexmessage\global\imki@splitdonetrue
-\fi\fi
-\if@tempswa
-\imki@exec{\imki@program\imki@options\imki@jobname-#1.idx}
-\fi
-%%%%%%%%%% 修改部分开始 %%%%%%%%%%
-\ifKV@imki@intoc
-\if@appendix
-\def\imki@maybeaddtotoc{\@nameuse{phantomsection}
-\addcontentsline{toc}{\imki@envtoclevel}{\imki@title}}
-\else
-\def\imki@maybeaddtotoc{\@nameuse{phantomsection}
-\addcontentsline{toc}{\imki@toclevel}{\imki@title}}
-\fi
-\else
-\def\imki@maybeaddtotoc{}
-\fi
-%%%%%%%%%% 修改部分结束 %%%%%%%%%%
-\ifx\imki@title\imki@check@indexname\else
-\def\indexname{\imki@title}
-\fi
-\@input@{\imki@jobname-#1.ind}
-\let\indexname\imki@indexname}
-
-\makeatother
-
-%%定义中文索引命令，#2是中文，#3是全拼（首字母）%%
-\NewDocumentCommand{\zhindex}{omm}{\IfValueTF{#1}{\index[#1]{#3@#2}}{\index{#3@#2}}}
-
-%%%%%%%%%%%%%%%%%%%% 术语表宏包 %%%%%%%%%%%%%%%%%%%%
-\RequirePackage{nomencl}%引入术语表
-%%生成主要符号表的方法：主文件先用XeLaTeX编译一次，然后建立一个.bat文件，内容为：makeindex <filename>.nlo -s nomencl.ist -o <filename>.nls -t <filename>.nlg，运行，再用XeLaTeX编译主文件两次即可生成%%
-\renewcommand{\nomname}{主要符号表}%更改符号表标题
-
-\makeatletter
-%%以下命令会令nomencl宏包选项失效，符号表的具体设置需要在主文件中进行%%
-%%设置符号表输出命令键%%
-\newif\if@nomencl@columnseprule
-\define@key{nomen}{columns}{\def\@nomencl@columns{#1}}
-\define@key{nomen}{columnsep}{\def\@nomencl@columnsep{#1}}
-%%添加新关键字level%%
-\def\@nomencl@level{\@ifundefined{chapter}{\section}{\chapter}*}
-\define@key{nomen}{level}{\def\@nomencl@level{#1}}
-%%添加新关键字envlevel%%
-\def\@nomencl@envlevel{\@ifundefined{chapter}{\section}{\chapter}*}
-\define@key{nomen}{envlevel}{\def\@nomencl@envlevel{#1}}
-%%添加新关键字toclevel%%
-\def\@nomencl@toclevel{\@ifundefined{chapter}{section}{chapter}}
-\define@key{nomen}{toclevel}{\def\@nomencl@toclevel{#1}}
-%%添加新关键字envtoclevel%%
-\def\@nomencl@envtoclevel{\@ifundefined{chapter}{section}{chapter}}
-\define@key{nomen}{envtoclevel}{\def\@nomencl@envtoclevel{#1}}
-%%定义产生一对布尔键的命令%%
-\newcommand{\@nomen@define@pairboolkeys}[4]{
-\define@boolkey{nomen}{#1}[true]{#2}
-\define@boolkey{nomen}{#3}[true]{#4}}
-%%
-\@nomen@define@pairboolkeys{columnseprule}{\@nomencl@columnsepruletrue}{nocolumnseprule}{\@nomencl@columnseprulefalse}
-\@nomen@define@pairboolkeys{intoc}{\@intoctrue}{notintoc}{\@intocfalse}
-\@nomen@define@pairboolkeys{tocbasic}{\@nomencl@tocbasictrue}{notocbasic}{\@nomencl@tocbasicfalse}
-%%设置默认键值%%
-\setkeys{nomen}{level=\chapter*,envlevel=\chapter,toclevel=chapter,envtoclevel=chapter,
-columns=2,columnsep=2.0em,notintoc,notocbasic,nocolumnseprule}
-%%定义符号表设置命令%%
-\newcommand{\nomensetup}[1]{\setkeys{nomen}{#1}}
-%%修改符号表环境%%
-\renewcommand{\thenomenclature}{
-%%%%%%%%%% 修改部分开始 %%%%%%%%%%
-\clearpage
-\providecommand*{\listofnlsname}{\nomname}
-\if@nomencl@tocbasic
-\let\list@fname\listofnlsname
-\def\@currext{nls}
-\tocbasic@listhead{\list@fname}
-\else
-\if@appendix%判断索引所在环境
-\@nomencl@envlevel{\nomname}
-\if@intoc%判断是否存在intoc参数
-\phantomsection
-\addcontentsline{toc}{\@nomencl@envtoclevel}{\nomname}
-\fi
-\else
-\@nomencl@level{\nomname}
-\if@intoc%判断是否存在intoc参数
-\phantomsection
-\addcontentsline{toc}{\@nomencl@toclevel}{\nomname}
-\fi\fi
-\fi
-\nompreamble
-\ifnum\@nomencl@columns>\@ne%多列符号表设置
-\begin{multicols}{\@nomencl@columns}
-\columnsep\@nomencl@columnsep
-\columnseprule
-\if@nomencl@columnseprule0.4\p@\else\z@\fi
-\fi
-%%%%%%%%%% 修改部分结束 %%%%%%%%%%
-\if@nomentbl
-\let\itemOrig=\item
-\def\item{\gdef\item{\\}}
-\expandafter\longtable\expandafter{\@nomtableformat}
-\else
-\list{}{
-\labelwidth\nom@tempdim
-\leftmargin\labelwidth
-\advance\leftmargin\labelsep
-\itemsep\nomitemsep
-\let\makelabel\nomlabel}
-\fi}
-%%
-\def\endthenomenclature{
-\if@nomentbl
-\item\endlongtable
-\global\let\item=\itemOrig
-\else
-\endlist
-\fi
-%%%%%%%%%% 修改部分开始 %%%%%%%%%%
-\nompostamble
-\ifnum\@nomencl@columns>\@ne
-\end{multicols}
-\fi
-%%%%%%%%%% 修改部分结束 %%%%%%%%%%
-}
-\makeatother
 
 %%%%%%%%%%%%%%%%%%%% 数学符号宏包 %%%%%%%%%%%%%%%%%%%%
 \RequirePackage{amsmath,amsfonts,amssymb,mathrsfs,array,bm,upgreek}%数学宏包
@@ -727,8 +448,7 @@ columns=2,columnsep=2.0em,notintoc,notocbasic,nocolumnseprule}
 \RequirePackage{anyfontsize}%自由调整字体大小
 \RequirePackage{tabularx,colortbl,array,tabularray,booktabs,multirow}%表格
 \RequirePackage{pgfplots,tikzpagenodes,tikz,eso-pic,tkz-euclide}%绘图
-\usetikzlibrary{fit,calc,math,scopes,backgrounds,positioning,intersections,decorations,shadows,
-shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,decorations.footprints}
+\usetikzlibrary{fit,calc,math,scopes,backgrounds,positioning,intersections,decorations,shadows,shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,decorations.footprints}
 \makeatletter
 %%修改addtolength的作用域%%
 \newcommand{\gaddtolength}[1]{\calc@assign@skip{\global\advance#1}}
@@ -980,7 +700,6 @@ shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,deco
 \RenewDocumentCommand{\sectionmark}{+m}{\markright{\sectionlabelfront{\sffamily\thesection}\sectionlabelback\quad#1}}
 %%%%
 %%绘制主页面样式%%
-\edef\currentpart{\thepart}
 \newcommand{\@Main@PageStyle}{
 \begin{tikzpicture}[remember picture,overlay]
 \pgfdeclarelayer{@MainPage@Top}%
@@ -997,7 +716,7 @@ shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,deco
 \coordinate(H)at([yshift=-\@FrameWidth]current page.north west);
 \coordinate(I)at(current page.south);
 %%绘制页面框架%%
-\draw[fill=ColorB!7.5,ColorB!7.5,sharp corners]
+\draw[ColorB!7.5,fill=ColorB!7.5,sharp corners]
 (A)--(B)--(C)--(D)--(E)[rounded corners=5.0mm]--(F)[rounded corners=5.0mm]--(G)[sharp corners]--(H)--cycle;
 %%绘制页码%%
 \path[fill=ColorA!60!ColorB]
@@ -1006,38 +725,39 @@ shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,deco
 ([xshift=-\@FrameWidth+0.15cm,yshift=-\@PageNumWidth]B)[sharp corners]--
 ([xshift=-\@FrameWidth+0.15cm]B)--cycle;
 %%%%
-\path[pattern={Lines[angle=45,distance=6.0pt,line width=4.0pt]},pattern color=ColorA]
+\path[pattern={Lines[angle=45,distance=5.0pt,line width=4.0pt]},pattern color=ColorA]
 ([xshift=-\@outerlen+0.25cm]B)[rounded corners=1.5mm]--
 ([xshift=-\@outerlen+0.25cm,yshift=-\@PageNumWidth]B)[rounded corners=1.5mm]--
 ([xshift=-\@FrameWidth+0.15cm,yshift=-\@PageNumWidth]B)[sharp corners]--
 ([xshift=-\@FrameWidth+0.15cm]B)--cycle;
 %%%%
-\node[font=\PageNumberFont,text=white,anchor=south,align=center,inner ysep=2.0mm](P)at([xshift=-\@outerlen/2-\@FrameWidth/2+0.2cm,yshift=-\@PageNumWidth]B){\maxsizebox{0.8cm}{!}{\thepage}};
+\node[font=\PageNumberFont,text=white,anchor=south,inner ysep=2.0mm](P)at([xshift=-\@outerlen/2-\@FrameWidth/2+0.2cm,yshift=-\@PageNumWidth]B){\maxsizebox{0.8cm}{!}{\centering\thepage}};
 %%绘制侧标%%
 \begin{pgfonlayer}{@MainPage@Top}
-\node[font=\ThumbFont,text=white,align=center,outer sep=0mm,inner xsep=2.5mm,inner ysep=3.5mm,anchor=east](T)at([yshift=\MarkY]B){%
+\node[font=\ThumbFont,text=white,outer sep=0mm,inner xsep=2.5mm,inner ysep=3.5mm,anchor=east](T)at([yshift=\MarkY]B){%
 \rotatebox[origin=c]{90}{%
 \begin{varwidth}{\DeltaH}
-\strut\@title\strut
+\centering\strut\@title\strut
 \end{varwidth}}%
 };
 \end{pgfonlayer}
 %%%%
 \path[fill=ColorA!60!ColorB](T.north west)--(T.north east)--(T.south east)[rounded corners=1.75mm]--(T.south west)[rounded corners=1.75mm]--cycle;
 %%%%
-\path[pattern={Lines[angle=45,distance=6.0pt,line width=4.0pt]},pattern color=ColorA](T.north west)--(T.north east)--(T.south east)[rounded corners=1.75mm]--(T.south west)[rounded corners=1.75mm]--cycle;
+\path[pattern={Lines[angle=45,distance=5.0pt,line width=4.0pt]},pattern color=ColorA](T.north west)--(T.north east)--(T.south east)[rounded corners=1.75mm]--(T.south west)[rounded corners=1.75mm]--cycle;
 %%%%
 \if@partnumbermark
 %%绘制部分序号标签%%
 \begin{pgfonlayer}{@MainPage@Top}
-\node[font=\PartNumberFont,text=white,align=center,outer sep=0mm,inner xsep=3.5mm,inner ysep=2.5mm,anchor=south](PTN)at([yshift=0.1cm]I){%
-\maxsizebox{2.4cm}{!}{\strut\firstleftxmark\strut}%
-};
+\node[font=\PartNumberFont,text=white,outer sep=0mm,inner xsep=3.5mm,inner ysep=2.5mm,anchor=south](PTN)at([yshift=0.1cm]I){%
+\begin{varwidth}{\textwidth/3}%
+\centering\strut\firstrightxmark\strut
+\end{varwidth}};
 \end{pgfonlayer}
 %%%%
 \path[fill=ColorA!60!ColorB]([yshift=-0.1cm]PTN.south west)[rounded corners=2.0mm]--(PTN.north west)[rounded corners=2.0mm]--(PTN.north east)[sharp corners]--([yshift=-0.1cm]PTN.south east)--cycle;
 %%%%
-\path[pattern={Lines[angle=45,distance=6.0pt,line width=4.0pt]},pattern color=ColorA]([yshift=-0.1cm]PTN.south west)[rounded corners=2.0mm]--(PTN.north west)[rounded corners=2.0mm]--(PTN.north east)[sharp corners]--([yshift=-0.1cm]PTN.south east)--cycle;
+\path[pattern={Lines[angle=45,distance=5.0pt,line width=4.0pt]},pattern color=ColorA]([yshift=-0.1cm]PTN.south west)[rounded corners=2.0mm]--(PTN.north west)[rounded corners=2.0mm]--(PTN.north east)[sharp corners]--([yshift=-0.1cm]PTN.south east)--cycle;
 \fi
 %%%%
 \else
@@ -1051,7 +771,7 @@ shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,deco
 \coordinate(H)at([yshift=-\@FrameWidth]current page.north east);
 \coordinate(I)at(current page.south);
 %%绘制页面框架%%
-\draw[fill=ColorB!7.5,ColorB!7.5,sharp corners]
+\draw[ColorB!7.5,fill=ColorB!7.5,sharp corners]
 (A)--(B)--(C)--(D)--(E)[rounded corners=5.0mm]--(F)[rounded corners=5.0mm]--(G)[sharp corners]--(H)--cycle;
 %%绘制页码%%
 \path[fill=ColorA!60!ColorB]
@@ -1060,38 +780,39 @@ shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,deco
 ([xshift=\@FrameWidth-0.15cm,yshift=-\@PageNumWidth]B)[sharp corners]--
 ([xshift=\@FrameWidth-0.15cm]B)--cycle;
 %%%%
-\path[pattern={Lines[angle=-45,distance=6.0pt,line width=4.0pt]},pattern color=ColorA]
+\path[pattern={Lines[angle=-45,distance=5.0pt,line width=4.0pt]},pattern color=ColorA]
 ([xshift=\@outerlen-0.25cm]B)[rounded corners=1.5mm]--
 ([xshift=\@outerlen-0.25cm,yshift=-\@PageNumWidth]B)[rounded corners=1.5mm]--
 ([xshift=\@FrameWidth-0.15cm,yshift=-\@PageNumWidth]B)[sharp corners]--
 ([xshift=\@FrameWidth-0.15cm]B)--cycle;
 %%%%
-\node[font=\PageNumberFont,text=white,anchor=south,align=center,inner ysep=2.0mm](P)at([xshift=\@FrameWidth/2+\@outerlen/2-0.2cm,yshift=-\@PageNumWidth]B){\maxsizebox{0.8cm}{!}{\thepage}};
+\node[font=\PageNumberFont,text=white,anchor=south,inner ysep=2.0mm](P)at([xshift=\@FrameWidth/2+\@outerlen/2-0.2cm,yshift=-\@PageNumWidth]B){\maxsizebox{0.8cm}{!}{\centering\thepage}};
 %%绘制侧标%%
 \begin{pgfonlayer}{@MainPage@Top}
-\node[font=\ThumbFont,text=white,align=center,outer sep=0mm,inner xsep=2.5mm,inner ysep=3.5mm,anchor=west](T)at([yshift=\MarkY]B){%
+\node[font=\ThumbFont,text=white,outer sep=0mm,inner xsep=2.5mm,inner ysep=3.5mm,anchor=west](T)at([yshift=\MarkY]B){%
 \rotatebox[origin=c]{-90}{%
 \begin{varwidth}{\DeltaH}
-\strut\@title\strut
+\centering\strut\@title\strut
 \end{varwidth}}%
 };
 \end{pgfonlayer}
 %%%%
 \path[fill=ColorA!60!ColorB](T.north west)[rounded corners=1.75mm]--(T.north east)[rounded corners=1.75mm]--(T.south east)[sharp corners]--(T.south west)--cycle;
 %%%%
-\path[pattern={Lines[angle=-45,distance=6.0pt,line width=4.0pt]},pattern color=ColorA](T.north west)[rounded corners=1.75mm]--(T.north east)[rounded corners=1.75mm]--(T.south east)[sharp corners]--(T.south west)--cycle;
+\path[pattern={Lines[angle=-45,distance=5.0pt,line width=4.0pt]},pattern color=ColorA](T.north west)[rounded corners=1.75mm]--(T.north east)[rounded corners=1.75mm]--(T.south east)[sharp corners]--(T.south west)--cycle;
 %%%%
 \if@partnumbermark
 %%绘制部分序号标签%%
 \begin{pgfonlayer}{@MainPage@Top}
-\node[font=\PartNumberFont,text=white,align=center,outer sep=0mm,inner xsep=3.5mm,inner ysep=2.5mm,anchor=south](PTN)at([yshift=0.1cm]I){%
-\maxsizebox{2.4cm}{!}{\strut\firstleftxmark\strut}%
-};
+\node[font=\PartNumberFont,text=white,outer sep=0mm,inner xsep=3.5mm,inner ysep=2.5mm,anchor=south](PTN)at([yshift=0.1cm]I){%
+\begin{varwidth}{\textwidth/3}%
+\centering\strut\firstleftxmark\strut
+\end{varwidth}};
 \end{pgfonlayer}
 %%%%
 \path[fill=ColorA!60!ColorB]([yshift=-0.1cm]PTN.south west)[rounded corners=2.0mm]--(PTN.north west)[rounded corners=2.0mm]--(PTN.north east)[sharp corners]--([yshift=-0.1cm]PTN.south east)--cycle;
 %%%%
-\path[pattern={Lines[angle=-45,distance=6.0pt,line width=4.0pt]},pattern color=ColorA]([yshift=-0.1cm]PTN.south west)[rounded corners=2.0mm]--(PTN.north west)[rounded corners=2.0mm]--(PTN.north east)[sharp corners]--([yshift=-0.1cm]PTN.south east)--cycle;
+\path[pattern={Lines[angle=-45,distance=5.0pt,line width=4.0pt]},pattern color=ColorA]([yshift=-0.1cm]PTN.south west)[rounded corners=2.0mm]--(PTN.north west)[rounded corners=2.0mm]--(PTN.north east)[sharp corners]--([yshift=-0.1cm]PTN.south east)--cycle;
 \fi
 %%
 \fi
@@ -1105,7 +826,7 @@ shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,deco
 \fancyhead[RO]{\HeaderFont\color{ColorA}\rightmark}
 \fancyhead[LE]{\HeaderFont\color{ColorA}\leftmark}}
 %%绘制空白页面样式%%
-\newcommand{\@Empty@PageStyle}{%
+\newcommand{\@Sub@PageStyle}{%
 \AddToShipoutPictureBG*{%
 \AtPageLowerLeft{%
 \begin{tikzpicture}[remember picture]
@@ -1115,9 +836,9 @@ shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,deco
 }
 %%
 %%重定义空白页面样式%%
-\fancypagestyle{empty}{%
+\fancypagestyle{SubPage}{%
 \fancyhf{}%清除所有页眉页脚
-\fancyfoot[C]{\@Empty@PageStyle}
+\fancyfoot[C]{\@Sub@PageStyle}%
 }
 \makeatother
 
@@ -1189,7 +910,10 @@ shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,deco
 \coordinate(U)at([xshift=-\@Part@StripeWidth]R);
 \coordinate(X)at([xshift=-\@Part@StripeWidth]S);
 %%部分编号%%
-\node[align=flush right,anchor=south east,font=\PartLabelFont,text=ColorA,inner xsep=0mm](NL)at([yshift=\@Part@StripeWidth+0.25cm]U){\begin{varwidth}{\textwidth-5.0cm}\strut#1\strut\end{varwidth}};
+\node[align=flush right,anchor=south east,font=\PartLabelFont,text=ColorA,inner xsep=0mm](NL)at([yshift=\@Part@StripeWidth+0.25cm]U){%
+\begin{varwidth}{\textwidth-5.0cm}%
+\strut#1\strut
+\end{varwidth}};
 %%页面中部色块坐标2%%
 %%获取标题宽度%%
 \pgfgetnodewidth(NL)\NLWidth
@@ -1206,15 +930,18 @@ shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,deco
 %%左侧色块%%
 \filldraw[ColorB,fill=ColorB,opacity=0.2](Y)[sharp corners]--(Z)--(YY)[rounded corners=2.5mm]--(ZZ)--cycle;
 %%部分名%%
-\node[align=flush right,anchor=north east,font=\PartNameFont,text=ColorA,inner xsep=0mm](PT)at([yshift=-\@Part@StripeWidth-0.25cm]X){\begin{varwidth}{\textwidth-2.45cm}\strut#2\strut\end{varwidth}};
+\node[align=flush right,anchor=north east,font=\PartNameFont,text=ColorA,inner xsep=0mm](PT)at([yshift=-\@Part@StripeWidth-0.25cm]X){%
+\begin{varwidth}{\textwidth-2.45cm}%
+\strut#2\strut
+\end{varwidth}};
 %%部分简介%%
-\node[align=flush right,inner xsep=3.0mm,anchor=north east,font=\itshape\kaiti,text=ColorA](IT)at([yshift=-0.5cm]PT.south east){
-\begin{varwidth}{\textwidth-2.75cm}
+\node[align=flush right,inner xsep=3.0mm,anchor=north east,font=\itshape\kaiti,text=ColorA](IT)at([yshift=-0.5cm]PT.south east){%
+\begin{varwidth}{\textwidth-2.75cm}%
 \@partintro
 \end{varwidth}};
 %%部分目录%%
-\node[inner sep=0mm,outer sep=0mm,anchor=south west](SC)at([xshift=\@innerlen+5.0mm,yshift=\@botlen]current page.south west){
-\begin{varwidth}{\textwidth/2}
+\node[inner sep=0mm,outer sep=0mm,anchor=south west](SC)at([xshift=\@innerlen+5.0mm,yshift=\@botlen]current page.south west){%
+\begin{varwidth}{\textwidth/2}%
 \printcontents[part]{l}{0}{\setcounter{tocdepth}{0}}
 \end{varwidth}};
 \end{pgfonlayer}}
@@ -1268,7 +995,10 @@ shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,deco
 \coordinate(U)at([xshift=\@Part@StripeWidth]R);
 \coordinate(X)at([xshift=\@Part@StripeWidth]S);
 %%部分编号%%
-\node[align=flush left,anchor=south west,font=\PartLabelFont,text=ColorA,inner xsep=0mm](NL)at([yshift=\@Part@StripeWidth+0.25cm]U){\begin{varwidth}{\textwidth-5.0cm}\strut#1\strut\end{varwidth}};
+\node[align=flush left,anchor=south west,font=\PartLabelFont,text=ColorA,inner xsep=0mm](NL)at([yshift=\@Part@StripeWidth+0.25cm]U){%
+\begin{varwidth}{\textwidth-5.0cm}%
+\strut#1\strut
+\end{varwidth}};
 %%页面中部色块坐标2%%
 %%获取标题宽度%%
 \pgfgetnodewidth(NL)\NLWidth
@@ -1286,15 +1016,18 @@ shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,deco
 \filldraw[draw=ColorB,fill=ColorB,opacity=0.2](Y)[sharp corners]--(Z)--(YY)[rounded corners=2.5mm]--(ZZ)--cycle;
 %%
 %%部分名%%
-\node[align=flush left,anchor=north west,font=\PartNameFont,text=ColorA,inner xsep=0mm](PT)at([yshift=-\@Part@StripeWidth-0.25cm]X){\begin{varwidth}{\textwidth-2.45cm}\strut#2\strut\end{varwidth}};
+\node[align=flush left,anchor=north west,font=\PartNameFont,text=ColorA,inner xsep=0mm](PT)at([yshift=-\@Part@StripeWidth-0.25cm]X){%
+\begin{varwidth}{\textwidth-2.45cm}%
+\strut#2\strut
+\end{varwidth}};
 %%部分简介%%
-\node[align=flush left,inner xsep=3.0mm,anchor=north west,font=\itshape\kaiti,text=ColorA](IT)at([yshift=-0.5cm]PT.south west){
-\begin{varwidth}{\textwidth-2.75cm}
+\node[align=flush left,inner xsep=3.0mm,anchor=north west,font=\itshape\kaiti,text=ColorA](IT)at([yshift=-0.5cm]PT.south west){%
+\begin{varwidth}{\textwidth-2.75cm}%
 \@partintro
 \end{varwidth}};
 %%部分目录%%
-\node[inner sep=0mm,outer sep=0mm,minimum width=4.0cm,anchor=south east](SC)at([xshift=-\@innerlen-5.0mm,yshift=\@botlen]current page.south east){
-\begin{varwidth}{\textwidth/2}
+\node[inner sep=0mm,outer sep=0mm,minimum width=4.0cm,anchor=south east](SC)at([xshift=-\@innerlen-5.0mm,yshift=\@botlen]current page.south east){%
+\begin{varwidth}{\textwidth/2}%
 \printcontents[part]{l}{0}{\setcounter{tocdepth}{0}}
 \end{varwidth}};
 \end{pgfonlayer}}
@@ -1362,6 +1095,7 @@ shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,deco
 \node[anchor=south west,outer sep=0mm,inner sep=0mm](Pic)at(current page.south west){\@partimage};
 %%%%
 \begin{pgfonlayer}{@Part@Star@Top}%
+\begingroup%
 \PartNameFont%
 \def\@Part@Star@LabelRadius{\dimexpr0.75\expandafter\baselineskip/2\relax}%
 \def\@Part@Star@LabelYShift{\dimexpr0.25\expandafter\baselineskip/2-0.1em\relax}%
@@ -1378,6 +1112,7 @@ shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,deco
 \begin{varwidth}{\textwidth-5.0cm}
 \strut#1\strut
 \end{varwidth}};}};
+\endgroup%
 %%页面中部色块坐标2%%
 %%获取标题宽度%%
 \pgfgetnodewidth(ZZ)\ZZWidth
@@ -1394,7 +1129,7 @@ shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,deco
 %%左侧色块%%
 \filldraw[draw=ColorB,fill=ColorB,opacity=0.2](Y)[sharp corners]--(Z)--(YY)[rounded corners=2.5mm]--(ZZ)--cycle;
 %%部分简介%%
-\node[align=flush right,inner xsep=2.0mm,anchor=north east,font=\itshape\kaiti,text=ColorA](IT)at([yshift=-1.25cm]X){\begin{varwidth}{\textwidth-2.75cm}
+\node[align=flush right,inner xsep=2.0mm,anchor=north east,font=\itshape\kaiti,text=ColorA](IT)at([yshift=-1.25cm]X){\begin{varwidth}{\textwidth-2.75cm}%
 \@partintro
 \end{varwidth}};
 %%部分目录%%
@@ -1448,6 +1183,7 @@ shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,deco
 \node[anchor=south east,outer sep=0mm,inner sep=0mm](Pic)at(current page.south east){\@partimage};
 %%%%
 \begin{pgfonlayer}{@Part@Star@Top}%
+\begingroup%
 \PartNameFont%
 \def\@Part@Star@LabelRadius{\dimexpr0.75\expandafter\baselineskip/2\relax}%
 \def\@Part@Star@LabelYShift{\dimexpr0.25\expandafter\baselineskip/2-0.1em\relax}%
@@ -1464,6 +1200,7 @@ shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,deco
 \begin{varwidth}{\textwidth-5.0cm}
 \strut#1\strut
 \end{varwidth}};}};
+\endgroup%
 %%页面中部色块坐标2%%
 %%获取标题宽度%%
 \pgfgetnodewidth(ZZ)\ZZWidth
@@ -1481,29 +1218,29 @@ shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,deco
 \filldraw[draw=ColorB,fill=ColorB,opacity=0.2](Y)[sharp corners]--(Z)--(YY)[rounded corners=2.5mm]--(ZZ)--cycle;
 %%
 %%部分简介%%
-\node[align=flush left,inner xsep=2.0mm,anchor=north west,font=\itshape\kaiti,text=ColorA](IT)at([yshift=-1.25cm]X){
-\begin{varwidth}{\textwidth-2.75cm}
+\node[align=flush left,inner xsep=2.0mm,anchor=north west,font=\itshape\kaiti,text=ColorA](IT)at([yshift=-1.25cm]X){%
+\begin{varwidth}{\textwidth-2.75cm}%
 \@partintro
 \end{varwidth}};
 %%部分目录%%
-\node[inner sep=0mm,outer sep=0mm,minimum width=4.0cm,anchor=south east](SC)at([xshift=-\@innerlen-5.0mm,yshift=\@botlen]current page.south east){
-\begin{varwidth}{\textwidth/2}
+\node[inner sep=0mm,outer sep=0mm,minimum width=4.0cm,anchor=south east](SC)at([xshift=-\@innerlen-5.0mm,yshift=\@botlen]current page.south east){%
+\begin{varwidth}{\textwidth/2}%
 \printcontents[part]{l}{0}{\setcounter{tocdepth}{0}}
 \end{varwidth}};
 \end{pgfonlayer}}
 %%
 %%不编号部分页样式%%
-\NewDocumentCommand{\@PartStarStyle}{ +m }{
+\NewDocumentCommand{\@PartStarStyle}{ +m }{%
 \begin{tikzpicture}[remember picture,overlay]
-\pgfdeclarelayer{@Part@Star@Top}
-\pgfdeclarelayer{@Part@Star@Bottom}
-\pgfsetlayers{@Part@Star@Bottom,main,@Part@Star@Top}
+\pgfdeclarelayer{@Part@Star@Top}%
+\pgfdeclarelayer{@Part@Star@Bottom}%
+\pgfsetlayers{@Part@Star@Bottom,main,@Part@Star@Top}%
 %%白色背景%%
 \draw[white,fill=white](current page.south west)rectangle(current page.north east);
 \ifodd\value{page}%判断奇偶页
-\@Part@Star@OddPage@Style{#1}
-\else
-\@Part@Star@EvenPage@Style{#1}
+\@Part@Star@OddPage@Style{#1}%
+\else%
+\@Part@Star@EvenPage@Style{#1}%
 \fi
 \end{tikzpicture}
 }
@@ -1514,9 +1251,10 @@ shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,deco
 {}{}{0em}
 {\startcontents[part]%开启小目录
 \@PartStyle{\partlabelfront{\sffamily\thepart}\partlabelback}{#1}%部分样式
-\global\@partnumbermarktrue%
-\extramarks{\partlabelfront{\sffamily\thepart}\partlabelback}{\partlabelfront{\sffamily\thepart}\partlabelback}%
-\thispagestyle{empty}}
+\global\@partnumbermarktrue%生成页面底部的部分索引
+\extramarks{\partlabelfront{\sffamily\thepart}\partlabelback\quad#1}{\partlabelfront{\sffamily\thepart}\partlabelback\quad#1}%部分索引内容
+\thispagestyle{empty}%部分页的页面样式为空白
+}
 [\global\partintro{}%清空\partintro
 \global\partimage{}]%清空\partimage
 %%不编号部分页%%
@@ -1524,13 +1262,16 @@ shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,deco
 {}{}{0em}
 {\startcontents[part]%开启小目录
 \@PartStarStyle{#1}%部分样式
-\global\@partnumbermarkfalse%
-\extramarks{}{}%
-\thispagestyle{empty}}
+\global\@partnumbermarktrue%生成页面底部的部分索引
+\extramarks{#1}{#1}%部分索引内容
+\thispagestyle{empty}%部分页的页面样式为空白
+}
 [\global\partintro{}%清空\partintro
 \global\partimage{}]%清空\partimage
 %%间距设置%%
 \titlespacing*{\part}{0pt}{0pt}{0pt}
+%%页面风格设置%%
+\assignpagestyle{\part}{SubPage}%部分页后面的空白页样式设置
 
 %%为\part*添加短页眉%%
 \NewCommandCopy{\OriginPart}{\part}
@@ -1683,8 +1424,10 @@ shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,deco
 %%不编号章节样式%%
 \newlength{\@Chapter@Star@LabelNameXSep}
 \newlength{\@Chapter@Star@LabelYShift@Up}
+\newlength{\@Chapter@Star@SayingBlockWidth}
 \setlength{\@Chapter@Star@LabelNameXSep}{4.0mm}
 \setlength{\@Chapter@Star@LabelYShift@Up}{5.0mm}
+\setlength{\@Chapter@Star@SayingBlockWidth}{\@FrameWidth+1.0cm}
 \NewDocumentCommand{\@ChapterStarStyle}{ +m +m }{
 \begin{tikzpicture}[remember picture,overlay]
 \pgfdeclarelayer{@Chapter@Star@Top}
@@ -1696,7 +1439,9 @@ shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,deco
 \coordinate(B)at(current page.north east);
 \coordinate(C)at(current page.south east);
 \coordinate(D)at(current page.south west);
-\coordinate(E)at([yshift=\@FrameWidth]D);
+\coordinate(E)at([yshift=\@Chapter@Star@SayingBlockWidth]D);
+\coordinate(F)at([xshift=-5.0cm,yshift=\@Chapter@Star@SayingBlockWidth]C);
+\coordinate(G)at([xshift=-3.0cm,yshift=\@FrameWidth]C);
 \coordinate(H)at([xshift=-\@FrameWidth,yshift=\@FrameWidth]C);
 \coordinate(N)at([yshift=\@Chapter@Star@LabelYShift@Up]current page text area.north west);
 \coordinate(Q1)at([xshift=-1.75cm,yshift=1.75cm]C);
@@ -1740,18 +1485,25 @@ shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,deco
 %%章节图片%%
 \node[anchor=north west,outer sep=0mm,inner sep=0mm](U)at(A){\@chapterimage};
 %%框架2%%
-\draw[white,fill=white](J)[rounded corners=5.0mm]--(I)[rounded corners=5.0mm]--(H)[sharp corners]--(E)[sharp corners]--cycle;
+\draw[white,fill=white](J)[rounded corners=5.0mm]--(I)[rounded corners=5.0mm]--(H)[rounded corners=2.5mm]--(G)[in=0,out=180]to(F)[sharp corners]--(E)--cycle;
 \end{pgfonlayer}
+%%
+\begin{pgfonlayer}{@Chapter@Star@Top}
+%%底部文字%%
+\node[anchor=west,font=\ChapterSayingFont,text=ColorA,text width=\paperwidth-\@innerlen-5.0cm,inner sep=0mm,outer sep=0mm](S)at([xshift=\@innerlen,yshift=\@FrameWidth/2+0.5cm]D){\@chaptersaying};
 %%页码%%
 \draw[ColorA,fill=ColorA,rounded corners=2.0mm](Q)circle(\@Chapter@PageSize/2);
 \node[font=\PageNumberFont,text=white,anchor=center,align=center](PP)at(Q){\maxsizebox{\@Chapter@PageSize-0.3cm}{!}{\thepage}};
+\end{pgfonlayer}
 \else
 %%坐标点%%
 \coordinate(A)at(current page.north east);
 \coordinate(B)at(current page.north west);
 \coordinate(C)at(current page.south west);
 \coordinate(D)at(current page.south east);
-\coordinate(E)at([yshift=\@FrameWidth]D);
+\coordinate(E)at([yshift=\@Chapter@Star@SayingBlockWidth]D);
+\coordinate(F)at([xshift=5.0cm,yshift=\@Chapter@Star@SayingBlockWidth]C);
+\coordinate(G)at([xshift=3.0cm,yshift=\@FrameWidth]C);
 \coordinate(H)at([xshift=\@FrameWidth,yshift=\@FrameWidth]C);
 \coordinate(N)at([yshift=\@Chapter@Star@LabelYShift@Up]current page text area.north east);
 \coordinate(Q1)at([xshift=1.75cm,yshift=1.75cm]C);
@@ -1796,11 +1548,16 @@ shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,deco
 %%章节图片%%
 \node[anchor=north east,outer sep=0mm,inner sep=0mm](U)at(A){\@chapterimage};
 %%框架2%%
-\draw[white,fill=white](J)[rounded corners=5.0mm]--(I)[rounded corners=5.0mm]--(H)[sharp corners]--(E)[sharp corners]--cycle;
+\draw[white,fill=white](J)[rounded corners=5.0mm]--(I)[rounded corners=5.0mm]--(H)[rounded corners=2.5mm]--(G)[in=180,out=0]to(F)[sharp corners]--(E)--cycle;
 \end{pgfonlayer}
+%%
+\begin{pgfonlayer}{@Chapter@Star@Top}
+%%底部文字%%
+\node[anchor=east,font=\ChapterSayingFont,text=ColorA,text width=\paperwidth-\@innerlen-5.0cm,inner sep=0mm,outer sep=0mm](S)at([xshift=-\@innerlen,yshift=\@FrameWidth/2+0.5cm]D){\@chaptersaying};
 %%页码%%
 \draw[ColorA,fill=ColorA,rounded corners=2.0mm](Q)circle(\@Chapter@PageSize/2);
 \node[font=\PageNumberFont,text=white,anchor=center,align=center](PP)at(Q){\maxsizebox{\@Chapter@PageSize-0.3cm}{!}{\thepage}};
+\end{pgfonlayer}
 \fi
 \end{tikzpicture}
 }
@@ -1814,13 +1571,14 @@ shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,deco
 \gaddtolength{\MarkY}{-\SepH}%更新侧标位置
 \fi%
 }
+
 %%编号章节页%%
 \titleformat{\chapter}
 {}{}{0em}
 {\@Thumb@Update@Rule%
 \@ChapterStyle{\chapterlabelfront{\sffamily\thechapter}\chapterlabelback}{#1}%章样式
 \enlargethispage{-0.75cm}%修改页面大小
-\thispagestyle{empty}}
+}
 [\global\chapterimage{}%清空\chapterimage
 \global\chaptersaying{}]%清空\chaptersaying
 %%不编号章节页%%
@@ -1828,18 +1586,37 @@ shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,deco
 {}{}{0em}
 {\@Thumb@Update@Rule%
 \@ChapterStarStyle{#1}{\@chaptersubtitle}%章样式
-\thispagestyle{empty}}
+\enlargethispage{-0.75cm}%修改页面大小
+}
 [\global\chaptersubtitle{}%清空\chaptersubtitle
 \global\chapterimage{}]%清空\chapterimage
 %%间距设置%%
 \titlespacing*{\chapter}{0pt}{0pt}{0pt}
+%%页面风格设置%%
+\assignpagestyle{\chapter}{empty}
+
 %%为\chapter*添加短页眉%%
 \NewCommandCopy{\OriginChapter}{\chapter}
-\RenewDocumentCommand{\chapter}{s +O{#3} +m}{
+%%
+%%原始cleardoublepage命令
+\def\@origin@cleardoublepage{%
+\clearpage\if@twoside \ifodd\c@page\else
+\hbox{}\newpage\if@twocolumn\hbox{}\newpage\fi\fi\fi}
+%%新cleardoublepage命令
+\def\@new@cleardoublepage{%
+\clearpage\if@twoside \ifodd\c@page\else
+\hbox{}\thispagestyle{SubPage}\newpage\if@twocolumn\hbox{}\newpage\fi\fi\fi}
+%%
+\RenewDocumentCommand{\chapter}{s +O{#3} +m}{%
+%%将原始cleardoublepage命令修改
+\def\cleardoublepage{\@new@cleardoublepage}%
+%%
 \IfBooleanTF{#1}
 {\OriginChapter*{#3\@mkboth{#2}{#2}}}
 {\OriginChapter[#2]{#3}}
-\vspace*{\@Chapter@VSpace}
+\vspace*{\@Chapter@VSpace}%
+%%重置cleardoublepage命令
+\def\cleardoublepage{\@origin@cleardoublepage}%
 }
 
 %%节样式%%
