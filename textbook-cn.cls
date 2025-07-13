@@ -1266,7 +1266,6 @@ marginparsep=\@marginparseplen,marginparwidth=\@marginparwidthlen,reversemarginp
 {\startcontents[part]%开启小目录
 \@PartStyle{\partlabelfront{\sffamily\thepart}\partlabelback}{#1}%部分样式
 \global\@partnumbermarktrue%生成页面底部的部分索引
-\extramarks{\partlabelfront{\sffamily\thepart}\partlabelback\quad#1}{\partlabelfront{\sffamily\thepart}\partlabelback\quad#1}%部分索引内容
 \thispagestyle{empty}%部分页的页面样式为空白
 }
 [\global\partintro{}%清空\partintro
@@ -1277,7 +1276,6 @@ marginparsep=\@marginparseplen,marginparwidth=\@marginparwidthlen,reversemarginp
 {\startcontents[part]%开启小目录
 \@PartStarStyle{#1}%部分样式
 \global\@partnumbermarktrue%生成页面底部的部分索引
-\extramarks{#1}{#1}%部分索引内容
 \thispagestyle{empty}%部分页的页面样式为空白
 }
 [\global\partintro{}%清空\partintro
@@ -1292,12 +1290,15 @@ marginparsep=\@marginparseplen,marginparwidth=\@marginparwidthlen,reversemarginp
 \NewCommandCopy{\OriginPart}{\part}
 \RenewDocumentCommand{\part}{s +O{#3} +m}{
 \IfBooleanTF{#1}
-{\OriginPart*{#3\@mkboth{#2}{#2}}}
-{\if@mainmatter
+{\OriginPart*{#3\@mkboth{\@subtitle}{\@subtitle}}
+\extramarks{#2}{#2}
+}{\if@mainmatter%
 \OriginPart[#2]{#3\@mkboth{\@subtitle}{\@subtitle}}
-\else
-\phantomsection
-\OriginPart*{#3\@mkboth{\@subtitle}{\@subtitle}\addcontentsline{toc}{part}{#2}}
+\extramarks{\partlabelfront{\sffamily\thepart}\partlabelback\quad#2}{\partlabelfront{\sffamily\thepart}\partlabelback\quad#2}%
+\else%
+\phantomsection%
+\OriginPart*{#3\@mkboth{\@subtitle}{\@subtitle}\addcontentsline{toc}{part}{#2}}%
+\extramarks{#2}{#2}
 \fi}
 }
 %%部分结束命令%%
