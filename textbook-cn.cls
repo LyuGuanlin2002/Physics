@@ -1134,7 +1134,7 @@ marginparsep=\@marginparseplen,marginparwidth=\@marginparwidthlen,reversemarginp
 %%部分副标题%%
 \node[align=flush left,anchor=north east,font=\PartNameFont,text=ColorA,inner xsep=0mm](PSST)at([yshift=-\@Part@StripeWidth-0.25cm]X){%
 \begin{varwidth}{\textwidth-2.45cm}%
-\strut\@partsubtitle\strut
+\expandafter\ifblank\expandafter{\@partsubtitle}{\relax}{\strut\@partsubtitle\strut}%要展开宏再进行非空判断
 \end{varwidth}};
 %%部分简介%%
 \node[align=flush left,anchor=north east,font=\itshape\kaiti,text=ColorA,inner xsep=0mm](IT)at([yshift=-0.5cm]PSST.south east){%
@@ -1229,7 +1229,7 @@ marginparsep=\@marginparseplen,marginparwidth=\@marginparwidthlen,reversemarginp
 %%部分副标题%%
 \node[align=flush left,anchor=north west,font=\PartNameFont,text=ColorA,inner xsep=0mm](PSST)at([yshift=-\@Part@StripeWidth-0.25cm]X){%
 \begin{varwidth}{\textwidth-2.45cm}%
-\ifdefempty{\@partsubtitle}{\relax}{\strut\@partsubtitle\strut}
+\expandafter\ifblank\expandafter{\@partsubtitle}{\relax}{\strut\@partsubtitle\strut}%要展开宏再进行非空判断
 \end{varwidth}};
 %%部分简介%%
 \node[align=flush left,anchor=north west,font=\itshape\kaiti,text=ColorA,inner xsep=0mm](IT)at([yshift=-0.5cm]PSST.south west){%
@@ -1294,10 +1294,10 @@ marginparsep=\@marginparseplen,marginparwidth=\@marginparwidthlen,reversemarginp
 \IfBooleanTF{#1}
 {\OriginPart*{#3\@mkboth{#2}{#2}}}
 {\if@mainmatter
-\OriginPart[#2]{#3\@mkboth{\partlabelfront{\sffamily\thepart}\partlabelback\quad#2}{\partlabelfront{\sffamily\thepart}\partlabelback\quad#2}}
+\OriginPart[#2]{#3\@mkboth{\@subtitle}{\@subtitle}}
 \else
 \phantomsection
-\OriginPart*{#3\@mkboth{#2}{#2}\addcontentsline{toc}{part}{#2}}
+\OriginPart*{#3\@mkboth{\@subtitle}{\@subtitle}\addcontentsline{toc}{part}{#2}}
 \fi}
 }
 %%部分结束命令%%
