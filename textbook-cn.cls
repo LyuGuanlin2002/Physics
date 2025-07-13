@@ -858,8 +858,10 @@ marginparsep=\@marginparseplen,marginparwidth=\@marginparwidthlen,reversemarginp
 %%部分介绍%%
 \newcommand{\partintro}[1]{\long\def\@partintro{\hspace*{2.0em}#1}}
 \newcommand{\partimage}[1]{\long\def\@partimage{#1}}
+\newcommand{\partsubtitle}[1]{\long\def\@partsubtitle{#1}}
 \partintro{}
 \partimage{}
+\partsubtitle{}
 %%
 %%奇数页布局%%
 \NewDocumentCommand{\@Part@OddPage@Style}{ +m +m }{
@@ -935,8 +937,8 @@ marginparsep=\@marginparseplen,marginparwidth=\@marginparwidthlen,reversemarginp
 \strut#2\strut
 \end{varwidth}};
 %%部分简介%%
-\node[align=flush right,inner xsep=3.0mm,anchor=north east,font=\itshape\kaiti,text=ColorA](IT)at([yshift=-0.5cm]PT.south east){%
-\begin{varwidth}{\textwidth-2.75cm}%
+\node[align=flush right,anchor=north east,font=\itshape\kaiti,text=ColorA,inner xsep=0mm](IT)at([yshift=-0.5cm]PT.south east){%
+\begin{varwidth}{\textwidth-2.45cm}%
 \@partintro
 \end{varwidth}};
 %%部分目录%%
@@ -1021,8 +1023,8 @@ marginparsep=\@marginparseplen,marginparwidth=\@marginparwidthlen,reversemarginp
 \strut#2\strut
 \end{varwidth}};
 %%部分简介%%
-\node[align=flush left,inner xsep=3.0mm,anchor=north west,font=\itshape\kaiti,text=ColorA](IT)at([yshift=-0.5cm]PT.south west){%
-\begin{varwidth}{\textwidth-2.75cm}%
+\node[align=flush left,anchor=north west,font=\itshape\kaiti,text=ColorA,inner xsep=0mm](IT)at([yshift=-0.5cm]PT.south west){%
+\begin{varwidth}{\textwidth-2.45cm}%
 \@partintro
 \end{varwidth}};
 %%部分目录%%
@@ -1128,8 +1130,15 @@ marginparsep=\@marginparseplen,marginparwidth=\@marginparwidthlen,reversemarginp
 \coordinate(ZZ)at([xshift=-\@Part@StripeWidth]W);
 %%左侧色块%%
 \filldraw[draw=ColorB,fill=ColorB,opacity=0.2](Y)[sharp corners]--(Z)--(YY)[rounded corners=2.5mm]--(ZZ)--cycle;
+%%
+%%部分副标题%%
+\node[align=flush left,anchor=north east,font=\PartNameFont,text=ColorA,inner xsep=0mm](PSST)at([yshift=-\@Part@StripeWidth-0.25cm]X){%
+\begin{varwidth}{\textwidth-2.45cm}%
+\strut\@partsubtitle\strut
+\end{varwidth}};
 %%部分简介%%
-\node[align=flush right,inner xsep=2.0mm,anchor=north east,font=\itshape\kaiti,text=ColorA](IT)at([yshift=-1.25cm]X){\begin{varwidth}{\textwidth-2.75cm}%
+\node[align=flush left,anchor=north east,font=\itshape\kaiti,text=ColorA,inner xsep=0mm](IT)at([yshift=-0.5cm]PSST.south east){%
+\begin{varwidth}{\textwidth-2.45cm}%
 \@partintro
 \end{varwidth}};
 %%部分目录%%
@@ -1217,9 +1226,14 @@ marginparsep=\@marginparseplen,marginparwidth=\@marginparwidthlen,reversemarginp
 %%左侧色块%%
 \filldraw[draw=ColorB,fill=ColorB,opacity=0.2](Y)[sharp corners]--(Z)--(YY)[rounded corners=2.5mm]--(ZZ)--cycle;
 %%
+%%部分副标题%%
+\node[align=flush left,anchor=north west,font=\PartNameFont,text=ColorA,inner xsep=0mm](PSST)at([yshift=-\@Part@StripeWidth-0.25cm]X){%
+\begin{varwidth}{\textwidth-2.45cm}%
+\ifdefempty{\@partsubtitle}{\relax}{\strut\@partsubtitle\strut}
+\end{varwidth}};
 %%部分简介%%
-\node[align=flush left,inner xsep=2.0mm,anchor=north west,font=\itshape\kaiti,text=ColorA](IT)at([yshift=-1.25cm]X){%
-\begin{varwidth}{\textwidth-2.75cm}%
+\node[align=flush left,anchor=north west,font=\itshape\kaiti,text=ColorA,inner xsep=0mm](IT)at([yshift=-0.5cm]PSST.south west){%
+\begin{varwidth}{\textwidth-2.45cm}%
 \@partintro
 \end{varwidth}};
 %%部分目录%%
@@ -1267,7 +1281,8 @@ marginparsep=\@marginparseplen,marginparwidth=\@marginparwidthlen,reversemarginp
 \thispagestyle{empty}%部分页的页面样式为空白
 }
 [\global\partintro{}%清空\partintro
-\global\partimage{}]%清空\partimage
+\global\partimage{}%清空\partimage
+\global\partsubtitle{}]%清空\partsubtitle
 %%间距设置%%
 \titlespacing*{\part}{0pt}{0pt}{0pt}
 %%页面风格设置%%
@@ -1285,9 +1300,9 @@ marginparsep=\@marginparseplen,marginparwidth=\@marginparwidthlen,reversemarginp
 \OriginPart*{#3\@mkboth{#2}{#2}\addcontentsline{toc}{part}{#2}}
 \fi}
 }
-
 %%部分结束命令%%
 \newcommand{\PartEnd}{\stopcontents[part]}
+
 %%章节页样式%%
 \newlength{\@Chapter@BlockHeight}
 \newlength{\@Chapter@VSpace}
@@ -1492,7 +1507,7 @@ marginparsep=\@marginparseplen,marginparwidth=\@marginparwidthlen,reversemarginp
 %%底部文字%%
 \node[anchor=west,font=\ChapterSayingFont,text=ColorA,text width=\paperwidth-\@innerlen-5.0cm,inner sep=0mm,outer sep=0mm](S)at([xshift=\@innerlen,yshift=\@FrameWidth/2+0.5cm]D){\@chaptersaying};
 %%页码%%
-\draw[ColorA,fill=ColorA,rounded corners=2.0mm](Q)circle(\@Chapter@PageSize/2);
+\draw[ColorA,fill=ColorA,rounded corners=2.0mm](Q1)rectangle(Q2);
 \node[font=\PageNumberFont,text=white,anchor=center,align=center](PP)at(Q){\maxsizebox{\@Chapter@PageSize-0.3cm}{!}{\thepage}};
 \end{pgfonlayer}
 \else
@@ -1555,7 +1570,7 @@ marginparsep=\@marginparseplen,marginparwidth=\@marginparwidthlen,reversemarginp
 %%底部文字%%
 \node[anchor=east,font=\ChapterSayingFont,text=ColorA,text width=\paperwidth-\@innerlen-5.0cm,inner sep=0mm,outer sep=0mm](S)at([xshift=-\@innerlen,yshift=\@FrameWidth/2+0.5cm]D){\@chaptersaying};
 %%页码%%
-\draw[ColorA,fill=ColorA,rounded corners=2.0mm](Q)circle(\@Chapter@PageSize/2);
+\draw[ColorA,fill=ColorA,rounded corners=2.0mm](Q1)rectangle(Q2);
 \node[font=\PageNumberFont,text=white,anchor=center,align=center](PP)at(Q){\maxsizebox{\@Chapter@PageSize-0.3cm}{!}{\thepage}};
 \end{pgfonlayer}
 \fi
@@ -1598,25 +1613,16 @@ marginparsep=\@marginparseplen,marginparwidth=\@marginparwidthlen,reversemarginp
 %%为\chapter*添加短页眉%%
 \NewCommandCopy{\OriginChapter}{\chapter}
 %%
-%%原始cleardoublepage命令
-\def\@origin@cleardoublepage{%
+%%修改cleardoublepage命令
+\def\cleardoublepage{%
 \clearpage\if@twoside \ifodd\c@page\else
-\hbox{}\newpage\if@twocolumn\hbox{}\newpage\fi\fi\fi}
-%%新cleardoublepage命令
-\def\@new@cleardoublepage{%
-\clearpage\if@twoside \ifodd\c@page\else
-\hbox{}\thispagestyle{SubPage}\newpage\if@twocolumn\hbox{}\newpage\fi\fi\fi}
+\null\newpage\if@twocolumn\null\newpage\fi\fi\fi}
 %%
 \RenewDocumentCommand{\chapter}{s +O{#3} +m}{%
-%%将原始cleardoublepage命令修改
-\def\cleardoublepage{\@new@cleardoublepage}%
-%%
 \IfBooleanTF{#1}
 {\OriginChapter*{#3\@mkboth{#2}{#2}}}
 {\OriginChapter[#2]{#3}}
 \vspace*{\@Chapter@VSpace}%
-%%重置cleardoublepage命令
-\def\cleardoublepage{\@origin@cleardoublepage}%
 }
 
 %%节样式%%
@@ -1871,9 +1877,6 @@ marginparsep=\@marginparseplen,marginparwidth=\@marginparwidthlen,reversemarginp
 }%
 }
 \makeatother
-
-%%%%%%%%%%%%%%%%%% 目录样式 %%%%%%%%%%%%%%%%%%%%%%%%
-
 
 %%%%%%%%%%%%%%%%%% 环境、文档层次和目录 %%%%%%%%%%%%%%%%%%%%%%%%
 \makeatletter

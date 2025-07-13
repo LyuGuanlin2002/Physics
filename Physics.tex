@@ -1,4 +1,4 @@
-\documentclass[themecolor=brown]{textbook-cn}
+\documentclass[themecolor=brown]{textbook-cn}%,openany
 \graphicspath{{./figure/}{./figures/}{./image/}{./images/}{./graphics/}{./graphic/}{./pictures/}{./picture/}}%提供多种图片路径
 \input{./styles/Cover-cn.tex}
 \input{./styles/Logo.tex}
@@ -84,7 +84,7 @@
 
 \cleardoublepage
 
-测试文字
+\lipsum[2]
 %
 \mainmatter
 
@@ -144,6 +144,18 @@
 \lipsum
 
 \chapter{测试文字}
+\lipsum
+
+
+%\partsubtitle{副标题测试副标题测试副标题测试副标题测试}
+\partintro{\lipsum[2]}
+\part*{测试文字测试文字}
+
+
+%\partsubtitle{副标题测试副标题测试副标题测试副标题测试}
+\partsubtitle{ }
+\partintro{\lipsum[2]}
+\part*{测试文字测试文字}
 
 %\backintro{\lipsum[2]}
 %\barcode{barcode.pdf}
