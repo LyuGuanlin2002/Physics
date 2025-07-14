@@ -1605,7 +1605,8 @@ marginparsep=\@marginparseplen,marginparwidth=\@marginparwidthlen,reversemarginp
 \enlargethispage{-0.75cm}%修改页面大小
 }
 [\global\chaptersubtitle{}%清空\chaptersubtitle
-\global\chapterimage{}]%清空\chapterimage
+\global\chapterimage{}%清空\chapterimage
+\global\chaptersaying{}]%清空\chaptersaying
 %%间距设置%%
 \titlespacing*{\chapter}{0pt}{0pt}{0pt}
 %%页面风格设置%%
