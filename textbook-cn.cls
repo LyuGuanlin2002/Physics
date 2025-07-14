@@ -679,6 +679,8 @@ marginparsep=\@marginparseplen,marginparwidth=\@marginparwidthlen,reversemarginp
 \setlength{\@ThumbMinimumHeight}{1.2cm}
 \newlength{\@FrameWidth}
 \setlength{\@FrameWidth}{1.0cm}
+\newlength{\@GutterWidth}
+\setlength{\@GutterWidth}{\@innerlen-1.5cm}
 \newlength{\@PageNumWidth}
 \setlength{\@PageNumWidth}{\@toplen-\@handseplen+1.0mm}
 %%%%
@@ -710,14 +712,15 @@ marginparsep=\@marginparseplen,marginparwidth=\@marginparwidthlen,reversemarginp
 \coordinate(B)at(current page.north east);
 \coordinate(C)at(current page.south east);
 \coordinate(D)at(current page.south west);
-\coordinate(E)at([yshift=\@FrameWidth]current page.south west);
+\coordinate(E)at([xshift=\@GutterWidth,yshift=\@FrameWidth]current page.south west);
 \coordinate(F)at([xshift=-\@FrameWidth,yshift=\@FrameWidth]current page.south east);
 \coordinate(G)at([xshift=-\@FrameWidth,yshift=-\@FrameWidth]current page.north east);
-\coordinate(H)at([yshift=-\@FrameWidth]current page.north west);
+\coordinate(H)at([xshift=\@GutterWidth,yshift=-\@FrameWidth]current page.north west);
 \coordinate(I)at(current page.south);
 %%绘制页面框架%%
 \draw[ColorB!7.5,fill=ColorB!7.5,sharp corners]
-(A)--(B)--(C)--(D)--(E)[rounded corners=5.0mm]--(F)[rounded corners=5.0mm]--(G)[sharp corners]--(H)--cycle;
+(A)--(B)--(C)--(D)--cycle
+(E)[rounded corners=5.0mm]--(F)[rounded corners=5.0mm]--(G)[sharp corners]--(H)[sharp corners]--cycle;
 %%绘制页码%%
 \path[fill=ColorA!60!ColorB]
 ([xshift=-\@outerlen+0.25cm]B)[rounded corners=1.5mm]--
@@ -765,14 +768,15 @@ marginparsep=\@marginparseplen,marginparwidth=\@marginparwidthlen,reversemarginp
 \coordinate(B)at(current page.north west);
 \coordinate(C)at(current page.south west);
 \coordinate(D)at(current page.south east);
-\coordinate(E)at([yshift=\@FrameWidth]current page.south east);
+\coordinate(E)at([xshift=-\@GutterWidth,yshift=\@FrameWidth]current page.south east);
 \coordinate(F)at([xshift=\@FrameWidth,yshift=\@FrameWidth]current page.south west);
 \coordinate(G)at([xshift=\@FrameWidth,yshift=-\@FrameWidth]current page.north west);
-\coordinate(H)at([yshift=-\@FrameWidth]current page.north east);
+\coordinate(H)at([xshift=-\@GutterWidth,yshift=-\@FrameWidth]current page.north east);
 \coordinate(I)at(current page.south);
 %%绘制页面框架%%
 \draw[ColorB!7.5,fill=ColorB!7.5,sharp corners]
-(A)--(B)--(C)--(D)--(E)[rounded corners=5.0mm]--(F)[rounded corners=5.0mm]--(G)[sharp corners]--(H)--cycle;
+(A)--(B)--(C)--(D)--cycle
+(E)[rounded corners=5.0mm]--(F)[rounded corners=5.0mm]--(G)[sharp corners]--(H)[sharp corners]--cycle;
 %%绘制页码%%
 \path[fill=ColorA!60!ColorB]
 ([xshift=\@outerlen-0.25cm]B)[rounded corners=1.5mm]--
@@ -1338,7 +1342,7 @@ marginparsep=\@marginparseplen,marginparwidth=\@marginparwidthlen,reversemarginp
 \coordinate(B)at(current page.north east);
 \coordinate(C)at(current page.south east);
 \coordinate(D)at(current page.south west);
-\coordinate(E)at([yshift=\@Chapter@SayingBlockWidth]D);
+\coordinate(E)at([xshift=\@GutterWidth,yshift=\@Chapter@SayingBlockWidth]D);
 \coordinate(F)at([xshift=-5.0cm,yshift=\@Chapter@SayingBlockWidth]C);
 \coordinate(G)at([xshift=-3.0cm,yshift=\@FrameWidth]C);
 \coordinate(H)at([xshift=-\@FrameWidth,yshift=\@FrameWidth]C);
@@ -1361,7 +1365,7 @@ marginparsep=\@marginparseplen,marginparwidth=\@marginparwidthlen,reversemarginp
 \end{pgfonlayer}
 %%%%
 \coordinate(I)at([xshift=\@outerlen-\@FrameWidth,yshift=-2\@Chapter@LabelYShift@Down/3]P.south east);
-\coordinate(J)at([xshift=-\@innerlen-\textwidth,yshift=-2\@Chapter@LabelYShift@Down/3]P.south east);
+\coordinate(J)at([xshift=-\@innerlen-\textwidth+\@GutterWidth,yshift=-2\@Chapter@LabelYShift@Down/3]P.south east);
 %%%%
 %%获取标题区域的高度%%
 \pgfgetdistance(A)(J)\DistanceAJ
@@ -1388,7 +1392,7 @@ marginparsep=\@marginparseplen,marginparwidth=\@marginparwidthlen,reversemarginp
 \coordinate(B)at(current page.north west);
 \coordinate(C)at(current page.south west);
 \coordinate(D)at(current page.south east);
-\coordinate(E)at([yshift=\@Chapter@SayingBlockWidth]D);
+\coordinate(E)at([xshift=-\@GutterWidth,yshift=\@Chapter@SayingBlockWidth]D);
 \coordinate(F)at([xshift=5.0cm,yshift=\@Chapter@SayingBlockWidth]C);
 \coordinate(G)at([xshift=3.0cm,yshift=\@FrameWidth]C);
 \coordinate(H)at([xshift=\@FrameWidth,yshift=\@FrameWidth]C);
@@ -1411,7 +1415,7 @@ marginparsep=\@marginparseplen,marginparwidth=\@marginparwidthlen,reversemarginp
 \end{pgfonlayer}
 %%%%
 \coordinate(I)at([xshift=-\@outerlen+\@FrameWidth,yshift=-2\@Chapter@LabelYShift@Down/3]P.south west);
-\coordinate(J)at([xshift=\@innerlen+\textwidth,yshift=-2\@Chapter@LabelYShift@Down/3]P.south west);
+\coordinate(J)at([xshift=\@innerlen+\textwidth-\@GutterWidth,yshift=-2\@Chapter@LabelYShift@Down/3]P.south west);
 %%%%
 %%获取标题区域的高度%%
 \pgfgetdistance(A)(J)\DistanceAJ
@@ -1455,7 +1459,7 @@ marginparsep=\@marginparseplen,marginparwidth=\@marginparwidthlen,reversemarginp
 \coordinate(B)at(current page.north east);
 \coordinate(C)at(current page.south east);
 \coordinate(D)at(current page.south west);
-\coordinate(E)at([yshift=\@Chapter@Star@SayingBlockWidth]D);
+\coordinate(E)at([xshift=\@GutterWidth,yshift=\@Chapter@Star@SayingBlockWidth]D);
 \coordinate(F)at([xshift=-5.0cm,yshift=\@Chapter@Star@SayingBlockWidth]C);
 \coordinate(G)at([xshift=-3.0cm,yshift=\@FrameWidth]C);
 \coordinate(H)at([xshift=-\@FrameWidth,yshift=\@FrameWidth]C);
@@ -1489,7 +1493,7 @@ marginparsep=\@marginparseplen,marginparwidth=\@marginparwidthlen,reversemarginp
 \end{pgfonlayer}
 %%%%
 \coordinate(I)at([xshift=\@outerlen-\@FrameWidth,yshift=-2\@Chapter@LabelYShift@Down/3]P.south east);
-\coordinate(J)at([xshift=-\textwidth-\@innerlen,yshift=-2\@Chapter@LabelYShift@Down/3]P.south east);
+\coordinate(J)at([xshift=-\textwidth-\@innerlen+\@GutterWidth,yshift=-2\@Chapter@LabelYShift@Down/3]P.south east);
 %%%%
 %%获取标题区域的高度%%
 \pgfgetdistance(A)(J)\DistanceAJ
@@ -1517,7 +1521,7 @@ marginparsep=\@marginparseplen,marginparwidth=\@marginparwidthlen,reversemarginp
 \coordinate(B)at(current page.north west);
 \coordinate(C)at(current page.south west);
 \coordinate(D)at(current page.south east);
-\coordinate(E)at([yshift=\@Chapter@Star@SayingBlockWidth]D);
+\coordinate(E)at([xshift=-\@GutterWidth,yshift=\@Chapter@Star@SayingBlockWidth]D);
 \coordinate(F)at([xshift=5.0cm,yshift=\@Chapter@Star@SayingBlockWidth]C);
 \coordinate(G)at([xshift=3.0cm,yshift=\@FrameWidth]C);
 \coordinate(H)at([xshift=\@FrameWidth,yshift=\@FrameWidth]C);
@@ -1552,7 +1556,7 @@ marginparsep=\@marginparseplen,marginparwidth=\@marginparwidthlen,reversemarginp
 \end{pgfonlayer}
 %%%%
 \coordinate(I)at([xshift=-\@outerlen+\@FrameWidth,yshift=-2\@Chapter@LabelYShift@Down/3]P.south west);
-\coordinate(J)at([xshift=\textwidth+\@innerlen,yshift=-2\@Chapter@LabelYShift@Down/3]P.south west);
+\coordinate(J)at([xshift=\textwidth+\@innerlen-\@GutterWidth,yshift=-2\@Chapter@LabelYShift@Down/3]P.south west);
 %%%%
 %%获取标题区域的高度%%
 \pgfgetdistance(A)(J)\DistanceAJ
@@ -3141,13 +3145,16 @@ rounded corners,arc=5.0pt,colupper=ColorA,#1}
 \coordinate(B)at(current page.north east);
 \coordinate(C)at(current page.south east);
 \coordinate(D)at(current page.south west);
-\coordinate(E)at([yshift=-1.0cm]current page.north west);
-\coordinate(F)at([xshift=-1.0cm,yshift=-1.0cm]current page.north east);
-\coordinate(G)at([xshift=-1.0cm,yshift=1.0cm]current page.south east);
-\coordinate(H)at([yshift=1.0cm]current page.south west);
+\coordinate(E)at([xshift=\@GutterWidth,yshift=\@FrameWidth]current page.south west);
+\coordinate(F)at([xshift=-\@FrameWidth,yshift=\@FrameWidth]current page.south east);
+\coordinate(G)at([xshift=-\@FrameWidth,yshift=-\@FrameWidth]current page.north east);
+\coordinate(H)at([xshift=\@GutterWidth,yshift=-\@FrameWidth]current page.north west);
 %%背景%%
 \draw[ColorB!7.5,fill=ColorB!7.5,sharp corners](D)rectangle(B);
-\draw[ColorA!25,fill=ColorA!25](A)--(B)--(C)--(D)--(H)[rounded corners=5.0mm]--(G)[rounded corners=5.0mm]--(F)[sharp corners]--(E)--cycle;
+%%
+\draw[ColorA!25,fill=ColorA!25]
+(A)--(B)--(C)--(D)--cycle
+(E)[rounded corners=5.0mm]--(F)[rounded corners=5.0mm]--(G)[sharp corners]--(H)[sharp corners]--cycle;
 \end{tikzpicture}%
 \centering\color{ColorA}\bfseries%
 %%书籍系列%%
