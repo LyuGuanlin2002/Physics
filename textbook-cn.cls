@@ -21,7 +21,7 @@
 \DeclareBoolOption[false]{splitbib}
 %%加载book作为基础文档类%%
 \DeclareDefaultOption{\PassOptionsToClass{\CurrentOption}{book}}
-\ProcessKeyvalOptions*%\relax,openany
+\ProcessKeyvalOptions*\relax
 \LoadClass[12pt]{book}
 
 %%%%%%%%%%%%%%%%%%%% 文本内容风格宏包 %%%%%%%%%%%%%%%%%%%%
@@ -285,7 +285,7 @@ BoldFont=FZCukai.ttf]
 \RequirePackage[letterpaper,
 inner=\@innerlen,outer=\@outerlen,top=\@toplen,bottom=\@botlen,
 headsep=\@handseplen,footskip=\@footskiplen,
-marginparsep=\@marginparseplen,marginparwidth=\@marginparwidthlen,reversemarginpar]{geometry}
+marginparsep=\@marginparseplen,marginparwidth=\@marginparwidthlen,reversemarginpar,heightrounded]{geometry}
 \makeatother
 \RequirePackage{emptypage,setspace,fancyhdr,lscape}%清除空页%行距%页眉页脚%旋转页面
 \RequirePackage{extramarks}%创建额外的标记，使用方法类似于\markboth和\markright
@@ -1370,7 +1370,7 @@ marginparsep=\@marginparseplen,marginparwidth=\@marginparwidthlen,reversemarginp
 %%获取标题区域的高度%%
 \pgfgetdistance(A)(J)\DistanceAJ
 \gsetlength{\@Chapter@BlockHeight}{\DistanceAJ}
-\gsetlength{\@Chapter@VSpace}{\@Chapter@BlockHeight-\@toplen-0.5cm}
+\gsetlength{\@Chapter@VSpace}{\@Chapter@BlockHeight-\@toplen-1.0cm}
 \begin{pgfonlayer}{@Chapter@Bottom}
 %%框架1%%
 \draw[ColorB!7.5,fill=ColorB!7.5,sharp corners](A)rectangle(C);
@@ -1420,7 +1420,7 @@ marginparsep=\@marginparseplen,marginparwidth=\@marginparwidthlen,reversemarginp
 %%获取标题区域的高度%%
 \pgfgetdistance(A)(J)\DistanceAJ
 \gsetlength{\@Chapter@BlockHeight}{\DistanceAJ}
-\gsetlength{\@Chapter@VSpace}{\@Chapter@BlockHeight-\@toplen-0.5cm}
+\gsetlength{\@Chapter@VSpace}{\@Chapter@BlockHeight-\@toplen-1.0cm}
 \begin{pgfonlayer}{@Chapter@Bottom}
 %%框架1%%
 \draw[ColorB!7.5,fill=ColorB!7.5,sharp corners](A)rectangle(C);
@@ -1498,7 +1498,7 @@ marginparsep=\@marginparseplen,marginparwidth=\@marginparwidthlen,reversemarginp
 %%获取标题区域的高度%%
 \pgfgetdistance(A)(J)\DistanceAJ
 \gsetlength{\@Chapter@BlockHeight}{\DistanceAJ}
-\gsetlength{\@Chapter@VSpace}{\@Chapter@BlockHeight-\@toplen-0.5cm}
+\gsetlength{\@Chapter@VSpace}{\@Chapter@BlockHeight-\@toplen-1.0cm}
 \begin{pgfonlayer}{@Chapter@Star@Bottom}
 %%框架1%%
 \draw[ColorB!7.5,fill=ColorB!7.5,sharp corners](A)rectangle(C);
@@ -1561,7 +1561,7 @@ marginparsep=\@marginparseplen,marginparwidth=\@marginparwidthlen,reversemarginp
 %%获取标题区域的高度%%
 \pgfgetdistance(A)(J)\DistanceAJ
 \gsetlength{\@Chapter@BlockHeight}{\DistanceAJ}
-\gsetlength{\@Chapter@VSpace}{\@Chapter@BlockHeight-\@toplen-0.5cm}
+\gsetlength{\@Chapter@VSpace}{\@Chapter@BlockHeight-\@toplen-1.0cm}
 \begin{pgfonlayer}{@Chapter@Star@Bottom}
 %%框架1%%
 \draw[ColorB!7.5,fill=ColorB!7.5,sharp corners](A)rectangle(C);
