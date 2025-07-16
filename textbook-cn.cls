@@ -214,7 +214,6 @@ BoldFont=FZCukai.ttf]
 \newcommand{\ChapterSayingFont}{\itshape\kaiti\FontSizeSet{13pt}{15.6pt}}%章谚语字体
 \newcommand{\SectionFont}{\rmfamily\bfseries\FontSizeSet{18pt}{21.6pt}}%节字体
 \newcommand{\SubsectionFont}{\rmfamily\bfseries\FontSizeSet{15pt}{19.5pt}}%小节字体
-\newcommand{\SubsectionSubTFont}{\rmfamily\bfseries\FontSizeSet{14pt}{16.8pt}}%小节副标题字体
 \newcommand{\SubsubsectionFont}{\rmfamily\bfseries\FontSizeSet{14.5pt}{17.4pt}}%小小节字体
 \newcommand{\ParagraphNameFont}{\rmfamily\bfseries\FontSizeSet{14pt}{16.8pt}}%段落名称字体
 \newcommand{\HeaderFont}{\rmfamily\bfseries\FontSizeSet{13pt}{16.9pt}}%页眉字体
@@ -237,7 +236,7 @@ BoldFont=FZCukai.ttf]
 \newcommand{\CiteNumFont}{\rmfamily}%引用字体
 \newcommand{\LineNumFont}{\sffamily\bfseries\FontSizeSet{10pt}{12pt}}%行号字体
 \newcommand{\ListNumFont}{\sffamily\bfseries\FontSizeSet{12pt}{14.4pt}}%列表序号字体
-\newcommand{\PracticeTitleFont}{\rmfamily\bfseries\FontSizeSet{13pt}{16.9pt}}%练习标题字体
+\newcommand{\HeadingFont}{\rmfamily\bfseries\FontSizeSet{13pt}{16.9pt}}%一般标题字体
 \newcommand{\EgLabelFont}{\rmfamily\bfseries\FontSizeSet{13pt}{15.6pt}}%例题标签字体
 \newcommand{\BoxTitleFont}{\rmfamily\bfseries\FontSizeSet{13pt}{16.9pt}}%盒子标题字体
 \newcommand{\BoxSubtitleFont}{\rmfamily\bfseries\FontSizeSet{13pt}{16.9pt}}%盒子副标题字体
@@ -596,12 +595,14 @@ marginparsep=\@marginparseplen,marginparwidth=\@marginparwidthlen,reversemarginp
 
 %%设置星级%%
 \NewDocumentCommand{\score}{m m O{ColorB}}{
-\begin{tikzpicture}[baseline]
+\begingroup%
+\tikz[baseline]{%
 \foreach \i in {1,...,#1}{
 \pgfmathparse{\i<=#2 ? "#3" : "white"}
 \edef\circlecolor{\pgfmathresult}
 \draw(\i*1.25em,0)node[name=circle\i,circle,inner sep=0mm,minimum size=0.35cm,draw=#3,very thick,fill=\circlecolor]{};}
-\end{tikzpicture}}
+}%
+\endgroup}
 
 %%设置答题卡%%
 \NewDocumentCommand{\AnswerSheet}{+O{选择题答题区域} m m O{\linewidth} O{0.7cm}}{
@@ -1828,23 +1829,78 @@ marginparsep=\@marginparseplen,marginparwidth=\@marginparwidthlen,reversemarginp
 {\ParagraphNameFont\color{ColorA}}}
 %%%%
 %%练习标题设置%%
-\NewDocumentCommand{\Practice}{ +m }{
+\newlength{\@Longheading@LabelCriticWidth}
+\setlength{\@Longheading@LabelCriticWidth}{4.0cm}
+\NewDocumentCommand{\Longheading}{m +m +m}{%
+\begingroup%
+\begin{flushleft}%
+\begin{tikzpicture}%
+\SubsectionFont%
+\def\@Longheading@Radius{\dimexpr\baselineskip/2\relax}%
+%%%%
+\pgfdeclarelayer{@Longheading@Bottom}%
+\pgfsetlayers{@Longheading@Bottom,main}%
+\node[text=white,inner xsep=\@Longheading@Radius,inner ysep=0mm,outer sep=0mm](L){%
+\hspace*{\@Longheading@Radius+0.5em}%
+\begin{varwidth}{\@Longheading@LabelCriticWidth}
+\strut#1\strut
+\end{varwidth}};%
+\pgfgetnodewidth(L)\@Longheading@LabelWidth%
+\pgfgetnodeheight(L)\@Longheading@LabelHeight%
+%%
+\node[text=ColorA,inner xsep=\@Longheading@Radius,inner ysep=0mm,outer sep=0mm,anchor=north west](N)at(L.north east){%
+\begin{minipage}{\linewidth-\@Longheading@LabelWidth-2\@Longheading@Radius}
+\strut#2\strut
+\end{minipage}};
+\pgfgetnodeheight(N)\@Longheading@NameHeight%
+%%
+\begin{pgfonlayer}{@Longheading@Bottom}
+\ifdim\@Longheading@NameHeight>\@Longheading@LabelHeight
+\path[fill=ColorB!7.5,rounded corners=\@Longheading@Radius](L.north west)rectangle(N.south east);
+%
+\path[fill=ColorA,rounded corners=\@Longheading@Radius](L.north west)rectangle(N.south west);
+\else
+\path[fill=ColorB!7.5,rounded corners=\@Longheading@Radius](L.south west)rectangle(N.north east);
+%
+\path[fill=ColorA,rounded corners=\@Longheading@Radius](L.south west)rectangle(N.north west);
+\fi
+\end{pgfonlayer}%
+\coordinate(C)at([xshift=\@Longheading@Radius,yshift=-\@Longheading@Radius]L.north west);
+\draw[ColorA,fill=white](C)circle(\@Longheading@Radius-2.5pt);
+\node[circle,text=ColorA,inner sep=0mm,outer sep=0mm,font=\MainFont](F)at(C){\centering#3};
+\end{tikzpicture}%
+\end{flushleft}%
+\endgroup}
+%%%%
+\NewDocumentCommand{\Heading}{ +m }{
 \begin{center}
 \begin{tikzpicture}%
-\PracticeTitleFont%
-\def\@PracticeTitle@Radius{\dimexpr\baselineskip/2\relax}%
-\pgfdeclarelayer{@Practice@Bottom}%
-\pgfsetlayers{@Practice@Bottom,main}%
+\HeadingFont%
+\def\@Heading@Radius{\dimexpr\baselineskip/2\relax}%
+\pgfdeclarelayer{@Heading@Bottom}%
+\pgfsetlayers{@Heading@Bottom,main}%
 \node[draw=ColorA,fill=ColorA,rounded corners,text=white,outer sep=0mm,inner xsep=0.5em,inner ysep=0mm,align=center](E){%
 \begin{varwidth}{\linewidth/2}
 \strut#1\strut
 \end{varwidth}};
-\begin{pgfonlayer}{@Practice@Bottom}
-\draw[draw=ColorA!65,fill=ColorA!65,line width=6.0pt,rounded corners=\@PracticeTitle@Radius]([xshift=-\@PracticeTitle@Radius]E.north west)rectangle([xshift=\@PracticeTitle@Radius]E.south east);
+\begin{pgfonlayer}{@Heading@Bottom}
+\draw[draw=ColorA!65,fill=ColorA!65,line width=6.0pt,rounded corners=\@Heading@Radius]([xshift=-\@Heading@Radius]E.north west)rectangle([xshift=\@Heading@Radius]E.south east);
 \end{pgfonlayer}
 \end{tikzpicture}
 \end{center}
 }
+%%%%
+%%索引分组标题样式%%
+\newcommand{\Subheading}[1]{%
+\begingroup%
+\centering\tikz{%
+\node[font=\HeadingFont,text=ColorA,draw=ColorB!7.5,fill=ColorB!7.5,ultra thick,rounded corners,inner sep=0mm](P){%
+\hspace*{1.5mm}%
+\parbox{\linewidth-3.0mm}{\centering\strut#1\strut}%
+\hspace*{1.5mm}%
+};}
+\endgroup}
+%%%%
 %%习题标题设置%%
 \def\@Exercise@Title{课后习题}
 \def\@Thinking@Title{思考题}
@@ -1881,6 +1937,14 @@ marginparsep=\@marginparseplen,marginparwidth=\@marginparwidthlen,reversemarginp
 ~\sffamily\thechapter%
 \fi}%
 }%
+}
+%%%%
+\newcommand{\Basis}{%
+\Longheading{基础巩固}{\hfill 用时：\underline{\qquad}}{\faPen}%
+}
+%%%%
+\newcommand{\Complex}{%
+\Longheading{综合提升}{\hfill 用时：\underline{\qquad}}{\faStar}%
 }
 \makeatother
 
