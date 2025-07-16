@@ -281,17 +281,14 @@ BoldFont=FZCukai.ttf]
 \setlength{\@marginparseplen}{-\@marginparwidthlen+0.75em}
 \setlength{\@handseplen}{0.875cm}
 \setlength{\@footskiplen}{0.95cm}
-\RequirePackage[letterpaper,
-inner=\@innerlen,outer=\@outerlen,top=\@toplen,bottom=\@botlen,
-headsep=\@handseplen,footskip=\@footskiplen,
-marginparsep=\@marginparseplen,marginparwidth=\@marginparwidthlen,reversemarginpar,heightrounded]{geometry}
+\RequirePackage[letterpaper,inner=\@innerlen,outer=\@outerlen,top=\@toplen,bottom=\@botlen,headsep=\@handseplen,footskip=\@footskiplen,marginparsep=\@marginparseplen,marginparwidth=\@marginparwidthlen,reversemarginpar,heightrounded]{geometry}
 \makeatother
 \RequirePackage{emptypage,setspace,fancyhdr,lscape}%清除空页%行距%页眉页脚%旋转页面
 \RequirePackage{extramarks}%创建额外的标记，使用方法类似于\markboth和\markright
 \RequirePackage[strict]{changepage}%换页
 %%边注格式%%
 \let\oldmarginpar\marginpar
-\renewcommand{\marginpar}[1]{\oldmarginpar{%
+\newcommand{\newmarginpar}[1]{\oldmarginpar{%
 \setlength{\parindent}{2.0em}%
 \MarginNoteFont#1}}
 %%脚注格式%%
@@ -1946,6 +1943,10 @@ marginparsep=\@marginparseplen,marginparwidth=\@marginparwidthlen,reversemarginp
 \newcommand{\Complex}{%
 \Longheading{综合提升}{\hfill 用时：\underline{\qquad}}{\faStar}%
 }
+%%%%
+\newcommand{\NoteArea}{%
+\marginpar{\Subheading{\faPenSquare~~笔记区}}
+}
 \makeatother
 
 %%%%%%%%%%%%%%%%%% 环境、文档层次和目录 %%%%%%%%%%%%%%%%%%%%%%%%
@@ -3101,7 +3102,7 @@ underlay boxed title={
 
 %%%%
 \DeclareTColorBox{box7}{ +O{} +O{} }{BlockBox=#2,#1}
-
+%%
 \newenvironment{Proof}{\begin{box7}[][\faBars~~证明]}{\end{box7}}
 %%
 \newenvironment{Solution}{\begin{box7}[][\faBars~~参考答案]}{\end{box7}}
@@ -3158,7 +3159,7 @@ minted language=#2}
 %%+m表示允许换行、空行的参数%%
 \DeclareDocumentCommand{\RelaInfo}{ s +m }
 {\IfBooleanTF{#1}
-{\marginpar{\upshape%
+{\newmarginpar{\upshape%
 \begin{box9}[][ColorH][\faCommentDots]{相关信息}
 \setlength{\parindent}{2.0em}#2
 \end{box9}}
@@ -3170,7 +3171,7 @@ minted language=#2}
 %%%%
 \DeclareDocumentCommand{\DeepThink}{ s +m }
 {\IfBooleanTF{#1}
-{\marginpar{\upshape%
+{\newmarginpar{\upshape%
 \begin{box9}[][ColorB!90!black][\faTh]{深入思考}
 \setlength{\parindent}{2.0em}#2
 \end{box9}}
@@ -3182,7 +3183,7 @@ minted language=#2}
 %%%%
 \DeclareDocumentCommand{\Remark}{ s +m }
 {\IfBooleanTF{#1}
-{\marginpar{\upshape%
+{\newmarginpar{\upshape%
 \begin{box9}[][ColorF][\faChrome]{重点注释}
 \setlength{\parindent}{2.0em}#2
 \end{box9}}
