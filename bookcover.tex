@@ -1,0 +1,315 @@
+\documentclass{article}
+\usepackage{graphicx}
+\usepackage[fontset=none]{ctex}
+\xeCJKsetup{
+CJKecglue={\hspace{0.25em plus 0.1em minus 0.08em}}%中英文间距微调推荐值
+}
+%%%%
+\usepackage{fontspec}%字体设置宏包
+\usepackage{mathptmx}%数学字体设置宏包
+%%设置英文字体%%
+%%主字体
+\setmainfont[
+Path=fonts/,
+BoldFont=LinLibertineRB.otf,
+ItalicFont=LinLibertineRI.otf,
+BoldItalicFont=LinLibertineRBI.otf,
+]{LinLibertineR.otf}
+%%无衬线字体
+\setsansfont[
+Path=fonts/,
+BoldFont=GOTHICB.ttf,
+ItalicFont=GOTHICI.ttf,
+BoldItalicFont=GOTHICBI.ttf
+]{GOTHIC.ttf}
+%%等宽字体
+\setmonofont[
+Path=fonts/,
+BoldFont=courbd.ttf,
+ItalicFont=couri.ttf,
+BoldItalicFont=courbi.ttf
+]{cour.ttf}
+
+%%设置中文字体%%
+%%主字体
+\setCJKmainfont[
+Path=fonts/,
+BoldFont=Source Han Serif SC Heavy.otf,
+ItalicFont=Source Han Serif SC Regular Italic.ttf,
+BoldItalicFont=Source Han Serif SC Heavy Italic.ttf
+]{Source Han Serif SC Regular.otf}
+%%无衬线字体
+\setCJKsansfont[
+Path=fonts/,
+BoldFont=Source Han Sans SC Heavy.otf,
+ItalicFont=Source Han Sans SC Regular Italic.ttf,
+BoldItalicFont=Source Han Sans SC Heavy Italic.ttf
+]{Source Han Sans SC Regular.otf}
+%%等宽字体
+\setCJKmonofont[
+Path=fonts/,
+BoldFont=FZCukai.ttf,
+ItalicFont=FZKai.ttf,
+BoldItalicFont=FZCukai.ttf
+]{FZKai.ttf}
+%%楷体设置
+\newCJKfontfamily\kaiti{FZKai.ttf}[
+Path=fonts/,
+BoldFont=FZCukai.ttf]
+
+
+\usepackage{lipsum}
+\usepackage{calc}%优化长度计算和设置
+\usepackage{fp,etoolbox}%浮点数计算
+\usepackage{ragged2e}%更美观的对齐设置
+
+\makeatletter
+\newcommand{\coverimage}[1]{\long\def\@coverimage{#1}}
+\newcommand{\backimage}[1]{\long\def\@backimage{#1}}
+\newcommand{\series}[1]{\long\def\@series{#1}}
+\newcommand{\version}[1]{\long\def\@version{#1}}
+\newcommand{\subtitle}[1]{\long\def\@subtitle{#1}}
+\newcommand{\englishtitle}[1]{\long\def\@englishtitle{\MakeUppercase{#1}}}
+\newcommand{\englishsubtitle}[1]{\long\def\@englishsubtitle{\MakeUppercase{#1}}}
+\newcommand{\presslogo}[1]{\long\def\@presslogo{#1}}
+\newcommand{\pressname}[1]{\long\def\@pressname{#1}}
+\newcommand{\backintro}[1]{\long\def\@backintro{#1}}
+\newcommand{\barcode}[1]{\long\def\@barcode{#1}}
+%%%%
+\newcommand{\ifestdef}{
+\maxsizebox{\paperwidth}{!}{\ifdefvoid{\@englishsubtitle}{}{\@englishsubtitle}~~\ifdefvoid{\@englishtitle}{}{\@englishtitle}}
+}
+%%
+\newlength{\@bookheight}
+\newlength{\@bookwidth}
+\newlength{\@spinewidth}
+\newlength{\@coverheight}
+\newlength{\@coverwidth}
+\newlength{\@pagesep}
+%%
+\setlength{\@bookheight}{11in}
+\setlength{\@bookwidth}{8.5in}
+\setlength{\@spinewidth}{1.5cm}
+\setlength{\@coverheight}{\@bookheight}
+\setlength{\@coverwidth}{2\@bookwidth+\@spinewidth}
+\setlength{\@pagesep}{2.0cm}
+%%%%
+\usepackage[paperheight=\@coverheight,paperwidth=\@coverwidth,inner=\@pagesep,outer=\@pagesep,top=\@pagesep,bottom=\@pagesep]{geometry}
+\makeatother
+
+\usepackage[dvipsnames]{xcolor}
+\definecolor{ColorA}{RGB}{132,60,12}
+\definecolor{ColorB}{RGB}{180,90,0}
+\definecolor{ColorC}{RGB}{99,45,9}
+\definecolor{ColorD}{RGB}{61,28,5}
+\definecolor{ColorE}{RGB}{135,61,11}
+\definecolor{ColorF}{RGB}{197,80,17}
+\definecolor{ColorG}{RGB}{237,122,43}
+\definecolor{ColorH}{RGB}{107,49,9}
+\definecolor{ColorI}{RGB}{151,69,13}
+
+\usepackage{pgfplots,tikz,tikzpagenodes,tkz-euclide,eso-pic}
+\usetikzlibrary{fit,calc,math,scopes,backgrounds,positioning,intersections,decorations,shadows,shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,decorations.footprints}
+\usepackage{anyfontsize,adjustbox}
+\newcommand{\FontSizeSet}[2]{\fontsize{#1}{#2}\selectfont}
+
+
+
+\tikzset{3D/.cd,
+x/.store in=\xx, x=0,
+y/.store in=\yy, y=0,
+z/.store in=\zz, z=0
+}
+
+\tikzdeclarecoordinatesystem{3D}{%
+\tikzset{3D/.cd,#1}%
+\pgfpoint{sin(\yy)*(\xx)}{-((\xx)/75)^2+(\zz)/100*(\xx)}%
+}
+
+\newcommand{\titlepagedecoration}[1]{%
+\begin{tikzpicture}[line join=round, very thin, scale=#1]
+\def\e{1260}
+\foreach \x [evaluate={\i=mod(\x+90,360); \j=int((\i<180)*2-1); \t=3;
+\sc=\x/\e; \n=int((\e-\x)/15+5); \X=\x/\e;}] in {10,25,...,\e} {
+
+\path [shift={(3D cs:x=\x-\t,y={3*sin(\x-\t)})}, yslant=cos(\x)/5]
+(-\X/2, 0)   coordinate (A')  ( \X/2, 0)   coordinate (B')
+( \X/2,2*\X) coordinate (C')  (-\X/2,2*\X) coordinate (D');
+
+\path [shift={(3D cs:x=\x,y=3*sin \x)}, yslant=cos(\x)/5]
+(-\X/2, 0)   coordinate (A) ( \X/2, 0)   coordinate (B)
+( \X/2,2*\X) coordinate (C) (-\X/2,2*\X) coordinate (D);
+
+\filldraw [ColorB!90] (B) -- (B') -- (C') -- (C)  -- cycle;
+\filldraw [ColorB!80] (A) -- (A') -- (D') -- (D)  -- cycle;
+\filldraw [ColorB!70] (C) -- (D)  -- (D') -- (C') -- cycle;
+\filldraw [ColorB]    (A) -- (B)  -- (C)  -- (D)  -- cycle;
+
+\node [text=white, shift={($(C)!0.5!(D)$)}, anchor=north,
+yslant=cos(\x)/5, font=\sf, scale=\sc*1.5] at (0,-.33*\X) {\n};
+}
+%
+\foreach \i [evaluate={\x=\i*30-10; \X=1; \n=int(5-\i); \xsl=\x/180}]
+in {1,...,4} {
+
+\path [shift={(3D cs:x=\x+\e,y=-3*\x/90)}, yslant=cos \e/5, xslant=\xsl]
+(-\X/2, 0)           coordinate (A) ( \X/2, 0)           coordinate (B)
+( \X/2, \X*2-\x/360) coordinate (C) (-\X/2, \X*2-\x/360) coordinate (D);
+
+\path [shift={(3D cs:x=\x+\e,y=-3*\x/90)}, shift={(5/50,5/50-\i*2/50)},
+yslant=cos \e/5, xslant=\xsl]
+(-\X/2, 0)           coordinate (A') ( \X/2, 0)           coordinate (B')
+( \X/2, \X*2-\x/330) coordinate (C') (-\X/2, \X*2-\x/330) coordinate (D');
+
+\filldraw [ColorB!70] (C) -- (D)  -- (D') -- (C') -- cycle;
+\filldraw [ColorB!70] (A) -- (B)  -- (B') -- (A') -- cycle;
+\filldraw [ColorB!90] (B) -- (B') -- (C') -- (C)  -- cycle;
+\filldraw [ColorB]    (A) -- (B)  -- (C)  -- (D)  -- cycle;
+
+\node [text=white, shift={($(C)!0.5!(D)$)}, anchor=north, xslant=\xsl,
+yslant=cos \e/5, font=\sf, scale=1.5] at (0,-.33*\X) {\n};
+}
+\end{tikzpicture}
+}
+
+
+
+
+
+
+\series{物理学系列教程}
+\version{一}
+\title{物理学基础讲义}
+\englishtitle{Fundamental of Physics}
+\subtitle{经典力学与热力学}
+\englishsubtitle{Classical Mechanics \& Thermal Dynamics}
+\author{【美】吉尔·沃克\\【美】大卫·哈里德\\【美】罗伯特·瑞斯尼克\\【中】N·A·S·A}
+\pressname{中等教育出版社}
+\presslogo{bookpresslogo.pdf}
+\coverimage{coverimage.pdf}
+\backimage{coverimage.pdf}
+\backintro{\lipsum[2]}
+\barcode{barcode.pdf}
+
+
+
+
+\begin{document}
+
+
+\makeatletter
+\begin{titlepage}
+\begin{tikzpicture}[remember picture,overlay,
+opacity node/.style={anchor=north west,font=\FontSizeSet{100pt}{120pt}\bfseries\sffamily,text=ColorB!25}]
+\coordinate(A)at(current page.north west);
+\coordinate(B)at([xshift=\@bookwidth]current page.north west);
+\coordinate(C)at([xshift=\@bookwidth+\@spinewidth]current page.north west);
+\coordinate(D)at(current page.north east);
+\coordinate(E)at(current page.south east);
+\coordinate(F)at([xshift=-\@bookwidth]current page.south east);
+\coordinate(G)at([xshift=-\@bookwidth-\@spinewidth]current page.south east);
+\coordinate(H)at(current page.south west);
+%%%%
+\coordinate(I)at([yshift=5.25cm]current page.west);
+\coordinate(J)at([xshift=\@bookwidth,yshift=5.25cm]current page.west);
+\coordinate(K)at([xshift=-\@bookwidth,yshift=5.25cm]current page.east);
+\coordinate(L)at([yshift=5.25cm]current page.east);
+\coordinate(M)at($0.5*(I)+0.5*(G)$);
+\coordinate(N)at($0.5*(K)+0.5*(E)$);
+%%%%
+\coordinate(textA)at(current page text area.north west);
+\coordinate(textC)at([xshift=\@bookwidth+\@spinewidth]current page text area.north west);
+\coordinate(textK)at([xshift=\@pagesep,yshift=-1.0cm]K);
+\coordinate(textF)at([xshift=\@pagesep,yshift=\@pagesep]F);
+\coordinate(textG)at([xshift=-\@pagesep,yshift=\@pagesep]G);
+\coordinate(textE)at([xshift=-\@pagesep,yshift=\@pagesep]E);
+\coordinate(textH)at([xshift=\@pagesep,yshift=\@pagesep]H);
+%%%%%%%%%%%%%%%%%%%%
+%%背景1%%
+\draw[ColorB!7.5,fill=ColorB!7.5,sharp corners](A)rectangle(E);
+\draw[ColorB!10,fill=ColorB!1,sharp corners](B)rectangle(K);
+%%半透明文字%%
+\node[opacity node,text opacity=1.0](O_1)at(A){\ifestdef};
+\foreach \x[evaluate=\x as \botpoint using int(\x-1),
+evaluate=\x as \opa using 1.2-0.12*\x] in {2,...,20}{
+\node[opacity node,text opacity=\opa](O_\x)at(O_\botpoint.south west){\ifestdef};}
+%%背景2%%
+\draw[ColorA,fill=ColorA](I)rectangle(E);
+\draw[ColorA!95,fill=ColorA!95](J)rectangle(F);
+%%标题%%
+\node[font=\FontSizeSet{55pt}{66pt}\bfseries\rmfamily,text=ColorA,inner sep=0mm,anchor=north west](T)at(textC){\@title};
+%%英文标题%%
+\node[font=\FontSizeSet{20pt}{24pt}\bfseries\sffamily,text=ColorA,inner sep=0mm,anchor=north west](ET)at([yshift=-0.5cm]T.south west){\ifdefvoid{\@englishtitle}{}{\@englishtitle}};
+%%副标题%%
+\node[font=\FontSizeSet{30pt}{36pt}\bfseries\rmfamily,text=ColorA,inner sep=0mm,anchor=north west](ST)at([yshift=-0.5cm]ET.south west){\ifdefvoid{\@subtitle}{}{\@subtitle}};
+%%英文副标题%%
+\node[font=\FontSizeSet{15pt}{18pt}\bfseries\sffamily,text=ColorA,inner sep=0mm,anchor=north west](EST)at([yshift=-0.5cm]ST.south west){\ifdefvoid{\@englishsubtitle}{}{\@englishsubtitle}};
+%%作者%%
+\node[font=\FontSizeSet{15pt}{18pt}\bfseries\rmfamily,text=white,inner sep=0mm,anchor=north west](AU)at(textK){%
+\begin{varwidth}{\linewidth-4.0cm}
+\@author
+\end{varwidth}%
+\qquad%
+\begin{varwidth}{2.0cm}
+编著
+\end{varwidth}%
+};
+%%出版社%%
+\node[font=\FontSizeSet{15pt}{18pt}\bfseries\rmfamily,inner sep=0mm,text=white,anchor=south west](PL)at(textF){\ifdefvoid{\@presslogo}{}{\raisebox{-0.2cm}{\mbox{\includegraphics[width=0.75cm]{\@presslogo}\hskip0.25cm}}}\ifdefvoid{\@pressname}{}{\@pressname}};
+
+%%%%%%%%%%%%%%%%%%%%
+%%条形码%%
+\ifdefvoid{\@barcode}{\relax}{%
+\node[fill=white,inner xsep=0mm,anchor=south east](BC)at(textG){\includegraphics[width=5.0cm]{\@barcode}};}
+%%说明文字%%
+\node[font=\itshape\kaiti\FontSizeSet{13pt}{15.6pt},text=ColorA,inner xsep=0mm,anchor=north west,text width=\@bookwidth-2\@pagesep](BT)at(textA){\hspace*{2.0em}\ifdefvoid{\@backintro}{}{\RaggedRight\@backintro}};
+%%书籍系列%%
+\node[font=\FontSizeSet{15pt}{18pt}\bfseries\rmfamily,text=white,anchor=west,inner sep=0mm](S)at([yshift=4.0cm]current page text area.west){\ifdefvoid{\@series}{}{\@series}};
+%%书籍系列%%
+\node[font=\FontSizeSet{15pt}{18pt}\bfseries\rmfamily,text=white,anchor=west,inner sep=0mm](V)at([yshift=-0.5cm]S.south west){\ifdefvoid{\@version}{}{第{\@version}版}};
+
+%%%%%%%%%%%%%%%%%%%%
+%%封面装饰图%%
+\node[anchor=south east](CI)at(textE){\titlepagedecoration{1.3}};
+
+%%%%%%%%%%%%%%%%%%%%
+%%书脊英文标题%%
+\node[font=\FontSizeSet{20pt}{24pt}\bfseries\sffamily,text=ColorA,inner sep=0mm,anchor=north](SET)at([yshift=-0.5cm]current page.north){\ifdefvoid{\@englishtitle}{}{\rotatebox[origin=c]{-90}{\maxsizebox{\@bookheight/2-6.0cm}{\@spinewidth}{\@englishtitle}}}};
+%%书脊标题%%
+\node[font=\FontSizeSet{20pt}{24pt}\bfseries\rmfamily,text=white,text width=\@spinewidth/2,align=center,anchor=north](ST)at([yshift=4.75cm]current page.center){\@title};
+%%书脊出版社名称%%
+\node[font=\FontSizeSet{15pt}{18pt}\bfseries\rmfamily,text=white,text width=\@spinewidth/2,align=center,anchor=south](SPN)at([yshift=0.5cm]current page.south){\ifdefvoid{\@pressname}{}{\@pressname}};
+%%书脊出版社logo%%
+\node[inner sep=0mm,anchor=south](SPL)at([yshift=0.25cm]SPN.north){\ifdefvoid{\@presslogo}{}{\includegraphics[width=\@spinewidth/2]{\@presslogo}}};
+
+\end{tikzpicture}
+\end{titlepage}
+
+\makeatother
+
+
+
+
+
+\end{document}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
