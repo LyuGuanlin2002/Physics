@@ -251,7 +251,7 @@ BoldFont=FZCukai.ttf]
 \makeatletter
 \RequirePackage{calc}%优化长度计算和设置
 \RequirePackage{fp}%浮点数计算
-\RequirePackage{ragged2e}%对齐设置
+\RequirePackage{ragged2e}%更美观的对齐设置
 \gdef\@MarginColumn@Ratio{0.25}
 \FPeval\@MainColumn@Ratio{round(1-\@MarginColumn@Ratio:2)}
 \RequirePackage{multicol,paracol}%双栏%分栏、边注、中英对照
@@ -264,7 +264,7 @@ BoldFont=FZCukai.ttf]
 \renewcommand{\columnseprulecolor}{\color{ColorA}}
 %%设置默认正文分栏环境%%
 \newenvironment{Paracol}[1][2]{\begin{paracol}{#1}}{\end{paracol}}
-%%页面布局设置%%a4paper
+%%页面布局设置%%
 \newlength{\@innerlen}
 \newlength{\@outerlen}
 \newlength{\@toplen}
@@ -283,12 +283,11 @@ BoldFont=FZCukai.ttf]
 \setlength{\@footskiplen}{0.95cm}
 \RequirePackage[letterpaper,inner=\@innerlen,outer=\@outerlen,top=\@toplen,bottom=\@botlen,headsep=\@handseplen,footskip=\@footskiplen,marginparsep=\@marginparseplen,marginparwidth=\@marginparwidthlen,reversemarginpar,heightrounded]{geometry}
 \makeatother
-\RequirePackage{emptypage,setspace,fancyhdr,lscape}%清除空页%行距%页眉页脚%旋转页面
-\RequirePackage{extramarks}%创建额外的标记，使用方法类似于\markboth和\markright
-\RequirePackage[strict]{changepage}%换页
+\RequirePackage{fancyhdr,extramarks}%页眉页脚样式设置%创建额外的标记，使用方法类似于\markboth和\markright
+\RequirePackage[strict]{changepage}%临时修改页面的尺寸
 %%边注格式%%
-\let\oldmarginpar\marginpar
-\newcommand{\newmarginpar}[1]{\oldmarginpar{%
+\let\originmarginpar\marginpar
+\renewcommand{\marginpar}[1]{\originmarginpar{%
 \setlength{\parindent}{2.0em}%
 \MarginNoteFont#1}}
 %%脚注格式%%
@@ -303,9 +302,7 @@ BoldFont=FZCukai.ttf]
 \makeatother
 
 %%%%%%%%%%%%%%%%%%%% 图表插入宏包 %%%%%%%%%%%%%%%%%%%%
-\RequirePackage{wrapfig}%文字环绕图片
 \RequirePackage{graphicx}%插入图片路径
-\RequirePackage{floatrow}%浮动体排布
 \RequirePackage{caption}%图表标签
 \RequirePackage{subcaption}%图表标签
 %%设置图片和表格格式%%
@@ -442,8 +439,7 @@ BoldFont=FZCukai.ttf]
 %%%%%%%%%%%%%%%%%%%% 绘图与表格宏包 %%%%%%%%%%%%%%%%%%%%
 \RequirePackage{pifont,fontawesome5}%图标
 \RequirePackage{anyfontsize}%自由调整字体大小
-\RequirePackage{tabularx,colortbl,array,tabularray,booktabs,multirow}%表格
-\RequirePackage{pgfplots,tikzpagenodes,tikz,eso-pic,tkz-euclide}%绘图
+\RequirePackage{pgfplots,tikz,tikzpagenodes,tkz-euclide,eso-pic}%绘图
 \usetikzlibrary{fit,calc,math,scopes,backgrounds,positioning,intersections,decorations,shadows,shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,decorations.footprints}
 \makeatletter
 %%修改addtolength的作用域%%
@@ -480,12 +476,10 @@ BoldFont=FZCukai.ttf]
 
 %%%%%%%%%%%%%%%%%%%% 超链接宏包 %%%%%%%%%%%%%%%%%%%%
 \RequirePackage{url}%超链接
-\RequirePackage{xr}%文件之间的交叉引用
 \RequirePackage[hidelinks,pagebackref]{hyperref}%超链接设置
-\RequirePackage{cleveref}%带前缀名称引用，必须放在hyperref之后
 
 %%%%%%%%%%%%%%%%%%%% 计数器宏包 %%%%%%%%%%%%%%%%%%%%
-\RequirePackage{zhnumber,totcount}%中文计数器%获取计数器的最大值
+\RequirePackage{totcount}%获取计数器的最大值
 %%定义计数器%%
 \makeatletter
 \newcounter{@Thumb@Number}%记录侧标数
@@ -514,13 +508,13 @@ BoldFont=FZCukai.ttf]
 %%设置不编号点样式%%
 \newcommand*{\UnnumberedLabel}{%
 \tikz[baseline=-0.4em]{%
-\node[circle,fill=white,draw=ListColor,ultra thick,anchor=base,minimum size=1.0em,inner sep=0mm,outer sep=0mm]{};%
-\node[circle,fill=ListColor,draw=ListColor,anchor=base,minimum size=0.5em,inner sep=0mm,outer sep=0mm]{};%
+\node[circle,fill=white,draw=ColorA,ultra thick,anchor=base,minimum size=1.0em,inner sep=0mm,outer sep=0mm]{};%
+\node[circle,fill=ColorA,draw=ColorA,anchor=base,minimum size=0.5em,inner sep=0mm,outer sep=0mm]{};%
 }}
 %%设置编号点样式%%
 \newcommand*{\NumberedLabel}[1]{%
 \tikz[baseline=-0.1em]{%
-\node[circle,fill=ListColor,draw=ListColor,ultra thick,anchor=base,minimum size=1.0em,align=center,inner sep=0mm,outer sep=0mm,font=\ListNumFont,text=white]{\maxsizebox{0.9em}{!}{#1}};}}
+\node[circle,fill=ColorA,draw=ColorA,ultra thick,anchor=base,minimum size=1.0em,align=center,inner sep=0mm,outer sep=0mm,font=\ListNumFont,text=white]{\maxsizebox{0.9em}{!}{#1}};}}
 %%%%
 %%无编号列表环境%%
 \NewDocumentEnvironment{UnnumberedItem}{O{1}}{%
@@ -539,8 +533,7 @@ BoldFont=FZCukai.ttf]
 \else%
 \end{itemize}%
 \end{multicols}%
-\fi%
-\global\colorlet{ListColor}{ColorA}}
+\fi}
 %%编号列表环境%%
 \NewDocumentEnvironment{NumberedItem}{O{1}}{%
 \ifnum#1=1%
@@ -558,8 +551,7 @@ BoldFont=FZCukai.ttf]
 \else%
 \end{enumerate}%
 \end{multicols}%
-\fi%
-\global\colorlet{ListColor}{ColorA}}
+\fi}
 
 %%题序号环境%%
 \makeatletter
@@ -569,13 +561,13 @@ BoldFont=FZCukai.ttf]
 %%%%
 \NewDocumentEnvironment{QuestionItem}{O{1}}{%
 \ifnum#1=1%
-\begin{enumerate}[labelsep=0em,labelwidth=2.0em,itemsep=0em,itemindent=2.0em,leftmargin=0.8em,label={\protect\raisebox{0.1em}{\parbox{2.0em}{\sffamily\bfseries\color{ListColor}\arabic*.}}}]%
+\begin{enumerate}[labelsep=0em,labelwidth=2.0em,itemsep=0em,itemindent=2.0em,leftmargin=0.8em,label={\protect\raisebox{0.1em}{\parbox{2.0em}{\sffamily\bfseries\color{ColorA}\arabic*.}}}]%
 \setcounter{enumi}{\value{@temp@item}}%
 \else%
 \setlength{\multicolsep}{0pt}%
 \setlength{\columnsep}{0.7em}%
 \begin{multicols}{#1}%
-\begin{enumerate}[labelsep=0em,labelwidth=2.0em,itemsep=0em,itemindent=2.0em,leftmargin=0.8em,label={\protect\raisebox{0.1em}{\parbox{2.0em}{\sffamily\bfseries\color{ListColor}\arabic*.}}}]%
+\begin{enumerate}[labelsep=0em,labelwidth=2.0em,itemsep=0em,itemindent=2.0em,leftmargin=0.8em,label={\protect\raisebox{0.1em}{\parbox{2.0em}{\sffamily\bfseries\color{ColorA}\arabic*.}}}]%
 \setcounter{enumi}{\value{@temp@item}}%
 \fi%
 }{%
@@ -586,8 +578,7 @@ BoldFont=FZCukai.ttf]
 \setcounter{@temp@item}{\value{enumi}}%
 \end{enumerate}%
 \end{multicols}%
-\fi%
-\global\colorlet{ListColor}{ColorA}}
+\fi}
 \makeatother
 
 %%设置星级%%
@@ -1107,12 +1098,12 @@ BoldFont=FZCukai.ttf]
 \coordinate(U)at([xshift=-\@Part@StripeWidth]R);
 \coordinate(X)at([xshift=-\@Part@StripeWidth]S);
 %%标题%%
-\node[inner sep=0mm,anchor=south east](ZZ)at([yshift=\@Part@StripeWidth+5.0mm]U){
-\tikz{
+\node[inner sep=0mm,anchor=south east](ZZ)at([yshift=\@Part@StripeWidth+5.0mm]U){%
+\tikz{%
 \node[inner sep=0mm,outer sep=0mm,anchor=south west](HC1){\@HalfCircle@Label{ColorA}{\@Part@Star@LabelRadius}};
 \node[inner sep=0mm,outer sep=0mm,anchor=west](HC2)at(HC1.east){\@HalfCircle@Label{ColorA!80}{\@Part@Star@LabelRadius}};
 \node[inner sep=0mm,outer sep=0mm,anchor=west](HC3)at(HC2.east){\@HalfCircle@Label{ColorA!60}{\@Part@Star@LabelRadius}};
-\node[align=flush left,inner sep=0mm,outer sep=0mm,anchor=north west,text=ColorA](PST)at([xshift=0.5cm,yshift=\@Part@Star@LabelYShift]HC3.north east){%
+\node[align=flush left,inner sep=0mm,outer sep=0mm,anchor=north west,text=ColorA,font=\PartNameFont](PST)at([xshift=0.5cm,yshift=\@Part@Star@LabelYShift]HC3.north east){%
 \begin{varwidth}{\textwidth-5.0cm}
 \strut#1\strut
 \end{varwidth}};}};
@@ -1202,12 +1193,12 @@ BoldFont=FZCukai.ttf]
 \coordinate(U)at([xshift=\@Part@StripeWidth]R);
 \coordinate(X)at([xshift=\@Part@StripeWidth]S);
 %%标题%%
-\node[inner sep=0mm,anchor=south west](ZZ)at([yshift=\@Part@StripeWidth+5.0mm]U){
-\tikz{
+\node[inner sep=0mm,anchor=south west](ZZ)at([yshift=\@Part@StripeWidth+5.0mm]U){%
+\tikz{%
 \node[inner sep=0mm,outer sep=0mm,anchor=south west](HC1){\@HalfCircle@Label{ColorA}{\@Part@Star@LabelRadius}};
 \node[inner sep=0mm,outer sep=0mm,anchor=west](HC2)at(HC1.east){\@HalfCircle@Label{ColorA!80}{\@Part@Star@LabelRadius}};
 \node[inner sep=0mm,outer sep=0mm,anchor=west](HC3)at(HC2.east){\@HalfCircle@Label{ColorA!60}{\@Part@Star@LabelRadius}};
-\node[align=flush left,inner sep=0mm,outer sep=0mm,anchor=north west,font=\PartNameFont,text=ColorA](PST)at([xshift=0.5cm,yshift=\@Part@Star@LabelYShift]HC3.north east){%
+\node[align=flush left,inner sep=0mm,outer sep=0mm,anchor=north west,text=ColorA,font=\PartNameFont](PST)at([xshift=0.5cm,yshift=\@Part@Star@LabelYShift]HC3.north east){%
 \begin{varwidth}{\textwidth-5.0cm}
 \strut#1\strut
 \end{varwidth}};}};
@@ -1467,6 +1458,7 @@ BoldFont=FZCukai.ttf]
 \coordinate(Q)at($0.5*(Q1)+0.5*(Q2)$);
 %%
 \begin{pgfonlayer}{@Chapter@Star@Top}%
+\begingroup%
 \ChapterNameFont%
 \def\@Chapter@Star@LabelRadius{\dimexpr0.75\expandafter\baselineskip/2\relax}%
 \def\@Chapter@Star@LabelYShift{\dimexpr0.25\expandafter\baselineskip/2-0.1em\relax}%
@@ -1475,16 +1467,17 @@ BoldFont=FZCukai.ttf]
 \tikz{%
 \node[inner sep=0mm,outer sep=0mm,anchor=north west](P1){\@HalfCircle@Label{ColorA}{\@Chapter@Star@LabelRadius}};
 \node[inner sep=0mm,outer sep=0mm,anchor=west](P2)at(P1.east){\@HalfCircle@Label{ColorA!80}{\@Chapter@Star@LabelRadius}};
-\node[inner sep=0mm,outer sep=0mm,anchor=north west,text=ColorA](P3)at([xshift=\@Chapter@Star@LabelNameXSep,yshift=\@Chapter@Star@LabelYShift]P2.north east){
+\node[inner sep=0mm,outer sep=0mm,anchor=north west,text=ColorA,font=\ChapterNameFont](P3)at([xshift=\@Chapter@Star@LabelNameXSep,yshift=\@Chapter@Star@LabelYShift]P2.north east){
 \begin{varwidth}{\textwidth-2\@Chapter@Star@LabelRadius-\@Chapter@Star@LabelNameXSep}
 \strut#1\strut
 \end{varwidth}};}};
+\endgroup%
 %%
 %%渐变带%%
 \filldraw[draw=ColorB,fill=ColorB,opacity=0.4]([xshift=-\@innerlen,yshift=-2\@Chapter@LabelYShift@Down/3]TT.south west)rectangle([xshift=\@outerlen,yshift=-2\@Chapter@LabelYShift@Down/3-\@Chapter@StripeWidth]TT.south east);
 %%
 %%副标题%%
-\node[inner sep=0mm,outer sep=0mm,anchor=north east,text=ColorA,align=flush right](P)at([yshift=-4\@Chapter@LabelYShift@Down/3-\@Chapter@StripeWidth]TT.south east){
+\node[inner sep=0mm,outer sep=0mm,anchor=north east,text=ColorA,font=\ChapterNameFont,align=flush right](P)at([yshift=-4\@Chapter@LabelYShift@Down/3-\@Chapter@StripeWidth]TT.south east){
 \begin{varwidth}{2\textwidth/3}
 \strut#2\strut
 \end{varwidth}};
@@ -1529,6 +1522,7 @@ BoldFont=FZCukai.ttf]
 \coordinate(Q)at($0.5*(Q1)+0.5*(Q2)$);
 %%
 \begin{pgfonlayer}{@Chapter@Star@Top}%
+\begingroup%
 \ChapterNameFont%
 \def\@Chapter@Star@LabelRadius{\dimexpr0.75\expandafter\baselineskip/2\relax}%
 \def\@Chapter@Star@LabelYShift{\dimexpr0.25\expandafter\baselineskip/2-0.1em\relax}%
@@ -1537,17 +1531,18 @@ BoldFont=FZCukai.ttf]
 \tikz{%
 \node[inner sep=0mm,outer sep=0mm,anchor=north west](P1){\@HalfCircle@Label{ColorA}{\@Chapter@Star@LabelRadius}};
 \node[inner sep=0mm,outer sep=0mm,anchor=west](P2)at(P1.east){\@HalfCircle@Label{ColorA!80}{\@Chapter@Star@LabelRadius}};
-\node[inner sep=0mm,outer sep=0mm,anchor=north west,text=ColorA](P3)at([xshift=\@Chapter@Star@LabelNameXSep,yshift=\@Chapter@Star@LabelYShift]P2.north east){
+\node[inner sep=0mm,outer sep=0mm,anchor=north west,text=ColorA,font=\ChapterNameFont](P3)at([xshift=\@Chapter@Star@LabelNameXSep,yshift=\@Chapter@Star@LabelYShift]P2.north east){
 \begin{varwidth}{\textwidth-2\@Chapter@Star@LabelRadius-\@Chapter@Star@LabelNameXSep}
 \strut#1\strut
 \end{varwidth}};
 }};
+\endgroup%
 %%
 %%渐变带%%
 \filldraw[draw=ColorB,fill=ColorB,opacity=0.4]([xshift=\@innerlen,yshift=-2\@Chapter@LabelYShift@Down/3]TT.south east)rectangle([xshift=-\@outerlen,yshift=-2\@Chapter@LabelYShift@Down/3-\@Chapter@StripeWidth]TT.south west);
 %%
 %%副标题%%
-\node[inner sep=0mm,outer sep=0mm,anchor=north west,text=ColorA,align=flush left](P)at([yshift=-4\@Chapter@LabelYShift@Down/3-\@Chapter@StripeWidth]TT.south west){
+\node[inner sep=0mm,outer sep=0mm,anchor=north west,text=ColorA,font=\ChapterNameFont,align=flush left](P)at([yshift=-4\@Chapter@LabelYShift@Down/3-\@Chapter@StripeWidth]TT.south west){
 \begin{varwidth}{2\textwidth/3}
 \strut#2\strut
 \end{varwidth}};
@@ -1616,11 +1611,6 @@ BoldFont=FZCukai.ttf]
 
 %%为\chapter*添加短页眉%%
 \NewCommandCopy{\OriginChapter}{\chapter}
-%%
-%%修改cleardoublepage命令
-\def\cleardoublepage{%
-\clearpage\if@twoside \ifodd\c@page\else
-\null\newpage\if@twocolumn\null\newpage\fi\fi\fi}
 %%
 \RenewDocumentCommand{\chapter}{s +O{#3} +m}{%
 \IfBooleanTF{#1}
@@ -1693,7 +1683,7 @@ BoldFont=FZCukai.ttf]
 \def\@Subsection@BRadius{\dimexpr\baselineskip/2+6.5pt\relax}
 \pgfdeclarelayer{@Subsection@Bottom}%
 \pgfsetlayers{@Subsection@Bottom,main}%
-\node[text=white,inner xsep=\@Subsection@Radius,inner ysep=0mm,outer sep=0mm](L){%
+\node[text=white,font=\SubsectionFont,inner xsep=\@Subsection@Radius,inner ysep=0mm,outer sep=0mm](L){%
 \begin{varwidth}{\@Subsection@LabelCriticWidth}
 %\AdjustStrut{0.9}%
 \strut#1\strut
@@ -1701,7 +1691,7 @@ BoldFont=FZCukai.ttf]
 \hspace*{\@Subsection@LabelHSkip}};
 \pgfgetnodewidth(L)\@Subsection@LabelWidth
 %%
-\node[text=ColorA,inner xsep=\@Subsection@Radius,inner ysep=0mm,outer sep=0mm,minimum width=\linewidth-\@Subsection@LabelWidth,anchor=north west](N)at(L.north east){\hspace*{\@Subsection@LabelHSkip}%
+\node[text=ColorA,font=\SubsectionFont,inner xsep=\@Subsection@Radius,inner ysep=0mm,outer sep=0mm,minimum width=\linewidth-\@Subsection@LabelWidth,anchor=north west](N)at(L.north east){\hspace*{\@Subsection@LabelHSkip}%
 \begin{minipage}{\linewidth-\@Subsection@LabelWidth-2\@Subsection@Radius-\@Subsection@LabelHSkip}
 %\AdjustStrut{0.9}%
 \strut#2\strut
@@ -1741,7 +1731,7 @@ BoldFont=FZCukai.ttf]
 %%%%
 \pgfdeclarelayer{@Subsection@Star@Bottom}%
 \pgfsetlayers{@Subsection@Star@Bottom,main}%
-\node[text=white,inner xsep=\@Subsection@Star@Radius,inner ysep=0mm,outer sep=0mm](L){%
+\node[text=white,font=\SubsectionFont,inner xsep=\@Subsection@Star@Radius,inner ysep=0mm,outer sep=0mm](L){%
 \hspace*{\@Subsection@Star@Radius+0.5em}%
 \begin{varwidth}{\@Subsection@Star@LabelCriticWidth}
 %\AdjustStrut{0.9}%
@@ -1750,7 +1740,7 @@ BoldFont=FZCukai.ttf]
 \pgfgetnodewidth(L)\@Subsection@Star@LabelWidth%
 \pgfgetnodeheight(L)\@Subsection@Star@LabelHeight%
 %%
-\node[text=ColorA,inner xsep=\@Subsection@Star@Radius,inner ysep=0mm,outer sep=0mm,anchor=north west](N)at(L.north east){%
+\node[text=ColorA,font=\SubsectionFont,inner xsep=\@Subsection@Star@Radius,inner ysep=0mm,outer sep=0mm,anchor=north west](N)at(L.north east){%
 \begin{minipage}{\linewidth-\@Subsection@Star@LabelWidth-2\@Subsection@Star@Radius-\@Subsection@Star@SRadius}
 %\AdjustStrut{0.9}%
 \strut#2\strut
@@ -1826,69 +1816,69 @@ BoldFont=FZCukai.ttf]
 {\ParagraphNameFont\color{ColorA}}}
 %%%%
 %%练习标题设置%%
-\newlength{\@Longheading@LabelCriticWidth}
-\setlength{\@Longheading@LabelCriticWidth}{4.0cm}
-\NewDocumentCommand{\Longheading}{m +m +m}{%
+\newlength{\@ComplexHeading@LabelCriticWidth}
+\setlength{\@ComplexHeading@LabelCriticWidth}{4.0cm}
+\NewDocumentCommand{\ComplexHeading}{m +m +m}{%
 \begingroup%
 \begin{flushleft}%
 \begin{tikzpicture}%
 \SubsectionFont%
-\def\@Longheading@Radius{\dimexpr\baselineskip/2\relax}%
+\def\@ComplexHeading@Radius{\dimexpr\baselineskip/2\relax}%
 %%%%
-\pgfdeclarelayer{@Longheading@Bottom}%
-\pgfsetlayers{@Longheading@Bottom,main}%
-\node[text=white,inner xsep=\@Longheading@Radius,inner ysep=0mm,outer sep=0mm](L){%
-\hspace*{\@Longheading@Radius+0.5em}%
-\begin{varwidth}{\@Longheading@LabelCriticWidth}
+\pgfdeclarelayer{@ComplexHeading@Bottom}%
+\pgfsetlayers{@ComplexHeading@Bottom,main}%
+\node[text=white,inner xsep=\@ComplexHeading@Radius,inner ysep=0mm,outer sep=0mm](L){%
+\hspace*{\@ComplexHeading@Radius+0.5em}%
+\begin{varwidth}{\@ComplexHeading@LabelCriticWidth}
 \strut#1\strut
 \end{varwidth}};%
-\pgfgetnodewidth(L)\@Longheading@LabelWidth%
-\pgfgetnodeheight(L)\@Longheading@LabelHeight%
+\pgfgetnodewidth(L)\@ComplexHeading@LabelWidth%
+\pgfgetnodeheight(L)\@ComplexHeading@LabelHeight%
 %%
-\node[text=ColorA,inner xsep=\@Longheading@Radius,inner ysep=0mm,outer sep=0mm,anchor=north west](N)at(L.north east){%
-\begin{minipage}{\linewidth-\@Longheading@LabelWidth-2\@Longheading@Radius}
+\node[text=ColorB,inner xsep=\@ComplexHeading@Radius,inner ysep=0mm,outer sep=0mm,anchor=north west](N)at(L.north east){%
+\begin{minipage}{\linewidth-\@ComplexHeading@LabelWidth-2\@ComplexHeading@Radius}
 \strut#2\strut
 \end{minipage}};
-\pgfgetnodeheight(N)\@Longheading@NameHeight%
+\pgfgetnodeheight(N)\@ComplexHeading@NameHeight%
 %%
-\begin{pgfonlayer}{@Longheading@Bottom}
-\ifdim\@Longheading@NameHeight>\@Longheading@LabelHeight
-\path[fill=ColorB!7.5,rounded corners=\@Longheading@Radius](L.north west)rectangle(N.south east);
+\begin{pgfonlayer}{@ComplexHeading@Bottom}
+\ifdim\@ComplexHeading@NameHeight>\@ComplexHeading@LabelHeight
+\path[fill=ColorA!7.5,rounded corners=\@ComplexHeading@Radius](L.north west)rectangle(N.south east);
 %
-\path[fill=ColorA,rounded corners=\@Longheading@Radius](L.north west)rectangle(N.south west);
+\path[fill=ColorB,rounded corners=\@ComplexHeading@Radius](L.north west)rectangle(N.south west);
 \else
-\path[fill=ColorB!7.5,rounded corners=\@Longheading@Radius](L.south west)rectangle(N.north east);
+\path[fill=ColorA!7.5,rounded corners=\@ComplexHeading@Radius](L.south west)rectangle(N.north east);
 %
-\path[fill=ColorA,rounded corners=\@Longheading@Radius](L.south west)rectangle(N.north west);
+\path[fill=ColorB,rounded corners=\@ComplexHeading@Radius](L.south west)rectangle(N.north west);
 \fi
 \end{pgfonlayer}%
-\coordinate(C)at([xshift=\@Longheading@Radius,yshift=-\@Longheading@Radius]L.north west);
-\draw[ColorA,fill=white](C)circle(\@Longheading@Radius-2.5pt);
-\node[circle,text=ColorA,inner sep=0mm,outer sep=0mm,font=\MainFont](F)at(C){\centering#3};
+\coordinate(C)at([xshift=\@ComplexHeading@Radius,yshift=-\@ComplexHeading@Radius]L.north west);
+\draw[ColorB,fill=white](C)circle(\@ComplexHeading@Radius-2.5pt);
+\node[circle,text=ColorB,inner sep=0mm,outer sep=0mm,font=\MainFont](F)at(C){\centering#3};
 \end{tikzpicture}%
 \end{flushleft}%
 \endgroup}
 %%%%
-\NewDocumentCommand{\Heading}{ +m }{
+\NewDocumentCommand{\AdjustiveHeading}{ +m }{
 \begin{center}
 \begin{tikzpicture}%
 \HeadingFont%
-\def\@Heading@Radius{\dimexpr\baselineskip/2\relax}%
-\pgfdeclarelayer{@Heading@Bottom}%
-\pgfsetlayers{@Heading@Bottom,main}%
-\node[draw=ColorA,fill=ColorA,rounded corners,text=white,outer sep=0mm,inner xsep=0.5em,inner ysep=0mm,align=center](E){%
+\def\@AdjustiveHeading@Radius{\dimexpr\baselineskip/2\relax}%
+\pgfdeclarelayer{@AdjustiveHeading@Bottom}%
+\pgfsetlayers{@AdjustiveHeading@Bottom,main}%
+\node[draw=ColorB!75,fill=ColorB!75,rounded corners,text=white,outer sep=0mm,inner xsep=0.5em,inner ysep=0mm,align=center](E){%
 \begin{varwidth}{\linewidth/2}
 \strut#1\strut
 \end{varwidth}};
-\begin{pgfonlayer}{@Heading@Bottom}
-\draw[draw=ColorA!65,fill=ColorA!65,line width=6.0pt,rounded corners=\@Heading@Radius]([xshift=-\@Heading@Radius]E.north west)rectangle([xshift=\@Heading@Radius]E.south east);
+\begin{pgfonlayer}{@AdjustiveHeading@Bottom}
+\draw[draw=ColorB!50,fill=ColorB!50,line width=6.0pt,rounded corners=\@AdjustiveHeading@Radius]([xshift=-\@AdjustiveHeading@Radius]E.north west)rectangle([xshift=\@AdjustiveHeading@Radius]E.south east);
 \end{pgfonlayer}
 \end{tikzpicture}
 \end{center}
 }
 %%%%
 %%索引分组标题样式%%
-\newcommand{\Subheading}[1]{%
+\newcommand{\LongHeading}[1]{%
 \begingroup%
 \centering\tikz{%
 \node[font=\HeadingFont,text=ColorA,draw=ColorB!7.5,fill=ColorB!7.5,ultra thick,rounded corners,inner sep=0mm](P){%
@@ -1937,15 +1927,15 @@ BoldFont=FZCukai.ttf]
 }
 %%%%
 \newcommand{\Basis}{%
-\Longheading{基础巩固}{\hfill 用时：\underline{\qquad}}{\faPen}%
+\ComplexHeading{基础巩固}{\hfill 用时：\underline{\qquad}}{\faPen}%
 }
 %%%%
 \newcommand{\Complex}{%
-\Longheading{综合提升}{\hfill 用时：\underline{\qquad}}{\faStar}%
+\ComplexHeading{综合提升}{\hfill 用时：\underline{\qquad}}{\faStar}%
 }
 %%%%
 \newcommand{\NoteArea}{%
-\marginpar{\Subheading{\faPenSquare~~笔记区}}
+\marginpar{\upshape\LongHeading{\faPenSquare~~笔记区}}
 }
 \makeatother
 
@@ -2701,7 +2691,7 @@ BoldFont=FZCukai.ttf]
 \setlength{\@Box@CriticTitleWidth}{2\linewidth/3}
 %%设置注释盒子样式%%
 \tcbset{NoteBox/.style args={#1/#2}{
-enhanced standard,breakable,empty,
+empty,breakable,
 boxsep=3.0mm,
 top=-3.0mm,bottom=-3.0mm,right=-3.0mm,left=-3.0mm,
 before=\par\medskip,after=\par\medskip,
@@ -2725,7 +2715,7 @@ segmentation at break=false
 \setlength{\@ItemBox@SmallCircle@LineWidth}{3.5pt}
 %%
 \tcbset{ItemBox/.style args={#1/#2}{
-enhanced standard,breakable,empty,
+empty,breakable,
 boxsep=3.0mm,
 top=2.0mm,bottom=-3.0mm,left=-3.0mm,right=-3.0mm,
 varwidth boxed title=\@Box@CriticTitleWidth,
@@ -2734,7 +2724,6 @@ before lower={\setlength{\parindent}{2.0em}},
 before=\par\medskip,after=\par\medskip,
 fontupper=\ItemFont,fontlower=\ItemFont,
 fonttitle=\BoxTitleFont,coltitle=white,
-code={\colorlet{ListColor}{#2}},
 title={%
 %\AdjustStrut{0.85}%
 \strut#1\strut%
@@ -2787,7 +2776,6 @@ segmentation at break=false
 %%%%
 \tcbset{CodeBox/.style args={#1/#2/#3/#4/#5}{
 enhanced standard,breakable,
-code={\colorlet{ListColor}{#4}},
 pad after break=5.0mm,
 rounded corners,arc=5.0pt,boxrule=2.25pt,
 colback=white,colframe=white,
@@ -3159,9 +3147,9 @@ minted language=#2}
 %%+m表示允许换行、空行的参数%%
 \DeclareDocumentCommand{\RelaInfo}{ s +m }
 {\IfBooleanTF{#1}
-{\newmarginpar{\upshape%
+{\marginpar{\upshape%
 \begin{box9}[][ColorH][\faCommentDots]{相关信息}
-\setlength{\parindent}{2.0em}#2
+#2
 \end{box9}}
 }{%
 \begin{box9}[][ColorH][\faCommentDots]{相关信息}
@@ -3173,7 +3161,7 @@ minted language=#2}
 {\IfBooleanTF{#1}
 {\newmarginpar{\upshape%
 \begin{box9}[][ColorB!90!black][\faTh]{深入思考}
-\setlength{\parindent}{2.0em}#2
+#2
 \end{box9}}
 }{%
 \begin{box9}[][ColorB!90!black][\faTh]{深入思考}
@@ -3185,7 +3173,7 @@ minted language=#2}
 {\IfBooleanTF{#1}
 {\newmarginpar{\upshape%
 \begin{box9}[][ColorF][\faChrome]{重点注释}
-\setlength{\parindent}{2.0em}#2
+#2
 \end{box9}}
 }{%
 \begin{box9}[][ColorF][\faChrome]{重点注释}
