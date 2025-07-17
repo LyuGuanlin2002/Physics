@@ -865,21 +865,21 @@ BoldFont=FZCukai.ttf]
 \coordinate(C)at([xshift=-\@Part@BlockWidth,yshift=-\@Part@TopOuterBlockLength]current page.north east);
 \coordinate(D)at([yshift=-\@Part@TopOuterBlockLength]current page.north east);
 %%右上角色块%%
-\filldraw[draw=ColorA,fill=ColorA,opacity=0.9](A)--(B)[rounded corners=2.5mm]--(C)[sharp corners]--(D)--cycle;
+\path[fill=ColorA,opacity=0.9](A)--(B)[rounded corners=2.5mm]--(C)[sharp corners]--(D)--cycle;
 %%右侧色块坐标%%
 \coordinate(Q)at([yshift=-\@Part@StripeWidth]D);
 \coordinate(R)at([xshift=-\@Part@MiddleOuterBlockLength]Q);
 \coordinate(T)at([yshift=-\@Part@BlockWidth]Q);
 \coordinate(S)at([xshift=-\@Part@MiddleOuterBlockLength]T);
 %%右侧色块%%
-\filldraw[draw=ColorB,fill=ColorB,opacity=0.2](Q)[rounded corners=2.5mm]--(R)--(S)[sharp corners]--(T)--cycle;
+\path[fill=ColorB,opacity=0.2](Q)[rounded corners=2.5mm]--(R)--(S)[sharp corners]--(T)--cycle;
 %%右下角色块坐标%%
 \coordinate(E)at([yshift=-\@Part@StripeWidth]T);
 \coordinate(F)at([xshift=-\@Part@BlockWidth]E);
 \coordinate(H)at(current page.south east);
 \coordinate(G)at([xshift=-\@Part@BlockWidth]H);
 %%右下角色块%%
-\filldraw[draw=ColorA,fill=ColorA,opacity=0.9](E)[rounded corners=2.5mm]--(F)[sharp corners]--(G)--(H)--cycle;
+\path[fill=ColorA,opacity=0.9](E)[rounded corners=2.5mm]--(F)[sharp corners]--(G)--(H)--cycle;
 \end{pgfonlayer}
 %%%%
 %%左上角色块坐标%%
@@ -916,14 +916,14 @@ BoldFont=FZCukai.ttf]
 \coordinate(W)at([xshift=-\NLWidth]X);
 %%
 %%页面中部色块%%
-\filldraw[draw=ColorB,fill=ColorB,opacity=0.5,rounded corners=2.5mm](U)rectangle(W);
+\path[fill=ColorB,opacity=0.5,rounded corners=2.5mm](U)rectangle(W);
 %%左侧色块坐标%%
 \coordinate(Y)at([xshift=-\@Part@StripeWidth]V);
 \coordinate(Z)at([yshift=-\@Part@StripeWidth]K);
 \coordinate(YY)at([yshift=\@Part@StripeWidth]N);
 \coordinate(ZZ)at([xshift=-\@Part@StripeWidth]W);
 %%左侧色块%%
-\filldraw[ColorB,fill=ColorB,opacity=0.2](Y)[sharp corners]--(Z)--(YY)[rounded corners=2.5mm]--(ZZ)--cycle;
+\path[fill=ColorB,opacity=0.2](Y)[sharp corners]--(Z)--(YY)[rounded corners=2.5mm]--(ZZ)--cycle;
 %%部分名%%
 \node[align=flush right,anchor=north east,font=\PartNameFont,text=ColorA,inner xsep=0mm](PT)at([yshift=-\@Part@StripeWidth-0.25cm]X){%
 \begin{varwidth}{\textwidth-2.45cm}%
@@ -950,21 +950,21 @@ BoldFont=FZCukai.ttf]
 \coordinate(C)at([xshift=\@Part@BlockWidth,yshift=-\@Part@TopOuterBlockLength]current page.north west);
 \coordinate(D)at([yshift=-\@Part@TopOuterBlockLength]current page.north west);
 %%右上角色块%%
-\filldraw[draw=ColorA,fill=ColorA,opacity=0.9](A)--(B)[rounded corners=2.5mm]--(C)[sharp corners]--(D)--cycle;
+\path[fill=ColorA,opacity=0.9](A)--(B)[rounded corners=2.5mm]--(C)[sharp corners]--(D)--cycle;
 %%右侧色块坐标%%
 \coordinate(Q)at([yshift=-\@Part@StripeWidth]D);
 \coordinate(R)at([xshift=\@Part@MiddleOuterBlockLength]Q);
 \coordinate(T)at([yshift=-\@Part@BlockWidth]Q);
 \coordinate(S)at([xshift=\@Part@MiddleOuterBlockLength]T);
 %%右侧色块%%
-\filldraw[draw=ColorB,fill=ColorB,opacity=0.2](Q)[rounded corners=2.5mm]--(R)--(S)[sharp corners]--(T)--cycle;
+\path[fill=ColorB,opacity=0.2](Q)[rounded corners=2.5mm]--(R)--(S)[sharp corners]--(T)--cycle;
 %%右下角色块坐标%%
 \coordinate(E)at([yshift=-\@Part@StripeWidth]T);
 \coordinate(F)at([xshift=\@Part@BlockWidth]E);
 \coordinate(H)at(current page.south west);
 \coordinate(G)at([xshift=\@Part@BlockWidth]H);
 %%右下角色块%%
-\filldraw[draw=ColorA,fill=ColorA,opacity=0.9](E)[rounded corners=2.5mm]--(F)[sharp corners]--(G)--(H)--cycle;
+\path[fill=ColorA,opacity=0.9](E)[rounded corners=2.5mm]--(F)[sharp corners]--(G)--(H)--cycle;
 \end{pgfonlayer}
 %%%%
 %%左上角色块坐标%%
@@ -1001,14 +1001,14 @@ BoldFont=FZCukai.ttf]
 \coordinate(W)at([xshift=\NLWidth]X);
 %%
 %%页面中部色块%%
-\filldraw[draw=ColorB,fill=ColorB,opacity=0.5,rounded corners=2.5mm](U)rectangle(W);
+\path[fill=ColorB,opacity=0.5,rounded corners=2.5mm](U)rectangle(W);
 %%左侧色块坐标%%
 \coordinate(Y)at([xshift=\@Part@StripeWidth]V);
 \coordinate(Z)at([yshift=-\@Part@StripeWidth]K);
 \coordinate(YY)at([yshift=\@Part@StripeWidth]N);
 \coordinate(ZZ)at([xshift=\@Part@StripeWidth]W);
 %%左侧色块%%
-\filldraw[draw=ColorB,fill=ColorB,opacity=0.2](Y)[sharp corners]--(Z)--(YY)[rounded corners=2.5mm]--(ZZ)--cycle;
+\path[fill=ColorB,opacity=0.2](Y)[sharp corners]--(Z)--(YY)[rounded corners=2.5mm]--(ZZ)--cycle;
 %%
 %%部分名%%
 \node[align=flush left,anchor=north west,font=\PartNameFont,text=ColorA,inner xsep=0mm](PT)at([yshift=-\@Part@StripeWidth-0.25cm]X){%
@@ -1055,21 +1055,21 @@ BoldFont=FZCukai.ttf]
 \coordinate(C)at([xshift=-\@Part@BlockWidth,yshift=-\@Part@TopOuterBlockLength]current page.north east);
 \coordinate(D)at([yshift=-\@Part@TopOuterBlockLength]current page.north east);
 %%右上角色块%%
-\filldraw[draw=ColorA,fill=ColorA,opacity=0.9](A)--(B)[rounded corners=2.5mm]--(C)[sharp corners]--(D)--cycle;
+\path[fill=ColorA,opacity=0.9](A)--(B)[rounded corners=2.5mm]--(C)[sharp corners]--(D)--cycle;
 %%右侧色块坐标%%
 \coordinate(Q)at([yshift=-\@Part@StripeWidth]D);
 \coordinate(R)at([xshift=-\@Part@MiddleOuterBlockLength]Q);
 \coordinate(T)at([yshift=-\@Part@BlockWidth]Q);
 \coordinate(S)at([xshift=-\@Part@MiddleOuterBlockLength]T);
 %%右侧色块%%
-\filldraw[draw=ColorB,fill=ColorB,opacity=0.2](Q)[rounded corners=2.5mm]--(R)--(S)[sharp corners]--(T)--cycle;
+\path[fill=ColorB,opacity=0.2](Q)[rounded corners=2.5mm]--(R)--(S)[sharp corners]--(T)--cycle;
 %%右下角色块坐标%%
 \coordinate(E)at([yshift=-\@Part@StripeWidth]T);
 \coordinate(F)at([xshift=-\@Part@BlockWidth]E);
 \coordinate(H)at(current page.south east);
 \coordinate(G)at([xshift=-\@Part@BlockWidth]H);
 %%右下角色块%%
-\filldraw[draw=ColorA,fill=ColorA,opacity=0.9](E)[rounded corners=2.5mm]--(F)[sharp corners]--(G)--(H)--cycle;
+\path[fill=ColorA,opacity=0.9](E)[rounded corners=2.5mm]--(F)[sharp corners]--(G)--(H)--cycle;
 \end{pgfonlayer}
 %%左上角色块坐标%%
 \coordinate(I)at([xshift=-\@Part@StripeWidth]B);
@@ -1115,14 +1115,14 @@ BoldFont=FZCukai.ttf]
 \coordinate(W)at([xshift=-\ZZWidth]X);
 %%
 %%页面中部色块%%
-\filldraw[draw=ColorB,fill=ColorB,opacity=0.5,rounded corners=2.5mm](U)rectangle(W);
+\path[fill=ColorB,opacity=0.5,rounded corners=2.5mm](U)rectangle(W);
 %%左侧色块坐标%%
 \coordinate(Y)at([xshift=-\@Part@StripeWidth]V);
 \coordinate(Z)at([yshift=-\@Part@StripeWidth]K);
 \coordinate(YY)at([yshift=\@Part@StripeWidth]N);
 \coordinate(ZZ)at([xshift=-\@Part@StripeWidth]W);
 %%左侧色块%%
-\filldraw[draw=ColorB,fill=ColorB,opacity=0.2](Y)[sharp corners]--(Z)--(YY)[rounded corners=2.5mm]--(ZZ)--cycle;
+\path[fill=ColorB,opacity=0.2](Y)[sharp corners]--(Z)--(YY)[rounded corners=2.5mm]--(ZZ)--cycle;
 %%
 %%部分副标题%%
 \node[align=flush left,anchor=north east,font=\PartNameFont,text=ColorA,inner xsep=0mm](PSST)at([yshift=-\@Part@StripeWidth-0.25cm]X){%
@@ -1150,21 +1150,21 @@ BoldFont=FZCukai.ttf]
 \coordinate(C)at([xshift=\@Part@BlockWidth,yshift=-\@Part@TopOuterBlockLength]current page.north west);
 \coordinate(D)at([yshift=-\@Part@TopOuterBlockLength]current page.north west);
 %%右上角色块%%
-\filldraw[draw=ColorA,fill=ColorA,opacity=0.9](A)--(B)[rounded corners=2.5mm]--(C)[sharp corners]--(D)--cycle;
+\path[fill=ColorA,opacity=0.9](A)--(B)[rounded corners=2.5mm]--(C)[sharp corners]--(D)--cycle;
 %%右侧色块坐标%%
 \coordinate(Q)at([yshift=-\@Part@StripeWidth]D);
 \coordinate(R)at([xshift=\@Part@MiddleOuterBlockLength]Q);
 \coordinate(T)at([yshift=-\@Part@BlockWidth]Q);
 \coordinate(S)at([xshift=\@Part@MiddleOuterBlockLength]T);
 %%右侧色块%%
-\filldraw[draw=ColorB,fill=ColorB,opacity=0.2](Q)[rounded corners=2.5mm]--(R)--(S)[sharp corners]--(T)--cycle;
+\path[fill=ColorB,opacity=0.2](Q)[rounded corners=2.5mm]--(R)--(S)[sharp corners]--(T)--cycle;
 %%右下角色块坐标%%
 \coordinate(E)at([yshift=-\@Part@StripeWidth]T);
 \coordinate(F)at([xshift=\@Part@BlockWidth]E);
 \coordinate(H)at(current page.south west);
 \coordinate(G)at([xshift=\@Part@BlockWidth]H);
 %%右下角色块%%
-\filldraw[draw=ColorA,fill=ColorA,opacity=0.9](E)[rounded corners=2.5mm]--(F)[sharp corners]--(G)--(H)--cycle;
+\path[fill=ColorA,opacity=0.9](E)[rounded corners=2.5mm]--(F)[sharp corners]--(G)--(H)--cycle;
 \end{pgfonlayer}
 %%左上角色块坐标%%
 \coordinate(I)at([xshift=\@Part@StripeWidth]B);
@@ -1210,14 +1210,14 @@ BoldFont=FZCukai.ttf]
 \coordinate(W)at([xshift=\ZZWidth]X);
 %%
 %%页面中部色块%%
-\filldraw[draw=ColorB,fill=ColorB,opacity=0.5,rounded corners=2.5mm](U)rectangle(W);
+\path[fill=ColorB,opacity=0.5,rounded corners=2.5mm](U)rectangle(W);
 %%左侧色块坐标%%
 \coordinate(Y)at([xshift=\@Part@StripeWidth]V);
 \coordinate(Z)at([yshift=-\@Part@StripeWidth]K);
 \coordinate(YY)at([yshift=\@Part@StripeWidth]N);
 \coordinate(ZZ)at([xshift=\@Part@StripeWidth]W);
 %%左侧色块%%
-\filldraw[draw=ColorB,fill=ColorB,opacity=0.2](Y)[sharp corners]--(Z)--(YY)[rounded corners=2.5mm]--(ZZ)--cycle;
+\path[fill=ColorB,opacity=0.2](Y)[sharp corners]--(Z)--(YY)[rounded corners=2.5mm]--(ZZ)--cycle;
 %%
 %%部分副标题%%
 \node[align=flush left,anchor=north west,font=\PartNameFont,text=ColorA,inner xsep=0mm](PSST)at([yshift=-\@Part@StripeWidth-0.25cm]X){%
@@ -1306,7 +1306,7 @@ BoldFont=FZCukai.ttf]
 \newlength{\@Chapter@PageSize}
 \newlength{\@Chapter@SayingBlockWidth}
 \newlength{\@Chapter@LabelYShift@Up}
-\setlength{\@Chapter@StripeWidth}{0.3cm}
+\setlength{\@Chapter@StripeWidth}{0.35cm}
 \setlength{\@Chapter@LabelSep}{0.5cm}
 \setlength{\@Chapter@LabelYShift@Down}{0.65cm}
 \setlength{\@Chapter@LabelYShift@Up}{0.5cm}
@@ -1341,12 +1341,12 @@ BoldFont=FZCukai.ttf]
 \coordinate(Q)at($0.5*(Q1)+0.5*(Q2)$);
 \begin{pgfonlayer}{@Chapter@Top}
 %%编号%%
-\draw[draw=ColorA,fill=ColorA,sharp corners]node[append after command={(T.south west)[rounded corners=2.5mm]--(T.south east)[sharp corners]--([yshift=\@toplen-\@Chapter@LabelYShift@Up]T.north east)--([yshift=\@toplen-\@Chapter@LabelYShift@Up]T.north west)[rounded corners=2.5mm]--cycle},anchor=north east,font=\ChapterLabelFont,text=white,inner xsep=\@Chapter@LabelSep,inner ysep=0mm,outer sep=0mm](T)at([yshift=\@Chapter@LabelYShift@Up]N){
+\draw[ColorA,fill=ColorA,sharp corners]node[append after command={(T.south west)[rounded corners=2.5mm]--(T.south east)[sharp corners]--([yshift=\@toplen-\@Chapter@LabelYShift@Up]T.north east)--([yshift=\@toplen-\@Chapter@LabelYShift@Up]T.north west)[rounded corners=2.5mm]--cycle},anchor=north east,font=\ChapterLabelFont,text=white,inner xsep=\@Chapter@LabelSep,inner ysep=0mm,outer sep=0mm](T)at([yshift=\@Chapter@LabelYShift@Up]N){
 \begin{varwidth}{\textwidth/3}
 \strut#1\strut
 \end{varwidth}};
 %%渐变带%%
-\filldraw[draw=ColorB,fill=ColorB,opacity=0.4]([xshift=\@outerlen,yshift=-2\@Chapter@LabelYShift@Down/3]T.south east)rectangle([xshift=-\@innerlen-\textwidth,yshift=-2\@Chapter@LabelYShift@Down/3-\@Chapter@StripeWidth]T.south east);
+\path[fill=ColorB,opacity=0.4]([xshift=\@outerlen,yshift=-3\@Chapter@LabelYShift@Down/4]T.south east)rectangle([xshift=-\@innerlen-\textwidth,yshift=-3\@Chapter@LabelYShift@Down/4-\@Chapter@StripeWidth]T.south east);
 %%标题%%
 \node[inner sep=0mm,anchor=north east,font=\ChapterNameFont,text=ColorA](P)at([yshift=-4\@Chapter@LabelYShift@Down/3-\@Chapter@StripeWidth]T.south east){\begin{varwidth}{\textwidth}
 \strut#2\strut
@@ -1359,7 +1359,7 @@ BoldFont=FZCukai.ttf]
 %%获取标题区域的高度%%
 \pgfgetdistance(A)(J)\DistanceAJ
 \gsetlength{\@Chapter@BlockHeight}{\DistanceAJ}
-\gsetlength{\@Chapter@VSpace}{\@Chapter@BlockHeight-\@toplen-1.0cm}
+\gsetlength{\@Chapter@VSpace}{\@Chapter@BlockHeight-\@toplen-0.8cm}
 \begin{pgfonlayer}{@Chapter@Bottom}
 %%框架1%%
 \draw[ColorB!7.5,fill=ColorB!7.5,sharp corners](A)rectangle(C);
@@ -1391,12 +1391,12 @@ BoldFont=FZCukai.ttf]
 \coordinate(Q)at($0.5*(Q1)+0.5*(Q2)$);
 \begin{pgfonlayer}{@Chapter@Top}
 %%编号%%
-\draw[draw=ColorA,fill=ColorA,sharp corners]node[append after command={(T.south west)[rounded corners=2.5mm]--(T.south east)[sharp corners]--([yshift=\@toplen-\@Chapter@LabelYShift@Up]T.north east)--([yshift=\@toplen-\@Chapter@LabelYShift@Up]T.north west)[rounded corners=2.5mm]--cycle},anchor=north west,font=\ChapterLabelFont,text=white,inner xsep=\@Chapter@LabelSep,inner ysep=0mm,outer sep=0mm](T)at([yshift=\@Chapter@LabelYShift@Up]N){
-\begin{varwidth}{\textwidth/3}
+\draw[ColorA,fill=ColorA,sharp corners]node[append after command={(T.south west)[rounded corners=2.5mm]--(T.south east)[sharp corners]--([yshift=\@toplen-\@Chapter@LabelYShift@Up]T.north east)--([yshift=\@toplen-\@Chapter@LabelYShift@Up]T.north west)[rounded corners=2.5mm]--cycle},anchor=north west,font=\ChapterLabelFont,text=white,inner xsep=\@Chapter@LabelSep,inner ysep=0mm,outer sep=0mm](T)at([yshift=\@Chapter@LabelYShift@Up]N){%
+\begin{varwidth}{\textwidth/3}%
 \strut#1\strut
 \end{varwidth}};
 %%渐变带%%
-\filldraw[draw=ColorB,fill=ColorB,opacity=0.4]([xshift=-\@outerlen,yshift=-2\@Chapter@LabelYShift@Down/3]T.south west)rectangle([xshift=\@innerlen+\textwidth,yshift=-2\@Chapter@LabelYShift@Down/3-\@Chapter@StripeWidth]T.south west);
+\path[fill=ColorB,opacity=0.4]([xshift=-\@outerlen,yshift=-3\@Chapter@LabelYShift@Down/4]T.south west)rectangle([xshift=\@innerlen+\textwidth,yshift=-3\@Chapter@LabelYShift@Down/4-\@Chapter@StripeWidth]T.south west);
 %%标题%%
 \node[inner sep=0mm,anchor=north west,font=\ChapterNameFont,text=ColorA](P)at([yshift=-4\@Chapter@LabelYShift@Down/3-\@Chapter@StripeWidth]T.south west){\begin{varwidth}{\textwidth}
 \strut#2\strut
@@ -1409,7 +1409,7 @@ BoldFont=FZCukai.ttf]
 %%获取标题区域的高度%%
 \pgfgetdistance(A)(J)\DistanceAJ
 \gsetlength{\@Chapter@BlockHeight}{\DistanceAJ}
-\gsetlength{\@Chapter@VSpace}{\@Chapter@BlockHeight-\@toplen-1.0cm}
+\gsetlength{\@Chapter@VSpace}{\@Chapter@BlockHeight-\@toplen-0.8cm}
 \begin{pgfonlayer}{@Chapter@Bottom}
 %%框架1%%
 \draw[ColorB!7.5,fill=ColorB!7.5,sharp corners](A)rectangle(C);
@@ -1459,22 +1459,22 @@ BoldFont=FZCukai.ttf]
 %%
 \begin{pgfonlayer}{@Chapter@Star@Top}%
 \begingroup%
-\ChapterNameFont%
+\ChapterLabelFont%
 \def\@Chapter@Star@LabelRadius{\dimexpr0.75\expandafter\baselineskip/2\relax}%
 \def\@Chapter@Star@LabelYShift{\dimexpr0.25\expandafter\baselineskip/2-0.1em\relax}%
 %%标题%%
-\node[inner sep=0mm,outer sep=0mm,anchor=north west,text width=\textwidth,align=flush left](TT)at(N){%
+\node[inner sep=0mm,outer sep=0mm,anchor=north west,text width=\textwidth,align=flush left](TT)at([yshift=\@Chapter@Star@LabelYShift@Up]N){%
 \tikz{%
 \node[inner sep=0mm,outer sep=0mm,anchor=north west](P1){\@HalfCircle@Label{ColorA}{\@Chapter@Star@LabelRadius}};
 \node[inner sep=0mm,outer sep=0mm,anchor=west](P2)at(P1.east){\@HalfCircle@Label{ColorA!80}{\@Chapter@Star@LabelRadius}};
-\node[inner sep=0mm,outer sep=0mm,anchor=north west,text=ColorA,font=\ChapterNameFont](P3)at([xshift=\@Chapter@Star@LabelNameXSep,yshift=\@Chapter@Star@LabelYShift]P2.north east){
+\node[inner sep=0mm,outer sep=0mm,anchor=north west,text=ColorA,font=\ChapterLabelFont](P3)at([xshift=\@Chapter@Star@LabelNameXSep,yshift=\@Chapter@Star@LabelYShift]P2.north east){
 \begin{varwidth}{\textwidth-2\@Chapter@Star@LabelRadius-\@Chapter@Star@LabelNameXSep}
 \strut#1\strut
 \end{varwidth}};}};
 \endgroup%
 %%
 %%渐变带%%
-\filldraw[draw=ColorB,fill=ColorB,opacity=0.4]([xshift=-\@innerlen,yshift=-2\@Chapter@LabelYShift@Down/3]TT.south west)rectangle([xshift=\@outerlen,yshift=-2\@Chapter@LabelYShift@Down/3-\@Chapter@StripeWidth]TT.south east);
+\path[fill=ColorB,opacity=0.4]([xshift=-\@innerlen,yshift=-3\@Chapter@LabelYShift@Down/4]TT.south west)rectangle([xshift=\@outerlen,yshift=-3\@Chapter@LabelYShift@Down/4-\@Chapter@StripeWidth]TT.south east);
 %%
 %%副标题%%
 \node[inner sep=0mm,outer sep=0mm,anchor=north east,text=ColorA,font=\ChapterNameFont,align=flush right](P)at([yshift=-4\@Chapter@LabelYShift@Down/3-\@Chapter@StripeWidth]TT.south east){
@@ -1489,7 +1489,7 @@ BoldFont=FZCukai.ttf]
 %%获取标题区域的高度%%
 \pgfgetdistance(A)(J)\DistanceAJ
 \gsetlength{\@Chapter@BlockHeight}{\DistanceAJ}
-\gsetlength{\@Chapter@VSpace}{\@Chapter@BlockHeight-\@toplen-1.0cm}
+\gsetlength{\@Chapter@VSpace}{\@Chapter@BlockHeight-\@toplen-0.8cm}
 \begin{pgfonlayer}{@Chapter@Star@Bottom}
 %%框架1%%
 \draw[ColorB!7.5,fill=ColorB!7.5,sharp corners](A)rectangle(C);
@@ -1523,7 +1523,7 @@ BoldFont=FZCukai.ttf]
 %%
 \begin{pgfonlayer}{@Chapter@Star@Top}%
 \begingroup%
-\ChapterNameFont%
+\ChapterLabelFont%
 \def\@Chapter@Star@LabelRadius{\dimexpr0.75\expandafter\baselineskip/2\relax}%
 \def\@Chapter@Star@LabelYShift{\dimexpr0.25\expandafter\baselineskip/2-0.1em\relax}%
 %%标题%%
@@ -1531,7 +1531,7 @@ BoldFont=FZCukai.ttf]
 \tikz{%
 \node[inner sep=0mm,outer sep=0mm,anchor=north west](P1){\@HalfCircle@Label{ColorA}{\@Chapter@Star@LabelRadius}};
 \node[inner sep=0mm,outer sep=0mm,anchor=west](P2)at(P1.east){\@HalfCircle@Label{ColorA!80}{\@Chapter@Star@LabelRadius}};
-\node[inner sep=0mm,outer sep=0mm,anchor=north west,text=ColorA,font=\ChapterNameFont](P3)at([xshift=\@Chapter@Star@LabelNameXSep,yshift=\@Chapter@Star@LabelYShift]P2.north east){
+\node[inner sep=0mm,outer sep=0mm,anchor=north west,text=ColorA,font=\ChapterLabelFont](P3)at([xshift=\@Chapter@Star@LabelNameXSep,yshift=\@Chapter@Star@LabelYShift]P2.north east){
 \begin{varwidth}{\textwidth-2\@Chapter@Star@LabelRadius-\@Chapter@Star@LabelNameXSep}
 \strut#1\strut
 \end{varwidth}};
@@ -1539,7 +1539,7 @@ BoldFont=FZCukai.ttf]
 \endgroup%
 %%
 %%渐变带%%
-\filldraw[draw=ColorB,fill=ColorB,opacity=0.4]([xshift=\@innerlen,yshift=-2\@Chapter@LabelYShift@Down/3]TT.south east)rectangle([xshift=-\@outerlen,yshift=-2\@Chapter@LabelYShift@Down/3-\@Chapter@StripeWidth]TT.south west);
+\path[fill=ColorB,opacity=0.4]([xshift=\@innerlen,yshift=-3\@Chapter@LabelYShift@Down/4]TT.south east)rectangle([xshift=-\@outerlen,yshift=-3\@Chapter@LabelYShift@Down/4-\@Chapter@StripeWidth]TT.south west);
 %%
 %%副标题%%
 \node[inner sep=0mm,outer sep=0mm,anchor=north west,text=ColorA,font=\ChapterNameFont,align=flush left](P)at([yshift=-4\@Chapter@LabelYShift@Down/3-\@Chapter@StripeWidth]TT.south west){
@@ -1554,7 +1554,7 @@ BoldFont=FZCukai.ttf]
 %%获取标题区域的高度%%
 \pgfgetdistance(A)(J)\DistanceAJ
 \gsetlength{\@Chapter@BlockHeight}{\DistanceAJ}
-\gsetlength{\@Chapter@VSpace}{\@Chapter@BlockHeight-\@toplen-1.0cm}
+\gsetlength{\@Chapter@VSpace}{\@Chapter@BlockHeight-\@toplen-0.8cm}
 \begin{pgfonlayer}{@Chapter@Star@Bottom}
 %%框架1%%
 \draw[ColorB!7.5,fill=ColorB!7.5,sharp corners](A)rectangle(C);
@@ -1613,10 +1613,10 @@ BoldFont=FZCukai.ttf]
 \NewCommandCopy{\OriginChapter}{\chapter}
 %%
 \RenewDocumentCommand{\chapter}{s +O{#3} +m}{%
-\IfBooleanTF{#1}
-{\OriginChapter*{#3\@mkboth{#2}{#2}}}
-{\OriginChapter[#2]{#3}}
-\vspace*{\@Chapter@VSpace}%
+\IfBooleanTF{#1}%
+{\OriginChapter*{#3\@mkboth{#2}{#2}}}%
+{\OriginChapter[#2]{#3}}%
+\addvspace{\@Chapter@VSpace}%
 }
 
 %%节样式%%
@@ -3205,7 +3205,10 @@ rounded corners,arc=5.0pt,colupper=ColorA,#1}
 %%背景%%
 \draw[ColorB!7.5,fill=ColorB!7.5,sharp corners](D)rectangle(B);
 %%
-\draw[ColorA!25,fill=ColorA!25]
+\path[fill=ColorB!15]
+(A)--(B)--(C)--(D)--cycle
+(E)[rounded corners=5.0mm]--(F)[rounded corners=5.0mm]--(G)[sharp corners]--(H)[sharp corners]--cycle;
+\path[pattern={Lines[angle=-45,distance=5.0pt,line width=4.0pt]},pattern color=ColorB!30]
 (A)--(B)--(C)--(D)--cycle
 (E)[rounded corners=5.0mm]--(F)[rounded corners=5.0mm]--(G)[sharp corners]--(H)[sharp corners]--cycle;
 \end{tikzpicture}%
