@@ -639,8 +639,9 @@ BoldFont=FZCukai.ttf]
 %%定义部分总数（序言、前言视作一个部分，目录、插图目录、表格目录视作一个部分，绪论、有编号部分、无编号部分以及后记）,编译两次可以得到正确的页面框架%%
 \makeatletter
 %%页眉和侧标的默认值%%
-\newcommand{\DefaultMark}{
+\newcommand{\DefaultMark}{%
 \markboth{\protect\@subtitle}{\protect\@subtitle}
+\extramarks{\protect\@seriesname}{\protect\@seriesname}
 }
 \makeatother
 %%设置新长度%%
@@ -648,15 +649,15 @@ BoldFont=FZCukai.ttf]
 \newlength{\SepH}%相邻两个侧标中心点之间的距离
 \newlength{\MarkY}%侧标中心点距页面最上端的垂直距离
 \setlength{\DeltaH}{6.0cm}
-\AtBeginDocument{
+\AtBeginDocument{%
 \makeatletter
 \ifthenelse{\totvalue{@Thumb@Number}=0\or\totvalue{@Thumb@Number}=1}
 {\setlength{\SepH}{0cm}
 \setlength{\MarkY}{-\paperheight/2}}
-{\setlength{\SepH}{\dimexpr(\paperheight-2\DeltaH)/(\totvalue{@Thumb@Number}-1)\relax}%设置侧标每次移动的距离
+{\setlength{\SepH}{\dimexpr(\paperheight-2\DeltaH)/\totvalue{@Thumb@Number}\relax}%设置侧标每次移动的距离
 \setlength{\MarkY}{-\DeltaH}}%设置侧标上下两侧锚点坐标的初值
-\pagestyle{empty}
-\DefaultMark
+\DefaultMark%默认标记
+\pagestyle{empty}%默认页面样式为空
 \makeatother}
 
 %%%%
@@ -736,7 +737,6 @@ BoldFont=FZCukai.ttf]
 %%%%
 \path[pattern={Lines[angle=45,distance=5.0pt,line width=4.0pt]},pattern color=ColorA](T.north west)--(T.north east)--(T.south east)[rounded corners=1.75mm]--(T.south west)[rounded corners=1.75mm]--cycle;
 %%%%
-\if@partnumbermark
 %%绘制部分序号标签%%
 \begin{pgfonlayer}{@MainPage@Top}
 \node[font=\PartNumberFont,text=white,outer sep=0mm,inner xsep=3.5mm,inner ysep=2.5mm,anchor=south](PTN)at([yshift=0.1cm]I){%
@@ -748,7 +748,6 @@ BoldFont=FZCukai.ttf]
 \path[fill=ColorA!60!ColorB]([yshift=-0.1cm]PTN.south west)[rounded corners=2.0mm]--(PTN.north west)[rounded corners=2.0mm]--(PTN.north east)[sharp corners]--([yshift=-0.1cm]PTN.south east)--cycle;
 %%%%
 \path[pattern={Lines[angle=45,distance=5.0pt,line width=4.0pt]},pattern color=ColorA]([yshift=-0.1cm]PTN.south west)[rounded corners=2.0mm]--(PTN.north west)[rounded corners=2.0mm]--(PTN.north east)[sharp corners]--([yshift=-0.1cm]PTN.south east)--cycle;
-\fi
 %%%%
 \else
 \coordinate(A)at(current page.north east);
@@ -792,7 +791,6 @@ BoldFont=FZCukai.ttf]
 %%%%
 \path[pattern={Lines[angle=-45,distance=5.0pt,line width=4.0pt]},pattern color=ColorA](T.north west)[rounded corners=1.75mm]--(T.north east)[rounded corners=1.75mm]--(T.south east)[sharp corners]--(T.south west)--cycle;
 %%%%
-\if@partnumbermark
 %%绘制部分序号标签%%
 \begin{pgfonlayer}{@MainPage@Top}
 \node[font=\PartNumberFont,text=white,outer sep=0mm,inner xsep=3.5mm,inner ysep=2.5mm,anchor=south](PTN)at([yshift=0.1cm]I){%
@@ -804,7 +802,6 @@ BoldFont=FZCukai.ttf]
 \path[fill=ColorA!60!ColorB]([yshift=-0.1cm]PTN.south west)[rounded corners=2.0mm]--(PTN.north west)[rounded corners=2.0mm]--(PTN.north east)[sharp corners]--([yshift=-0.1cm]PTN.south east)--cycle;
 %%%%
 \path[pattern={Lines[angle=-45,distance=5.0pt,line width=4.0pt]},pattern color=ColorA]([yshift=-0.1cm]PTN.south west)[rounded corners=2.0mm]--(PTN.north west)[rounded corners=2.0mm]--(PTN.north east)[sharp corners]--([yshift=-0.1cm]PTN.south east)--cycle;
-\fi
 %%
 \fi
 \end{tikzpicture}%
@@ -1251,12 +1248,10 @@ BoldFont=FZCukai.ttf]
 }
 %%
 %%编号部分页%%
-\newif\if@partnumbermark
 \titleformat{\part}
 {}{}{0em}
 {\startcontents[part]%开启小目录
 \@PartStyle{\partlabelfront{\sffamily\thepart}\partlabelback}{#1}%部分样式
-\global\@partnumbermarktrue%生成页面底部的部分索引
 \thispagestyle{empty}%部分页的页面样式为空白
 }
 [\global\partintro{}%清空\partintro
@@ -1266,7 +1261,6 @@ BoldFont=FZCukai.ttf]
 {}{}{0em}
 {\startcontents[part]%开启小目录
 \@PartStarStyle{#1}%部分样式
-\global\@partnumbermarktrue%生成页面底部的部分索引
 \thispagestyle{empty}%部分页的页面样式为空白
 }
 [\global\partintro{}%清空\partintro
@@ -1576,13 +1570,8 @@ BoldFont=FZCukai.ttf]
 %%侧标更新规则%%
 \newcommand{\@Thumb@Update@Rule}{
 \stepcounter{@Thumb@Number}%侧标数计数
-\ifnum\value{@Thumb@Number}=1%
-\relax%
-\else%
 \gaddtolength{\MarkY}{-\SepH}%更新侧标位置
-\fi%
 }
-
 %%编号章节页%%
 \titleformat{\chapter}
 {}{}{0em}
@@ -1595,8 +1584,7 @@ BoldFont=FZCukai.ttf]
 %%不编号章节页%%
 \titleformat{name=\chapter,numberless}
 {}{}{0em}
-{\@Thumb@Update@Rule%
-\@ChapterStarStyle{#1}{\@chaptersubtitle}%章样式
+{\@ChapterStarStyle{#1}{\@chaptersubtitle}%章样式
 \enlargethispage{-0.75cm}%修改页面大小
 }
 [\global\chaptersubtitle{}%清空\chaptersubtitle
@@ -1869,7 +1857,7 @@ BoldFont=FZCukai.ttf]
 \strut#1\strut
 \end{varwidth}};
 \begin{pgfonlayer}{@AdjustiveHeading@Bottom}
-\draw[draw=ColorB!50,fill=ColorB!50,line width=6.0pt,rounded corners=\@AdjustiveHeading@Radius]([xshift=-\@AdjustiveHeading@Radius]E.north west)rectangle([xshift=\@AdjustiveHeading@Radius]E.south east);
+\draw[ColorB!50,fill=ColorB!50,line width=6.0pt,rounded corners=\@AdjustiveHeading@Radius]([xshift=-\@AdjustiveHeading@Radius]E.north west)rectangle([xshift=\@AdjustiveHeading@Radius]E.south east);
 \end{pgfonlayer}
 \end{tikzpicture}
 \end{center}
