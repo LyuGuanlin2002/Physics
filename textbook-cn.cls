@@ -2735,11 +2735,6 @@ segmentation style={cap=round,line width=2.25pt,draw=#2!25,loosely dashed},
 segmentation at break=false
 }}
 %%%%
-\newlength{\@ItemBox@BigCircle@LineWidth}
-\newlength{\@ItemBox@SmallCircle@LineWidth}
-\setlength{\@ItemBox@BigCircle@LineWidth}{12.0pt}
-\setlength{\@ItemBox@SmallCircle@LineWidth}{3.5pt}
-%%
 \tcbset{ItemBox/.style args={#1/#2}{
 empty,breakable,
 boxsep=3.0mm,
@@ -2751,11 +2746,11 @@ before=\par\medskip,after=\par\medskip,
 fontupper=\ItemFont,fontlower=\ItemFont,
 fonttitle=\BoxTitleFont,coltitle=white,
 title={%
-%\AdjustStrut{0.85}%
+%\AdjustStrut{0.85}
 \strut#1\strut%
 },
-attach boxed title to top left={xshift=\@ItemBox@SmallCircle@LineWidth/2,yshift*=-\tcboxedtitleheight},
-boxed title style={size=minimal,empty,valign=center,left=2.5em,right=1.0em},
+attach boxed title to top left={yshift*=-\tcboxedtitleheight},
+boxed title style={size=minimal,empty,valign=center,left=2.25em,right=1.0em},
 subtitle style={empty,fontupper=\BoxSubtitleFont,colupper=#2,top=-3.0mm,bottom=-3.0mm},
 segmentation engine=path,
 segmentation style={cap=round,line width=2.25pt,draw=#2!25,loosely dashed},
@@ -2765,9 +2760,8 @@ underlay boxed title={
 \BoxTitleFont
 \def\@BoxTitle@Radius{\dimexpr\baselineskip/2\relax}%0.85
 \draw[#2,fill=#2,ultra thick,rounded corners=\@BoxTitle@Radius](title.north west)rectangle(title.south east);
-\draw[white,fill=white,line width=\@ItemBox@BigCircle@LineWidth]([xshift=\@BoxTitle@Radius,yshift=-\@BoxTitle@Radius]title.north west)circle(\@BoxTitle@Radius);
-\draw[#2,fill=white,line width=\@ItemBox@SmallCircle@LineWidth]([xshift=\@BoxTitle@Radius,yshift=-\@BoxTitle@Radius]title.north west)circle(\@BoxTitle@Radius);
-\draw[#2,fill=#2]([xshift=\@BoxTitle@Radius,yshift=-\@BoxTitle@Radius]title.north west)circle({\@BoxTitle@Radius/2});
+\draw[white,fill=white]([xshift=\@BoxTitle@Radius,yshift=-\@BoxTitle@Radius]title.north west)circle(\@BoxTitle@Radius-2.0pt);
+\draw[#2,fill=#2]([xshift=\@BoxTitle@Radius,yshift=-\@BoxTitle@Radius]title.north west)circle(\@BoxTitle@Radius/2);
 %%%%
 \draw[#2,fill=#2,ultra thin]([xshift=-\@BoxTitle@Radius,yshift=-\@BoxTitle@Radius]frame.north east)circle({2*\@BoxTitle@Radius/3});
 \draw[#2!90,fill=#2!90,ultra thin]([xshift=-3*\@BoxTitle@Radius,yshift=-\@BoxTitle@Radius]frame.north east)circle({2*\@BoxTitle@Radius/3});
