@@ -17,8 +17,6 @@
 \DeclareVoidOption{orange}{\ekv{themecolor=orange}}
 \DeclareVoidOption{yellow}{\ekv{themecolor=yellow}}
 \DeclareVoidOption{colorful}{\ekv{themecolor=colorful}}
-%%声明参考文献生成方式布尔键%%
-\DeclareBoolOption[false]{splitbib}
 %%加载book作为基础文档类%%
 \DeclareDefaultOption{\PassOptionsToClass{\CurrentOption}{book}}
 \ProcessKeyvalOptions*\relax
@@ -133,9 +131,8 @@
 
 \makeatletter
 %%定义书籍信息%%
-\newcommand{\coverimage}[1]{\long\def\@coverimage{#1}}
-\newcommand{\backimage}[1]{\long\def\@backimage{#1}}
-\newcommand{\series}[1]{\long\def\@series{#1}}
+\newcommand{\serieslogo}[1]{\long\def\@serieslogo{#1}}
+\newcommand{\seriesname}[1]{\long\def\@seriesname{#1}}
 \newcommand{\version}[1]{\long\def\@version{#1}}
 \newcommand{\subtitle}[1]{\long\def\@subtitle{#1}}
 \newcommand{\englishtitle}[1]{\long\def\@englishtitle{\MakeUppercase{#1}}}
@@ -207,6 +204,10 @@ BoldFont=FZCukai.ttf]
 %%简化字体命令%%
 \newcommand{\FontSizeSet}[2]{\fontsize{#1}{#2}\selectfont}
 %%字号设置%%
+\newcommand{\TitlepageNormalFont}{\rmfamily\bfseries\FontSizeSet{15pt}{18pt}}%标题页正常字体
+\newcommand{\TitlepageTitleFont}{\rmfamily\bfseries\FontSizeSet{40pt}{48pt}}%标题页主标题字体
+\newcommand{\TitlepageSubtitleFont}{\rmfamily\bfseries\FontSizeSet{30pt}{36pt}}%标题页次标题字体
+\newcommand{\TitlepageEnglishFont}{\sffamily\bfseries\FontSizeSet{18pt}{21.6pt}}%标题页次标题字体
 \newcommand{\PartLabelFont}{\rmfamily\bfseries\FontSizeSet{34pt}{40.8pt}}%部分标签字体
 \newcommand{\PartNameFont}{\rmfamily\bfseries\FontSizeSet{32pt}{38.4pt}}%部分名称字体
 \newcommand{\ChapterLabelFont}{\rmfamily\bfseries\FontSizeSet{27pt}{32.4pt}}%章标签字体
@@ -265,32 +266,23 @@ BoldFont=FZCukai.ttf]
 %%设置默认正文分栏环境%%
 \newenvironment{Paracol}[1][2]{\begin{paracol}{#1}}{\end{paracol}}
 %%页面布局设置%%
-\newlength{\@paperwidthlen}
-\newlength{\@paperheightlen}
 \newlength{\@innerlen}
 \newlength{\@outerlen}
 \newlength{\@toplen}
 \newlength{\@botlen}
-\newlength{\@handseplen}
-\newlength{\@footskiplen}
-\newlength{\@textwidthlen}
-\newlength{\@marginparwidthlen}
-\newlength{\@marginparseplen}
 %%%%
-\setlength{\@paperwidthlen}{8.5in}
-\setlength{\@paperheightlen}{11.0in}
 \setlength{\@innerlen}{2.5cm}
 \setlength{\@outerlen}{2.25cm}
 \setlength{\@toplen}{2.5cm}
 \setlength{\@botlen}{2.5cm}
-\setlength{\@handseplen}{0.875cm}
-\setlength{\@footskiplen}{0.95cm}
-\setlength{\@textwidthlen}{\@paperwidthlen-\@innerlen-\@outerlen}
-\setlength{\@marginparwidthlen}{\dimeval{\@MarginColumn@Ratio\@textwidthlen-0.75em}}
-\setlength{\@marginparseplen}{-\@marginparwidthlen}
 %%%%
 \RequirePackage{geometry}
-\geometry{paperwidth=\@paperwidthlen,paperheight=\@paperheightlen,inner=\@innerlen,outer=\@outerlen,top=\@toplen,bottom=\@botlen,headsep=\@handseplen,footskip=\@footskiplen,marginparwidth=\@marginparwidthlen,marginparsep=\@marginparseplen,reversemarginpar,heightrounded}
+\geometry{letterpaper,reversemarginpar,heightrounded,headsep=0.875cm,footskip=0.95cm,inner=\@innerlen,outer=\@outerlen,top=\@toplen,bottom=\@botlen}
+%%
+\setlength{\marginparwidth}{\dimeval{\@MarginColumn@Ratio\textwidth-0.75em}}
+\setlength{\marginparsep}{-\marginparwidth}
+
+
 \makeatother
 %%%%
 \RequirePackage{fancyhdr,extramarks}%页眉页脚样式设置%创建额外的标记，使用方法类似于\markboth和\markright
@@ -461,7 +453,6 @@ BoldFont=FZCukai.ttf]
 \global#1=\skip@
 \endgroup}
 %%测量节点node尺寸%%
-%%
 \def\pgfgetnodeheight(#1)#2{
 \begin{pgfinterruptboundingbox}
 \path($(#1.south)-(#1.north)$);
@@ -613,20 +604,17 @@ BoldFont=FZCukai.ttf]
 % 绘制表格外框
 \draw[ColorA,fill=ColorB!5,very thick,rounded corners](0,0)rectangle(#4,\totalheight);
 % 绘制水平线
-\ifnum#2=1
-\relax
+\ifnum#2=1\relax
 \else
 \foreach \row in {2,...,#2}{
 \draw[ColorA,very thick](0,\row*#5-#5)--(#4,\row*#5-#5);
 }
 \fi
 % 绘制垂直线
-\ifnum#3=1
-\relax
+\ifnum#3=1\relax
 \else
 \foreach \col in {2,...,#3}{
-\draw[ColorA,very thick](\col*#4/#3-#4/#3,0)--(\col*#4/#3-#4/#3,\totalheight);
-}
+\draw[ColorA,very thick](\col*#4/#3-#4/#3,0)--(\col*#4/#3-#4/#3,\totalheight);}
 \fi
 % 添加题号
 \foreach \row in {1,...,\numexpr#2\relax}{
@@ -681,7 +669,7 @@ BoldFont=FZCukai.ttf]
 \newlength{\@GutterWidth}
 \setlength{\@GutterWidth}{\@innerlen-1.5cm}
 \newlength{\@PageNumWidth}
-\setlength{\@PageNumWidth}{\@toplen-\@handseplen+1.0mm}
+\setlength{\@PageNumWidth}{\@toplen-\headsep+1.0mm}
 %%%%
 \newcommand{\partlabelfront}{第~}
 \newcommand{\partlabelback}{~部分}
@@ -3232,32 +3220,33 @@ rounded corners,arc=5.0pt,colupper=ColorA,#1}
 (A)--(B)--(C)--(D)--cycle
 (E)[rounded corners=5.0mm]--(F)[rounded corners=5.0mm]--(G)[sharp corners]--(H)[sharp corners]--cycle;
 \end{tikzpicture}%
-\centering\color{ColorA}\bfseries%
+\centering\color{ColorA}%
 %%书籍系列%%
-\ifdefvoid{\@series}{}{%
-{\FontSizeSet{15pt}{18pt}\rmfamily\@series\\}}%
+{\TitlepageNormalFont%
+\ifdefvoid{\@serieslogo}{}{\raisebox{-0.2cm}{\mbox{\includegraphics[width=0.75cm]{\@serieslogo}\hskip0.25cm}}}\ifdefvoid{\@seriesname}{\\}{\@seriesname\\}%
+}%
 \vskip1.0cm%
 %%标题%%
-{\FontSizeSet{55pt}{66pt}\rmfamily\@title\\}%
+{\TitlepageTitleFont\@title\\}%
 %%英文标题%%
 \ifdefvoid{\@englishtitle}{}{%
 \vskip0.5cm%
-{\FontSizeSet{20pt}{24pt}\sffamily\@englishtitle\\}}
+{\TitlepageEnglishFont\@englishtitle\\}}
 %%副标题%%
 \ifdefvoid{\@subtitle}{}{%
 \vskip0.75cm%
-{\FontSizeSet{30pt}{36pt}\rmfamily\@subtitle\\}}%
+{\TitlepageSubtitleFont\@subtitle\\}}%
 %%英文副标题%%
 \ifdefvoid{\@englishsubtitle}{}{%
 \vskip0.25cm%
-{\FontSizeSet{17.5pt}{21pt}\sffamily\@englishsubtitle\\}}%
+{\TitlepageEnglishFont\@englishsubtitle\\}}%
 %%版本号%%
 \ifdefvoid{\@version}{}{%
 \vskip0.75cm%
-{\FontSizeSet{15pt}{18pt}\rmfamily 第{\@version}版\\}}%
+{\TitlepageNormalFont 第{\@version}版\\}}%
 \vskip1.0cm%
 %%作者%%
-{\FontSizeSet{15pt}{18pt}\rmfamily%
+{\TitlepageNormalFont%
 \begin{varwidth}{\linewidth-4.0cm}
 \@author
 \end{varwidth}%
@@ -3268,6 +3257,8 @@ rounded corners,arc=5.0pt,colupper=ColorA,#1}
 \\}%
 \vfill%
 %%出版社%%
-{\FontSizeSet{15pt}{18pt}\rmfamily\ifdefvoid{\@presslogo}{}{\raisebox{-0.2cm}{\mbox{\includegraphics[width=0.75cm]{\@presslogo}}}}\hskip0.25cm\@pressname\\}%
+{\TitlepageNormalFont%
+\ifdefvoid{\@presslogo}{}{\raisebox{-0.2cm}{\mbox{\includegraphics[width=0.75cm]{\@presslogo}\hskip0.25cm}}}\ifdefvoid{\@pressname}{}{\@pressname}%
+}%
 \end{titlepage}}
 \makeatother
