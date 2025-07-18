@@ -252,7 +252,7 @@ BoldFont=FZCukai.ttf]
 \RequirePackage{calc}%优化长度计算和设置
 \RequirePackage{fp}%浮点数计算
 \RequirePackage{ragged2e}%更美观的对齐设置
-\gdef\@MarginColumn@Ratio{0.25}
+\gdef\@MarginColumn@Ratio{0.3}
 \FPeval\@MainColumn@Ratio{round(1-\@MarginColumn@Ratio:2)}
 \RequirePackage{multicol,paracol}%双栏%分栏、边注、中英对照
 \columnratio{\@MainColumn@Ratio}
@@ -265,24 +265,34 @@ BoldFont=FZCukai.ttf]
 %%设置默认正文分栏环境%%
 \newenvironment{Paracol}[1][2]{\begin{paracol}{#1}}{\end{paracol}}
 %%页面布局设置%%
+\newlength{\@paperwidthlen}
+\newlength{\@paperheightlen}
 \newlength{\@innerlen}
 \newlength{\@outerlen}
 \newlength{\@toplen}
 \newlength{\@botlen}
-\newlength{\@marginparwidthlen}
-\newlength{\@marginparseplen}
 \newlength{\@handseplen}
 \newlength{\@footskiplen}
+\newlength{\@textwidthlen}
+\newlength{\@marginparwidthlen}
+\newlength{\@marginparseplen}
+%%%%
+\setlength{\@paperwidthlen}{8.5in}
+\setlength{\@paperheightlen}{11.0in}
 \setlength{\@innerlen}{2.5cm}
 \setlength{\@outerlen}{2.25cm}
 \setlength{\@toplen}{2.5cm}
 \setlength{\@botlen}{2.5cm}
-\setlength{\@marginparwidthlen}{\dimeval{\@MarginColumn@Ratio\textwidth+2.0em}}
-\setlength{\@marginparseplen}{-\@marginparwidthlen+0.75em}
 \setlength{\@handseplen}{0.875cm}
 \setlength{\@footskiplen}{0.95cm}
-\RequirePackage[letterpaper,inner=\@innerlen,outer=\@outerlen,top=\@toplen,bottom=\@botlen,headsep=\@handseplen,footskip=\@footskiplen,marginparsep=\@marginparseplen,marginparwidth=\@marginparwidthlen,reversemarginpar,heightrounded]{geometry}
+\setlength{\@textwidthlen}{\@paperwidthlen-\@innerlen-\@outerlen}
+\setlength{\@marginparwidthlen}{\dimeval{\@MarginColumn@Ratio\@textwidthlen-0.75em}}
+\setlength{\@marginparseplen}{-\@marginparwidthlen}
+%%%%
+\RequirePackage{geometry}
+\geometry{paperwidth=\@paperwidthlen,paperheight=\@paperheightlen,inner=\@innerlen,outer=\@outerlen,top=\@toplen,bottom=\@botlen,headsep=\@handseplen,footskip=\@footskiplen,marginparwidth=\@marginparwidthlen,marginparsep=\@marginparseplen,reversemarginpar,heightrounded}
 \makeatother
+%%%%
 \RequirePackage{fancyhdr,extramarks}%页眉页脚样式设置%创建额外的标记，使用方法类似于\markboth和\markright
 \RequirePackage[strict]{changepage}%临时修改页面的尺寸
 %%边注格式%%
@@ -292,7 +302,7 @@ BoldFont=FZCukai.ttf]
 \MarginNoteFont#1}}
 %%脚注格式%%
 \gdef\footnoterule{}
-\gdef\footnotesize{\color{ColorA}\FootNoteFont}
+\gdef\footnotesize{\color{ColorB}\FootNoteFont}
 \makeatletter
 %%\strut盒子高度调整%%
 \newcommand{\AdjustStrut}[1]{
@@ -306,7 +316,7 @@ BoldFont=FZCukai.ttf]
 \RequirePackage{caption}%图表标签
 \RequirePackage{subcaption}%图表标签
 %%设置图片和表格格式%%
-\renewcommand{\captionfont}{\color{ColorA}\CaptionFont}
+\renewcommand{\captionfont}{\color{ColorB}\CaptionFont}
 %%
 \makeatletter
 \@removefromreset{figure}{chapter}%移除figure对chapter的依赖
@@ -324,8 +334,8 @@ BoldFont=FZCukai.ttf]
 \the@prenumber.\arabic{table}%
 \fi}
 %%
-\def\fnum@figure{{\color{ColorA!50}\faSquare}\nobreakspace\figurename\nobreakspace{\sffamily\@Environment@Mark\thefigure}}
-\def\fnum@table{{\color{ColorA!50}\faSquare}\nobreakspace\tablename\nobreakspace{\sffamily\@Environment@Mark\thetable}}
+\def\fnum@figure{{\color{ColorB!50}\faSquare}\nobreakspace\figurename\nobreakspace{\sffamily\@Environment@Mark\thefigure}}
+\def\fnum@table{{\color{ColorB!50}\faSquare}\nobreakspace\tablename\nobreakspace{\sffamily\@Environment@Mark\thetable}}
 %%
 \renewcommand{\subfigurename}{图}
 \renewcommand{\subtablename}{表}
@@ -493,7 +503,7 @@ BoldFont=FZCukai.ttf]
 \newcounter{@colry}[section]
 \newcounter{@prop}[section]
 \newcounter{@check}
-\newcounter{@reading}
+\newcounter{@comprehension}
 \newcounter{@cloze}
 \makeatother
 \renewcommand{\thesubfigure}{\thefigure.\Alph{subfigure}}
@@ -1937,6 +1947,22 @@ BoldFont=FZCukai.ttf]
 \newcommand{\NoteArea}{%
 \marginpar{\upshape\LongHeading{\faPenSquare~~笔记区}}
 }
+%%%%
+\newcommand{\Listening}{%
+\AdjustiveHeading{\faMusic~~听力模块}
+}
+%%%%
+\newcommand{\Reading}{%
+\AdjustiveHeading{\faBookReader~~阅读模块}
+}
+%%%%
+\newcommand{\Speaking}{%
+\AdjustiveHeading{\faHeadSideMask~~口语模块}
+}
+%%%%
+\newcommand{\Writing}{%
+\AdjustiveHeading{\faPenNib~~写作模块}
+}
 \makeatother
 
 %%%%%%%%%%%%%%%%%% 环境、文档层次和目录 %%%%%%%%%%%%%%%%%%%%%%%%
@@ -3100,7 +3126,7 @@ underlay boxed title={
 %%%%
 \DeclareTColorBox{box8}{+O{} +m +O{} +O{} O{ColorA} O{}}{CodeBox=#2/#3/#4/#5/#6,#1}
 
-\NewDocumentEnvironment{Reading}{ +O{} +O{} }{\begin{box8}[step=@reading]{阅读理解~{\sffamily\the@reading}}[#1][#2][ColorB]}{\end{box8}}
+\NewDocumentEnvironment{Comprehension}{ +O{} +O{} }{\begin{box8}[step=@comprehension]{阅读理解~{\sffamily\the@comprehension}}[#1][#2][ColorB]}{\end{box8}}
 %%
 \NewDocumentEnvironment{Cloze}{ +O{} +O{} }{\begin{box8}[step=@cloze]{完形填空~{\sffamily\the@cloze}}[#1][#2][ColorA]}{\end{box8}}
 %%

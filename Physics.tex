@@ -6,10 +6,11 @@
 \usepackage{zhlipsum,lipsum}%乱数假文（测试文字）
 \usepackage{physics}%物理符号包
 \usepackage{siunitx}%物理符号包
-%\usepackage{tabularx,colortbl,array,tabularray,booktabs,multirow}%表格
+\usepackage{tabularx,colortbl,array,tabularray,booktabs,multirow}%表格
 \usepackage{wrapfig}%文字环绕图片
-%\usepackage{floatrow}%浮动体排布
 \usetikzlibrary{3d}
+
+\usepackage{pdfpages}
 
 %\usepackage[cam,cross,letter,center]{crop}
 
@@ -67,44 +68,7 @@
 \begin{document}
 \MainFont
 
-%\makecover
-
-%\begin{tikzpicture}[remember picture,overlay]
-%	%%%%%%%%%%%%%%%%%%%% Background %%%%%%%%%%%%%%%%%%%%%%%%
-%	\fill[ColorB] (current page.south west) rectangle (current page.north east);
-%	
-%	
-%	\foreach \i in {100,95,...,5}{
-%		\node[fill=ColorB!\i,draw=none,star, minimum size=\i cm,thick] at (current page.east){}; }
-%	
-%	
-%	
-%	
-%	%%%%%%%%%%%%%%%%%%%% Title of the Report %%%%%%%%%%%%%%%%%%%% 
-%	\node[left,black,minimum width=0.625*\paperwidth,minimum height=3cm, rounded corners] at ($(current page.north east)+(0,-9.5)$)
-%	{
-%		{\fontsize{25}{30} \selectfont \bfseries TITLE OF THE REPORT}
-%	};
-%	
-%	%%%%%%%%%%%%%%%%%%%% Subtitle %%%%%%%%%%%%%%%%%%%% 
-%	\node[left,black,minimum width=0.625*\paperwidth,minimum height=2cm, rounded corners] at ($(current page.north east)+(0,-11)$)
-%	{
-%		{\huge \textit{Subtitle of the Report}}
-%	};
-%	
-%	%%%%%%%%%%%%%%%%%%%% Author Name %%%%%%%%%%%%%%%%%%%% 
-%	\node[left,black,minimum width=0.625*\paperwidth,minimum height=2cm, rounded corners] at ($(current page.north east)+(0,-13)$)
-%	{
-%		{\Large \textsc{Author Name}}
-%	};
-%	
-%	%%%%%%%%%%%%%%%%%%%% Year %%%%%%%%%%%%%%%%%%%% 
-%	\node[rounded corners,fill=ColorB,text =black,regular polygon,regular polygon sides=6, minimum size=2.5 cm,inner sep=0,ultra thick] at ($(current page.south east)+(-2.5,+2.5)$) {\LARGE \bfseries 2020};
-%	
-%\end{tikzpicture}
-
-
-
+%\includepdf{bookcover.pdf}
 
 \maketitle
 % 内容提要
@@ -209,11 +173,7 @@
 \partintro{\lipsum[2]}
 \part*{测试文字测试文字}
 
-%\backintro{\lipsum[2]}
-%\barcode{barcode.pdf}
-%\makeback
-%
-%\makespine[1.02cm]
+
 
 \end{document}
 
