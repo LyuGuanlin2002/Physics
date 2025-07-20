@@ -1,4 +1,4 @@
-\documentclass[themecolor=brown]{textbook-cn}%,splitbib,openany
+\documentclass[themecolor=brown]{textbook-cn}
 \graphicspath{{./figure/}{./figures/}{./image/}{./images/}{./graphics/}{./graphic/}{./pictures/}{./picture/}}%提供多种图片路径
 \input{./styles/Cover-cn.tex}
 \input{./styles/Logo.tex}
@@ -6,24 +6,19 @@
 \usepackage{zhlipsum,lipsum}%乱数假文（测试文字）
 \usepackage{physics}%物理符号包
 \usepackage{siunitx}%物理符号包
-\usetikzlibrary{patterns,3d}
+\usepackage{tabularx,colortbl,array,tabularray,booktabs,multirow}%表格
+\usepackage{wrapfig}%文字环绕图片
+\usetikzlibrary{3d}
 
-\usepackage{refcount}
+\usepackage{pdfpages}
+\usepackage{notoccite}
 
-%%设置符号表样式%%
-\nomensetup{columnsep=2.0em,columns=3}
-\makenomenclature
+%\usepackage[cam,cross,letter,center]{crop}
 
-%%设置索引样式%%
-\indexsetup{}
-\makeindex[name=noun,title=名词索引,columns=3,columnsep=2.0em,options=-s indexstyle.ist]
-\makeindex[name=video,title=视频索引,columnsep=2.0em,options=-s indexstyle.ist]
-
-%%设置参考文献样式%%
-\bibsetup{intoc}
 
 %%设置书籍信息%%
-\series{物理学系列教程}
+\seriesname{物理学系列教程}
+\serieslogo{Springer.pdf}
 \version{一}
 \title{物理学基础讲义}
 \englishtitle{Fundamental of Physics}
@@ -32,15 +27,6 @@
 \author{【美】吉尔·沃克\\【美】大卫·哈里德\\【美】罗伯特·瑞斯尼克\\【中】N·A·S·A}
 \pressname{中等教育出版社}
 \presslogo{bookpresslogo.pdf}
-\coverimage{coverimage.pdf}
-\backimage{coverimage.pdf}
-
-\newcommand{\indexnoun}[1]{\index[noun]{#1}}
-\newcommand{\indexvideo}[1]{\index[video]{#1}}
-
-\newcommand{\zhindexnoun}[2]{\zhindex[noun]{#1}{#2}}
-\newcommand{\zhindexvideo}[2]{\zhindex[video]{#1}{#2}}
-
 
 %空心字母
 \newcommand{\E}{\mathbb{E}}
@@ -80,9 +66,11 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{document}
-\MainFont
+%\MainFont
 
-%\makecover
+
+
+%\includepdf{bookcover.pdf}
 
 \maketitle
 % 内容提要
@@ -100,13 +88,19 @@
 \tableofcontents
 
 \listoffigures
-%
+
+
+\cleardoublepage
+
+\lipsum[2]
+
+
 \mainmatter
 
 
 \partintro{\lipsum[2]}
-\part{力学}
-
+\part[短标题]{力学}
+\lipsum
 %% 第一章
 \include{main/M01.00-li.tex}
 
@@ -136,7 +130,8 @@
 %
 %% 第十章
 %\include{body/M010.00-xueshengshiyan}
-
+\chapter{测试}
+\zhlipsum[1]
 
 \backmatter
 
@@ -144,15 +139,44 @@
 %	\include{body/fulu}
 %\end{appendix}
 
+
+\chaptersubtitle{测试文字}
 \chapter{后记}
 
 \lipsum
 
-%\backintro{\lipsum[2]}
-%\barcode{barcode.pdf}
-%\makeback
-%
-%\makespine[1.02cm]
+
+
+
+\chapter{测试文字}
+\zhlipsum
+
+\cleardoublepage
+
+\lipsum
+
+
+
+\chaptersaying{物华天宝，龙光射牛斗之墟；人杰地灵，徐孺下陈蕃之榻。}
+\chapter{测试文字}
+
+\chapter{哈哈哈}
+\lipsum
+
+
+%\partsubtitle{副标题测试副标题测试副标题测试副标题测试}
+\partintro{\lipsum[2]}
+\part*{测试文字测试文字}
+
+\zhlipsum
+
+
+%\partsubtitle{副标题测试副标题测试副标题测试副标题测试}
+\partsubtitle{ }
+\partintro{\lipsum[2]}
+\part*{测试文字测试文字}
+
+\zhlipsum
 
 \end{document}
 
