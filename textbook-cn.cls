@@ -273,8 +273,8 @@ BoldFont=FZCukai.ttf]
 \newlength{\@toplen}
 \newlength{\@botlen}
 %%%%
-\setlength{\@innerlen}{2.5cm}
-\setlength{\@outerlen}{2.25cm}
+\setlength{\@innerlen}{2.6cm}
+\setlength{\@outerlen}{2.5cm}
 \setlength{\@toplen}{2.5cm}
 \setlength{\@botlen}{2.5cm}
 %%%%
@@ -351,20 +351,20 @@ BoldFont=FZCukai.ttf]
 \setcounter{secnumdepth}{3}
 \makeatletter
 %%重定义\tableofcontents%%
-\RenewDocumentCommand{\tableofcontents}{s O{1} O{1}}{
+\RenewDocumentCommand{\tableofcontents}{s O{1} O{2}}{%
 \begingroup%确保计数器值只在局部生效
 \chapter*{\contentsname}
 \c@tocdepth=#3%预设目录深度为1
-\IfBooleanTF{#1}{
-\begin{paracol}{2}
-\@starttoc{toc}
+\IfBooleanTF{#1}{%
+\begin{paracol}{2}%
+\@starttoc{toc}%
 \end{paracol}}
 {\ifnum#2=1%
-\@starttoc{toc}
-\else
-\begin{multicols}{#2}
-\@starttoc{toc}
-\end{multicols}
+\@starttoc{toc}%
+\else%
+\begin{multicols}{#2}%
+\@starttoc{toc}%
+\end{multicols}%
 \fi}
 \endgroup}
 %%重定义\listoffigures%%
@@ -670,8 +670,10 @@ BoldFont=FZCukai.ttf]
 \setlength{\@FrameWidth}{1.0cm}
 \newlength{\@GutterWidth}
 \setlength{\@GutterWidth}{\@FrameWidth+\@innerlen-\@outerlen}
+\newlength{\@PageNumHeight}
+\setlength{\@PageNumHeight}{\@toplen-\headsep+1.5mm}
 \newlength{\@PageNumWidth}
-\setlength{\@PageNumWidth}{\@toplen-\headsep+1.0mm}
+\setlength{\@PageNumWidth}{\@outerlen-\@FrameWidth-2.0mm}
 %%%%
 \newcommand{\partlabelfront}{第}
 \newcommand{\partlabelback}{部分}
@@ -681,12 +683,12 @@ BoldFont=FZCukai.ttf]
 \newcommand{\sectionlabelback}{节}
 \newcommand{\subsectionlabelfront}{课时}
 \newcommand{\subsectionlabelback}{}
-\newcommand{\subsubsectionlabelfront}{知识点}
+\newcommand{\subsubsectionlabelfront}{要点}
 \newcommand{\subsubsectionlabelback}{}
 %%%%
 \renewcommand{\headrulewidth}{0pt}
-\RenewDocumentCommand{\chaptermark}{ +m }{
-\if@mainmatter
+\RenewDocumentCommand{\chaptermark}{ +m }{%
+\if@mainmatter%
 \markboth{\chapterlabelfront{\sffamily\thechapter}\chapterlabelback\quad#1}{\chapterlabelfront{\sffamily\thechapter}\chapterlabelback\quad#1}
 \else
 \markboth{#1}{#1}
@@ -694,8 +696,8 @@ BoldFont=FZCukai.ttf]
 \RenewDocumentCommand{\sectionmark}{+m}{\markright{\sectionlabelfront{\sffamily\thesection}\sectionlabelback\quad#1}}
 %%%%
 %%绘制主页面样式%%
-\newcommand{\@Main@PageStyle}{
-\begin{tikzpicture}[remember picture,overlay]
+\newcommand{\@Main@PageStyle}{%
+\begin{tikzpicture}[remember picture,overlay]%
 \pgfdeclarelayer{@MainPage@Top}%
 \pgfsetlayers{main,@MainPage@Top}%
 %%根据页数的奇偶生成%%
@@ -715,21 +717,21 @@ BoldFont=FZCukai.ttf]
 (E)[rounded corners=5.0mm]--(F)[rounded corners=5.0mm]--(G)[sharp corners]--(H)[sharp corners]--cycle;
 %%绘制页码%%
 \path[fill=ColorA!60!ColorB]
-([xshift=-\@outerlen+0.25cm]B)[rounded corners=1.5mm]--
-([xshift=-\@outerlen+0.25cm,yshift=-\@PageNumWidth]B)[rounded corners=1.5mm]--
-([xshift=-\@FrameWidth+0.15cm,yshift=-\@PageNumWidth]B)[sharp corners]--
+([xshift=-\@outerlen+0.35cm]B)[rounded corners=1.5mm]--
+([xshift=-\@outerlen+0.35cm,yshift=-\@PageNumHeight]B)[rounded corners=1.5mm]--
+([xshift=-\@FrameWidth+0.15cm,yshift=-\@PageNumHeight]B)[sharp corners]--
 ([xshift=-\@FrameWidth+0.15cm]B)--cycle;
 %%%%
 \path[pattern={Lines[angle=45,distance=5.0pt,line width=4.0pt]},pattern color=ColorA]
-([xshift=-\@outerlen+0.25cm]B)[rounded corners=1.5mm]--
-([xshift=-\@outerlen+0.25cm,yshift=-\@PageNumWidth]B)[rounded corners=1.5mm]--
-([xshift=-\@FrameWidth+0.15cm,yshift=-\@PageNumWidth]B)[sharp corners]--
+([xshift=-\@outerlen+0.35cm]B)[rounded corners=1.5mm]--
+([xshift=-\@outerlen+0.35cm,yshift=-\@PageNumHeight]B)[rounded corners=1.5mm]--
+([xshift=-\@FrameWidth+0.15cm,yshift=-\@PageNumHeight]B)[sharp corners]--
 ([xshift=-\@FrameWidth+0.15cm]B)--cycle;
 %%%%
-\node[font=\PageNumberFont,text=white,anchor=south,inner ysep=2.0mm](P)at([xshift=-\@outerlen/2-\@FrameWidth/2+0.2cm,yshift=-\@PageNumWidth]B){\maxsizebox{0.8cm}{!}{\centering\thepage}};
+\node[font=\PageNumberFont,text=white,anchor=south,inner ysep=2.5mm](P)at([xshift=-\@outerlen/2-\@FrameWidth/2+0.25cm,yshift=-\@PageNumHeight]B){\maxsizebox{\@PageNumWidth-2.0mm}{!}{\centering\thepage}};
 %%绘制侧标%%
 \begin{pgfonlayer}{@MainPage@Top}
-\node[font=\ThumbFont,text=white,outer sep=0mm,inner xsep=2.5mm,inner ysep=3.5mm,anchor=east](T)at([yshift=\MarkY]B){%
+\node[font=\ThumbFont,text=white,outer sep=0mm,inner xsep=2.5mm,inner ysep=3.5mm,anchor=east](T)at([xshift=-0.1cm,yshift=\MarkY]B){%
 \rotatebox[origin=c]{90}{%
 \begin{varwidth}{\DeltaH}
 \centering\strut\@title\strut
@@ -737,9 +739,9 @@ BoldFont=FZCukai.ttf]
 };
 \end{pgfonlayer}
 %%%%
-\path[fill=ColorA!60!ColorB](T.north west)--(T.north east)--(T.south east)[rounded corners=1.75mm]--(T.south west)[rounded corners=1.75mm]--cycle;
+\path[fill=ColorA!60!ColorB](T.north west)--([xshift=0.1cm]T.north east)--([xshift=0.1cm]T.south east)[rounded corners=1.75mm]--(T.south west)[rounded corners=1.75mm]--cycle;
 %%%%
-\path[pattern={Lines[angle=45,distance=5.0pt,line width=4.0pt]},pattern color=ColorA](T.north west)--(T.north east)--(T.south east)[rounded corners=1.75mm]--(T.south west)[rounded corners=1.75mm]--cycle;
+\path[pattern={Lines[angle=45,distance=5.0pt,line width=4.0pt]},pattern color=ColorA](T.north west)--([xshift=0.1cm]T.north east)--([xshift=0.1cm]T.south east)[rounded corners=1.75mm]--(T.south west)[rounded corners=1.75mm]--cycle;
 %%%%
 %%绘制部分序号标签%%
 \begin{pgfonlayer}{@MainPage@Top}
@@ -769,21 +771,21 @@ BoldFont=FZCukai.ttf]
 (E)[rounded corners=5.0mm]--(F)[rounded corners=5.0mm]--(G)[sharp corners]--(H)[sharp corners]--cycle;
 %%绘制页码%%
 \path[fill=ColorA!60!ColorB]
-([xshift=\@outerlen-0.25cm]B)[rounded corners=1.5mm]--
-([xshift=\@outerlen-0.25cm,yshift=-\@PageNumWidth]B)[rounded corners=1.5mm]--
-([xshift=\@FrameWidth-0.15cm,yshift=-\@PageNumWidth]B)[sharp corners]--
+([xshift=\@outerlen-0.35cm]B)[rounded corners=1.5mm]--
+([xshift=\@outerlen-0.35cm,yshift=-\@PageNumHeight]B)[rounded corners=1.5mm]--
+([xshift=\@FrameWidth-0.15cm,yshift=-\@PageNumHeight]B)[sharp corners]--
 ([xshift=\@FrameWidth-0.15cm]B)--cycle;
 %%%%
 \path[pattern={Lines[angle=-45,distance=5.0pt,line width=4.0pt]},pattern color=ColorA]
-([xshift=\@outerlen-0.25cm]B)[rounded corners=1.5mm]--
-([xshift=\@outerlen-0.25cm,yshift=-\@PageNumWidth]B)[rounded corners=1.5mm]--
-([xshift=\@FrameWidth-0.15cm,yshift=-\@PageNumWidth]B)[sharp corners]--
+([xshift=\@outerlen-0.35cm]B)[rounded corners=1.5mm]--
+([xshift=\@outerlen-0.35cm,yshift=-\@PageNumHeight]B)[rounded corners=1.5mm]--
+([xshift=\@FrameWidth-0.15cm,yshift=-\@PageNumHeight]B)[sharp corners]--
 ([xshift=\@FrameWidth-0.15cm]B)--cycle;
 %%%%
-\node[font=\PageNumberFont,text=white,anchor=south,inner ysep=2.0mm](P)at([xshift=\@FrameWidth/2+\@outerlen/2-0.2cm,yshift=-\@PageNumWidth]B){\maxsizebox{0.8cm}{!}{\centering\thepage}};
+\node[font=\PageNumberFont,text=white,anchor=south,inner ysep=2.5mm](P)at([xshift=\@FrameWidth/2+\@outerlen/2-0.25cm,yshift=-\@PageNumHeight]B){\maxsizebox{\@PageNumWidth-2.0mm}{!}{\centering\thepage}};
 %%绘制侧标%%
 \begin{pgfonlayer}{@MainPage@Top}
-\node[font=\ThumbFont,text=white,outer sep=0mm,inner xsep=2.5mm,inner ysep=3.5mm,anchor=west](T)at([yshift=\MarkY]B){%
+\node[font=\ThumbFont,text=white,outer sep=0mm,inner xsep=2.5mm,inner ysep=3.5mm,anchor=west](T)at([xshift=0.1cm,yshift=\MarkY]B){%
 \rotatebox[origin=c]{-90}{%
 \begin{varwidth}{\DeltaH}
 \centering\strut\@title\strut
@@ -791,9 +793,9 @@ BoldFont=FZCukai.ttf]
 };
 \end{pgfonlayer}
 %%%%
-\path[fill=ColorA!60!ColorB](T.north west)[rounded corners=1.75mm]--(T.north east)[rounded corners=1.75mm]--(T.south east)[sharp corners]--(T.south west)--cycle;
+\path[fill=ColorA!60!ColorB]([xshift=-0.1cm]T.north west)[rounded corners=1.75mm]--(T.north east)[rounded corners=1.75mm]--(T.south east)[sharp corners]--([xshift=-0.1cm]T.south west)--cycle;
 %%%%
-\path[pattern={Lines[angle=-45,distance=5.0pt,line width=4.0pt]},pattern color=ColorA](T.north west)[rounded corners=1.75mm]--(T.north east)[rounded corners=1.75mm]--(T.south east)[sharp corners]--(T.south west)--cycle;
+\path[pattern={Lines[angle=-45,distance=5.0pt,line width=4.0pt]},pattern color=ColorA]([xshift=-0.1cm]T.north west)[rounded corners=1.75mm]--(T.north east)[rounded corners=1.75mm]--(T.south east)[sharp corners]--([xshift=-0.1cm]T.south west)--cycle;
 %%%%
 %%绘制部分序号标签%%
 \begin{pgfonlayer}{@MainPage@Top}
@@ -812,10 +814,10 @@ BoldFont=FZCukai.ttf]
 }
 %%
 %%定义主页面样式%%
-\fancypagestyle{MainPage}{
-\fancyhf{}
-\fancyfoot[C]{\@Main@PageStyle}
-\fancyhead[RO]{\HeaderFont\color{ColorA}\rightmark}
+\fancypagestyle{MainPage}{%
+\fancyhf{}%
+\fancyfoot[C]{\@Main@PageStyle}%
+\fancyhead[RO]{\HeaderFont\color{ColorA}\rightmark}%
 \fancyhead[LE]{\HeaderFont\color{ColorA}\leftmark}}
 %%绘制空白页面样式%%
 \newcommand{\@Sub@PageStyle}{%
@@ -856,7 +858,7 @@ BoldFont=FZCukai.ttf]
 \partsubtitle{}
 %%
 %%奇数页布局%%
-\NewDocumentCommand{\@Part@OddPage@Style}{ +m +m }{
+\NewDocumentCommand{\@Part@OddPage@Style}{ +m +m }{%
 \begin{pgfonlayer}{@Part@Top}
 %%右上角色块坐标%%
 \coordinate(A)at(current page.north east);
@@ -1302,7 +1304,7 @@ BoldFont=FZCukai.ttf]
 \newcommand{\PartEnd}{\stopcontents[part]}
 
 %%章节页样式%%
-\newlength{\@Chapter@BlockHeight}
+\newlength{\@Chapter@TitleBlockHeight}
 \newlength{\@Chapter@VSpace}
 \newlength{\@Chapter@StripeWidth}
 \newlength{\@Chapter@LabelSep}
@@ -1314,8 +1316,8 @@ BoldFont=FZCukai.ttf]
 \setlength{\@Chapter@LabelSep}{0.5cm}
 \setlength{\@Chapter@LabelYShift@Down}{0.65cm}
 \setlength{\@Chapter@LabelYShift@Up}{0.5cm}
-\setlength{\@Chapter@PageSize}{1.1cm}
-\setlength{\@Chapter@SayingBlockWidth}{\@FrameWidth+1.0cm}
+\setlength{\@Chapter@PageSize}{\@PageNumWidth}
+\setlength{\@Chapter@SayingBlockWidth}{\@outerlen-2.5mm}
 %%%%
 \newcommand{\chaptersaying}[1]{\long\def\@chaptersaying{#1}}
 \newcommand{\chaptersubtitle}[1]{\long\def\@chaptersubtitle{#1}}
@@ -1324,7 +1326,7 @@ BoldFont=FZCukai.ttf]
 \chaptersubtitle{}
 \chapterimage{}
 %%编号章节页样式%%
-\NewDocumentCommand{\@ChapterStyle}{ +m +m }{
+\NewDocumentCommand{\@ChapterStyle}{ +m +m }{%
 \begin{tikzpicture}[remember picture,overlay]
 \pgfdeclarelayer{@Chapter@Top}
 \pgfdeclarelayer{@Chapter@Bottom}
@@ -1340,8 +1342,8 @@ BoldFont=FZCukai.ttf]
 \coordinate(G)at([xshift=-3.0cm,yshift=\@FrameWidth]C);
 \coordinate(H)at([xshift=-\@FrameWidth,yshift=\@FrameWidth]C);
 \coordinate(N)at([yshift=\@Chapter@LabelYShift@Up]current page text area.north east);
-\coordinate(Q1)at([xshift=-1.75cm,yshift=1.75cm]C);
-\coordinate(Q2)at([xshift=\@Chapter@PageSize,yshift=-\@Chapter@PageSize]Q1);
+\coordinate(Q1)at([xshift=-\@FrameWidth+0.15cm,yshift=\@FrameWidth-0.15cm]C);
+\coordinate(Q2)at([xshift=-\@Chapter@PageSize,yshift=\@Chapter@PageSize]Q1);
 \coordinate(Q)at($0.5*(Q1)+0.5*(Q2)$);
 \begin{pgfonlayer}{@Chapter@Top}
 %%编号%%
@@ -1360,10 +1362,13 @@ BoldFont=FZCukai.ttf]
 \coordinate(I)at([xshift=\@outerlen-\@FrameWidth,yshift=-2\@Chapter@LabelYShift@Down/3]P.south east);
 \coordinate(J)at([xshift=-\@innerlen-\textwidth+\@GutterWidth,yshift=-2\@Chapter@LabelYShift@Down/3]P.south east);
 %%%%
+\coordinate(K)at([xshift=-\@innerlen-\textwidth,yshift=-2\@Chapter@LabelYShift@Down/3]P.south east);
+\coordinate(L)at([xshift=-\@innerlen-\textwidth,yshift=-3\@Chapter@LabelYShift@Down/4-\@Chapter@StripeWidth]T.south east);
+%%%%
 %%获取标题区域的高度%%
-\pgfgetdistance(A)(J)\DistanceAJ
-\gsetlength{\@Chapter@BlockHeight}{\DistanceAJ}
-\gsetlength{\@Chapter@VSpace}{\@Chapter@BlockHeight-\@toplen-0.8cm}
+\pgfgetdistance(K)(L)\DistanceKL
+\gsetlength{\@Chapter@TitleBlockHeight}{\DistanceKL}
+\gsetlength{\@Chapter@VSpace}{\@Chapter@TitleBlockHeight+\@toplen-\@FrameWidth-1.0cm}
 \begin{pgfonlayer}{@Chapter@Bottom}
 %%框架1%%
 \draw[ColorB!7.5,fill=ColorB!7.5,sharp corners](A)rectangle(C);
@@ -1375,9 +1380,9 @@ BoldFont=FZCukai.ttf]
 %%
 \begin{pgfonlayer}{@Chapter@Top}
 %%底部文字%%
-\node[anchor=west,font=\ChapterSayingFont,text=ColorA,text width=\paperwidth-\@innerlen-5.0cm,inner sep=0mm,outer sep=0mm](S)at([xshift=\@innerlen,yshift=\@FrameWidth/2+0.5cm]D){\@chaptersaying};
+\node[anchor=west,font=\ChapterSayingFont,text=ColorA,text width=\paperwidth-\@innerlen-5.0cm,inner sep=0mm,outer sep=0mm](S)at([xshift=\@innerlen,yshift=\@Chapter@SayingBlockWidth/2]D){\@chaptersaying};
 %%页码%%
-\draw[ColorA,fill=ColorA,rounded corners=2.0mm](Q1)rectangle(Q2);
+\path[fill=ColorA,rounded corners=2.0mm](Q1)rectangle(Q2);
 \node[font=\PageNumberFont,text=white,anchor=center,align=center](PP)at(Q){\maxsizebox{\@Chapter@PageSize-0.3cm}{!}{\thepage}};
 \end{pgfonlayer}
 \else
@@ -1390,8 +1395,8 @@ BoldFont=FZCukai.ttf]
 \coordinate(G)at([xshift=3.0cm,yshift=\@FrameWidth]C);
 \coordinate(H)at([xshift=\@FrameWidth,yshift=\@FrameWidth]C);
 \coordinate(N)at([yshift=\@Chapter@LabelYShift@Up]current page text area.north west);
-\coordinate(Q1)at([xshift=1.75cm,yshift=1.75cm]C);
-\coordinate(Q2)at([xshift=-\@Chapter@PageSize,yshift=-\@Chapter@PageSize]Q1);
+\coordinate(Q1)at([xshift=\@FrameWidth-0.15cm,yshift=\@FrameWidth-0.15cm]C);
+\coordinate(Q2)at([xshift=\@Chapter@PageSize,yshift=\@Chapter@PageSize]Q1);
 \coordinate(Q)at($0.5*(Q1)+0.5*(Q2)$);
 \begin{pgfonlayer}{@Chapter@Top}
 %%编号%%
@@ -1410,10 +1415,14 @@ BoldFont=FZCukai.ttf]
 \coordinate(I)at([xshift=-\@outerlen+\@FrameWidth,yshift=-2\@Chapter@LabelYShift@Down/3]P.south west);
 \coordinate(J)at([xshift=\@innerlen+\textwidth-\@GutterWidth,yshift=-2\@Chapter@LabelYShift@Down/3]P.south west);
 %%%%
+\coordinate(K)at([xshift=\@innerlen+\textwidth,yshift=-2\@Chapter@LabelYShift@Down/3]P.south west);
+\coordinate(L)at([xshift=\@innerlen+\textwidth,yshift=-3\@Chapter@LabelYShift@Down/4-\@Chapter@StripeWidth]T.south west);
+%%%%
 %%获取标题区域的高度%%
-\pgfgetdistance(A)(J)\DistanceAJ
-\gsetlength{\@Chapter@BlockHeight}{\DistanceAJ}
-\gsetlength{\@Chapter@VSpace}{\@Chapter@BlockHeight-\@toplen-0.8cm}
+\pgfgetdistance(K)(L)\DistanceKL
+\gsetlength{\@Chapter@TitleBlockHeight}{\DistanceKL}
+\gsetlength{\@Chapter@VSpace}{\@Chapter@TitleBlockHeight+\@toplen-\@FrameWidth-1.0cm}
+%%%%
 \begin{pgfonlayer}{@Chapter@Bottom}
 %%框架1%%
 \draw[ColorB!7.5,fill=ColorB!7.5,sharp corners](A)rectangle(C);
@@ -1425,9 +1434,9 @@ BoldFont=FZCukai.ttf]
 %%
 \begin{pgfonlayer}{@Chapter@Top}
 %%底部文字%%
-\node[anchor=east,font=\ChapterSayingFont,text=ColorA,text width=\paperwidth-\@innerlen-5.0cm,inner sep=0mm,outer sep=0mm](S)at([xshift=-\@innerlen,yshift=\@FrameWidth/2+0.5cm]D){\@chaptersaying};
+\node[anchor=east,font=\ChapterSayingFont,text=ColorA,text width=\paperwidth-\@innerlen-5.0cm,inner sep=0mm,outer sep=0mm](S)at([xshift=-\@innerlen,yshift=\@Chapter@SayingBlockWidth/2]D){\@chaptersaying};
 %%页码%%
-\draw[ColorA,fill=ColorA,rounded corners=2.0mm](Q1)rectangle(Q2);
+\path[fill=ColorA,rounded corners=2.0mm](Q1)rectangle(Q2);
 \node[font=\PageNumberFont,text=white,anchor=center,align=center](PP)at(Q){\maxsizebox{\@Chapter@PageSize-0.3cm}{!}{\thepage}};
 \end{pgfonlayer}
 \fi
@@ -1437,11 +1446,10 @@ BoldFont=FZCukai.ttf]
 %%不编号章节样式%%
 \newlength{\@Chapter@Star@LabelNameXSep}
 \newlength{\@Chapter@Star@LabelYShift@Up}
-\newlength{\@Chapter@Star@SayingBlockWidth}
 \setlength{\@Chapter@Star@LabelNameXSep}{4.0mm}
 \setlength{\@Chapter@Star@LabelYShift@Up}{5.0mm}
-\setlength{\@Chapter@Star@SayingBlockWidth}{\@FrameWidth+1.0cm}
-\NewDocumentCommand{\@ChapterStarStyle}{ +m +m }{
+%%%%
+\NewDocumentCommand{\@ChapterStarStyle}{ +m +m }{%
 \begin{tikzpicture}[remember picture,overlay]
 \pgfdeclarelayer{@Chapter@Star@Top}
 \pgfdeclarelayer{@Chapter@Star@Bottom}
@@ -1452,13 +1460,13 @@ BoldFont=FZCukai.ttf]
 \coordinate(B)at(current page.north east);
 \coordinate(C)at(current page.south east);
 \coordinate(D)at(current page.south west);
-\coordinate(E)at([xshift=\@GutterWidth,yshift=\@Chapter@Star@SayingBlockWidth]D);
-\coordinate(F)at([xshift=-5.0cm,yshift=\@Chapter@Star@SayingBlockWidth]C);
+\coordinate(E)at([xshift=\@GutterWidth,yshift=\@Chapter@SayingBlockWidth]D);
+\coordinate(F)at([xshift=-5.0cm,yshift=\@Chapter@SayingBlockWidth]C);
 \coordinate(G)at([xshift=-3.0cm,yshift=\@FrameWidth]C);
 \coordinate(H)at([xshift=-\@FrameWidth,yshift=\@FrameWidth]C);
 \coordinate(N)at([yshift=\@Chapter@Star@LabelYShift@Up]current page text area.north west);
-\coordinate(Q1)at([xshift=-1.75cm,yshift=1.75cm]C);
-\coordinate(Q2)at([xshift=\@Chapter@PageSize,yshift=-\@Chapter@PageSize]Q1);
+\coordinate(Q1)at([xshift=-\@FrameWidth+0.15cm,yshift=\@FrameWidth-0.15cm]C);
+\coordinate(Q2)at([xshift=-\@Chapter@PageSize,yshift=\@Chapter@PageSize]Q1);
 \coordinate(Q)at($0.5*(Q1)+0.5*(Q2)$);
 %%
 \begin{pgfonlayer}{@Chapter@Star@Top}%
@@ -1471,7 +1479,7 @@ BoldFont=FZCukai.ttf]
 \tikz{%
 \node[inner sep=0mm,outer sep=0mm,anchor=north west](P1){\@HalfCircle@Label{ColorA}{\@Chapter@Star@LabelRadius}};
 \node[inner sep=0mm,outer sep=0mm,anchor=west](P2)at(P1.east){\@HalfCircle@Label{ColorA!80}{\@Chapter@Star@LabelRadius}};
-\node[inner sep=0mm,outer sep=0mm,anchor=north west,text=ColorA,font=\ChapterLabelFont](P3)at([xshift=\@Chapter@Star@LabelNameXSep,yshift=\@Chapter@Star@LabelYShift]P2.north east){
+\node[inner sep=0mm,outer sep=0mm,anchor=north west,text=ColorA,font=\ChapterLabelFont](P3)at([xshift=\@Chapter@Star@LabelNameXSep,yshift=\@Chapter@Star@LabelYShift]P2.north east){%
 \begin{varwidth}{\textwidth-2\@Chapter@Star@LabelRadius-\@Chapter@Star@LabelNameXSep}
 \strut#1\strut
 \end{varwidth}};}};
@@ -1481,7 +1489,7 @@ BoldFont=FZCukai.ttf]
 \path[fill=ColorB,opacity=0.4]([xshift=-\@innerlen,yshift=-3\@Chapter@LabelYShift@Down/4]TT.south west)rectangle([xshift=\@outerlen,yshift=-3\@Chapter@LabelYShift@Down/4-\@Chapter@StripeWidth]TT.south east);
 %%
 %%副标题%%
-\node[inner sep=0mm,outer sep=0mm,anchor=north east,text=ColorA,font=\ChapterNameFont,align=flush right](P)at([yshift=-4\@Chapter@LabelYShift@Down/3-\@Chapter@StripeWidth]TT.south east){
+\node[inner sep=0mm,outer sep=0mm,anchor=north east,text=ColorA,font=\ChapterNameFont,align=flush right](P)at([yshift=-4\@Chapter@LabelYShift@Down/3-\@Chapter@StripeWidth]TT.south east){%
 \begin{varwidth}{2\textwidth/3}
 \strut#2\strut
 \end{varwidth}};
@@ -1490,10 +1498,14 @@ BoldFont=FZCukai.ttf]
 \coordinate(I)at([xshift=\@outerlen-\@FrameWidth,yshift=-2\@Chapter@LabelYShift@Down/3]P.south east);
 \coordinate(J)at([xshift=-\textwidth-\@innerlen+\@GutterWidth,yshift=-2\@Chapter@LabelYShift@Down/3]P.south east);
 %%%%
+\coordinate(K)at([xshift=-\@innerlen-\textwidth,yshift=-2\@Chapter@LabelYShift@Down/3]P.south east);
+\coordinate(L)at([xshift=-\@innerlen-\textwidth,yshift=-3\@Chapter@LabelYShift@Down/4-\@Chapter@StripeWidth]TT.south east);
+%%%%
 %%获取标题区域的高度%%
-\pgfgetdistance(A)(J)\DistanceAJ
-\gsetlength{\@Chapter@BlockHeight}{\DistanceAJ}
-\gsetlength{\@Chapter@VSpace}{\@Chapter@BlockHeight-\@toplen-0.8cm}
+\pgfgetdistance(K)(L)\DistanceKL
+\gsetlength{\@Chapter@TitleBlockHeight}{\DistanceKL}
+\gsetlength{\@Chapter@VSpace}{\@Chapter@TitleBlockHeight+\@toplen-\@FrameWidth-1.0cm}
+%%%%
 \begin{pgfonlayer}{@Chapter@Star@Bottom}
 %%框架1%%
 \draw[ColorB!7.5,fill=ColorB!7.5,sharp corners](A)rectangle(C);
@@ -1505,9 +1517,9 @@ BoldFont=FZCukai.ttf]
 %%
 \begin{pgfonlayer}{@Chapter@Star@Top}
 %%底部文字%%
-\node[anchor=west,font=\ChapterSayingFont,text=ColorA,text width=\paperwidth-\@innerlen-5.0cm,inner sep=0mm,outer sep=0mm](S)at([xshift=\@innerlen,yshift=\@FrameWidth/2+0.5cm]D){\@chaptersaying};
+\node[anchor=west,font=\ChapterSayingFont,text=ColorA,text width=\paperwidth-\@innerlen-5.0cm,inner sep=0mm,outer sep=0mm](S)at([xshift=\@innerlen,yshift=\@Chapter@SayingBlockWidth/2]D){\@chaptersaying};
 %%页码%%
-\draw[ColorA,fill=ColorA,rounded corners=2.0mm](Q1)rectangle(Q2);
+\path[fill=ColorA,rounded corners=2.0mm](Q1)rectangle(Q2);
 \node[font=\PageNumberFont,text=white,anchor=center,align=center](PP)at(Q){\maxsizebox{\@Chapter@PageSize-0.3cm}{!}{\thepage}};
 \end{pgfonlayer}
 \else
@@ -1516,13 +1528,13 @@ BoldFont=FZCukai.ttf]
 \coordinate(B)at(current page.north west);
 \coordinate(C)at(current page.south west);
 \coordinate(D)at(current page.south east);
-\coordinate(E)at([xshift=-\@GutterWidth,yshift=\@Chapter@Star@SayingBlockWidth]D);
-\coordinate(F)at([xshift=5.0cm,yshift=\@Chapter@Star@SayingBlockWidth]C);
+\coordinate(E)at([xshift=-\@GutterWidth,yshift=\@Chapter@SayingBlockWidth]D);
+\coordinate(F)at([xshift=5.0cm,yshift=\@Chapter@SayingBlockWidth]C);
 \coordinate(G)at([xshift=3.0cm,yshift=\@FrameWidth]C);
 \coordinate(H)at([xshift=\@FrameWidth,yshift=\@FrameWidth]C);
 \coordinate(N)at([yshift=\@Chapter@Star@LabelYShift@Up]current page text area.north east);
-\coordinate(Q1)at([xshift=1.75cm,yshift=1.75cm]C);
-\coordinate(Q2)at([xshift=-\@Chapter@PageSize,yshift=-\@Chapter@PageSize]Q1);
+\coordinate(Q1)at([xshift=\@FrameWidth-0.15cm,yshift=\@FrameWidth-0.15cm]C);
+\coordinate(Q2)at([xshift=\@Chapter@PageSize,yshift=\@Chapter@PageSize]Q1);
 \coordinate(Q)at($0.5*(Q1)+0.5*(Q2)$);
 %%
 \begin{pgfonlayer}{@Chapter@Star@Top}%
@@ -1531,11 +1543,11 @@ BoldFont=FZCukai.ttf]
 \def\@Chapter@Star@LabelRadius{\dimexpr0.75\expandafter\baselineskip/2\relax}%
 \def\@Chapter@Star@LabelYShift{\dimexpr0.25\expandafter\baselineskip/2-0.1em\relax}%
 %%标题%%
-\node[inner sep=0mm,outer sep=0mm,anchor=north east,text width=\textwidth,align=flush right](TT)at(N){%
+\node[inner sep=0mm,outer sep=0mm,anchor=north east,text width=\textwidth,align=flush right](TT)at([yshift=\@Chapter@Star@LabelYShift@Up]N){%
 \tikz{%
 \node[inner sep=0mm,outer sep=0mm,anchor=north west](P1){\@HalfCircle@Label{ColorA}{\@Chapter@Star@LabelRadius}};
 \node[inner sep=0mm,outer sep=0mm,anchor=west](P2)at(P1.east){\@HalfCircle@Label{ColorA!80}{\@Chapter@Star@LabelRadius}};
-\node[inner sep=0mm,outer sep=0mm,anchor=north west,text=ColorA,font=\ChapterLabelFont](P3)at([xshift=\@Chapter@Star@LabelNameXSep,yshift=\@Chapter@Star@LabelYShift]P2.north east){
+\node[inner sep=0mm,outer sep=0mm,anchor=north west,text=ColorA,font=\ChapterLabelFont](P3)at([xshift=\@Chapter@Star@LabelNameXSep,yshift=\@Chapter@Star@LabelYShift]P2.north east){%
 \begin{varwidth}{\textwidth-2\@Chapter@Star@LabelRadius-\@Chapter@Star@LabelNameXSep}
 \strut#1\strut
 \end{varwidth}};
@@ -1555,10 +1567,14 @@ BoldFont=FZCukai.ttf]
 \coordinate(I)at([xshift=-\@outerlen+\@FrameWidth,yshift=-2\@Chapter@LabelYShift@Down/3]P.south west);
 \coordinate(J)at([xshift=\textwidth+\@innerlen-\@GutterWidth,yshift=-2\@Chapter@LabelYShift@Down/3]P.south west);
 %%%%
+\coordinate(K)at([xshift=\@innerlen+\textwidth,yshift=-2\@Chapter@LabelYShift@Down/3]P.south west);
+\coordinate(L)at([xshift=\@innerlen+\textwidth,yshift=-3\@Chapter@LabelYShift@Down/4-\@Chapter@StripeWidth]TT.south west);
+%%%%
 %%获取标题区域的高度%%
-\pgfgetdistance(A)(J)\DistanceAJ
-\gsetlength{\@Chapter@BlockHeight}{\DistanceAJ}
-\gsetlength{\@Chapter@VSpace}{\@Chapter@BlockHeight-\@toplen-0.8cm}
+\pgfgetdistance(K)(L)\DistanceKL
+\gsetlength{\@Chapter@TitleBlockHeight}{\DistanceKL}
+\gsetlength{\@Chapter@VSpace}{\@Chapter@TitleBlockHeight+\@toplen-\@FrameWidth-1.0cm}
+%%%%
 \begin{pgfonlayer}{@Chapter@Star@Bottom}
 %%框架1%%
 \draw[ColorB!7.5,fill=ColorB!7.5,sharp corners](A)rectangle(C);
@@ -1570,9 +1586,9 @@ BoldFont=FZCukai.ttf]
 %%
 \begin{pgfonlayer}{@Chapter@Star@Top}
 %%底部文字%%
-\node[anchor=east,font=\ChapterSayingFont,text=ColorA,text width=\paperwidth-\@innerlen-5.0cm,inner sep=0mm,outer sep=0mm](S)at([xshift=-\@innerlen,yshift=\@FrameWidth/2+0.5cm]D){\@chaptersaying};
+\node[anchor=east,font=\ChapterSayingFont,text=ColorA,text width=\paperwidth-\@innerlen-5.0cm,inner sep=0mm,outer sep=0mm](S)at([xshift=-\@innerlen,yshift=\@Chapter@SayingBlockWidth/2]D){\@chaptersaying};
 %%页码%%
-\draw[ColorA,fill=ColorA,rounded corners=2.0mm](Q1)rectangle(Q2);
+\path[fill=ColorA,rounded corners=2.0mm](Q1)rectangle(Q2);
 \node[font=\PageNumberFont,text=white,anchor=center,align=center](PP)at(Q){\maxsizebox{\@Chapter@PageSize-0.3cm}{!}{\thepage}};
 \end{pgfonlayer}
 \fi
@@ -1587,12 +1603,15 @@ BoldFont=FZCukai.ttf]
 \else%
 \gaddtolength{\MarkY}{-\SepH}%更新侧标位置
 \fi}
+%%
+\newlength{\@PageHeightCut}
+\setlength{\@PageHeightCut}{-\@Chapter@SayingBlockWidth+\@FrameWidth}
 %%编号章节页%%
 \titleformat{\chapter}
 {}{}{0em}
 {\@Thumb@Update@Rule%
 \@ChapterStyle{\chapterlabelfront{\sffamily\thechapter}\chapterlabelback}{#1}%章样式
-\enlargethispage{-0.75cm}%修改页面大小
+\enlargethispage{\@PageHeightCut}%修改页面大小
 }
 [\global\chapterimage{}%清空\chapterimage
 \global\chaptersaying{}]%清空\chaptersaying
@@ -1601,7 +1620,7 @@ BoldFont=FZCukai.ttf]
 {}{}{0em}
 {\@Thumb@Update@Rule
 \@ChapterStarStyle{#1}{\@chaptersubtitle}%章样式
-\enlargethispage{-0.75cm}%修改页面大小
+\enlargethispage{\@PageHeightCut}%修改页面大小
 }
 [\global\chaptersubtitle{}%清空\chaptersubtitle
 \global\chapterimage{}%清空\chapterimage
@@ -1986,85 +2005,8 @@ BoldFont=FZCukai.ttf]
 \pagestyle{MainPage}
 \@mainmatterfalse
 \pagenumbering{#1}}
-%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%以下为本文档类内置栏目，请谨慎修改%%
-%设置环境布尔变量
-\newif\if@appendixchap
-\newif\if@appendixsect
-\newif\if@quiz
-\newif\if@project
-\newif\if@topic
-%%%%
-%%写入目录布尔变量%%
-\newcommand{\@Cts@AppendixChap@True}{%
-\@appendixchaptrue
-\addtocontents{toc}{\protect\@appendixchaptrue}
-\addtocontents{lof}{\protect\@appendixchaptrue}
-\addtocontents{lot}{\protect\@appendixchaptrue}
-}
-%%
-\newcommand{\@Cts@AppendixSect@True}{%
-\@appendixsecttrue
-\addtocontents{toc}{\protect\@appendixsecttrue}
-\addtocontents{lof}{\protect\@appendixsecttrue}
-\addtocontents{lot}{\protect\@appendixsecttrue}
-}
-%%
-\newcommand{\@Cts@Quiz@True}{%
-\@quiztrue
-\addtocontents{toc}{\protect\@quiztrue}
-\addtocontents{lof}{\protect\@quiztrue}
-\addtocontents{lot}{\protect\@quiztrue}
-}
-%%
-\newcommand{\@Cts@Topic@True}{%
-\@topictrue
-\addtocontents{toc}{\protect\@topictrue}
-\addtocontents{lof}{\protect\@topictrue}
-\addtocontents{lot}{\protect\@topictrue}
-}
-%%
-\newcommand{\@Cts@Project@True}{%
-\@projecttrue
-\addtocontents{toc}{\protect\@projecttrue}
-\addtocontents{lof}{\protect\@projecttrue}
-\addtocontents{lot}{\protect\@projecttrue}
-}
-%%
-\newcommand{\@Cts@AppendixChap@False}{%
-\@appendixchapfalse
-\addtocontents{toc}{\protect\@appendixchapfalse}
-\addtocontents{lof}{\protect\@appendixchapfalse}
-\addtocontents{lot}{\protect\@appendixchapfalse}
-}
-%%
-\newcommand{\@Cts@AppendixSect@False}{%
-\@appendixsectfalse
-\addtocontents{toc}{\protect\@appendixsectfalse}
-\addtocontents{lof}{\protect\@appendixsectfalse}
-\addtocontents{lot}{\protect\@appendixsectfalse}
-}
-%%
-\newcommand{\@Cts@Quiz@False}{%
-\@quizfalse
-\addtocontents{toc}{\protect\@quizfalse}
-\addtocontents{lof}{\protect\@quizfalse}
-\addtocontents{lot}{\protect\@quizfalse}
-}
-%%
-\newcommand{\@Cts@Topic@False}{%
-\@topicfalse
-\addtocontents{toc}{\protect\@topicfalse}
-\addtocontents{lof}{\protect\@topicfalse}
-\addtocontents{lot}{\protect\@topicfalse}
-}
-%%
-\newcommand{\@Cts@Project@False}{%
-\@projectfalse
-\addtocontents{toc}{\protect\@projectfalse}
-\addtocontents{lof}{\protect\@projectfalse}
-\addtocontents{lot}{\protect\@projectfalse}
-}
 %%环境层级计数器：数值为1对应chapter，数值为2对应section%%
 \newcounter{@Environment@Depth}
 \setcounter{@Environment@Depth}{0}
@@ -2108,8 +2050,6 @@ BoldFont=FZCukai.ttf]
 \fi\fi
 %%设置环境层级
 \setcounter{@Environment@Depth}{1}
-%%设置环境内的布尔变量值
-\@Cts@AppendixChap@True
 %修改章计数器样式为大写字母
 \renewcommand{\thechapter}{\Alph{chapter}}
 %修改节计数器样式为小写字母
@@ -2140,7 +2080,7 @@ BoldFont=FZCukai.ttf]
 \renewcommand{\subsectionlabelfront}{小节}
 \renewcommand{\subsectionlabelback}{}
 %修改小小节标签
-\renewcommand{\subsubsectionlabelfront}{知识点}
+\renewcommand{\subsubsectionlabelfront}{要点}
 \renewcommand{\subsubsectionlabelback}{}
 %修改环境标识
 \renewcommand{\environmentmark}{}
@@ -2152,7 +2092,7 @@ BoldFont=FZCukai.ttf]
 \addtocontents{toc}{\protect\def\protect\sectionlabelback{}}
 \addtocontents{toc}{\protect\def\protect\subsectionlabelfront{小节}}
 \addtocontents{toc}{\protect\def\protect\subsectionlabelback{}}
-\addtocontents{toc}{\protect\def\protect\subsubsectionlabelfront{知识点}}
+\addtocontents{toc}{\protect\def\protect\subsubsectionlabelfront{要点}}
 \addtocontents{toc}{\protect\def\protect\subsubsectionlabelback{}}
 \addtocontents{lof}{\protect\def\protect\environmentmark{}}
 \addtocontents{lot}{\protect\def\protect\environmentmark{}}
@@ -2197,8 +2137,6 @@ BoldFont=FZCukai.ttf]
 \addtocontents{toc}{\protect\def\protect\subsubsectionlabelback{\@temp@subsubsectionlabelback}}
 \addtocontents{lof}{\protect\def\protect\environmentmark{\@temp@environmentmark}}
 \addtocontents{lot}{\protect\def\protect\environmentmark{\@temp@environmentmark}}
-%%重置布尔变量
-\@Cts@AppendixChap@False
 }
 
 %%设置附录节环境%%
@@ -2221,16 +2159,8 @@ BoldFont=FZCukai.ttf]
 \else
 \relax
 \fi
-%%Appendix*环境不能嵌套于Appendix环境中%%
-\if@appendixchap
-\ClassError{textbook-cn}{Appendix* environment must not be used in Appendix environment!}
-\else
-\relax
-\fi
 %%设置环境层级
 \setcounter{@Environment@Depth}{2}
-%%设置环境内的布尔变量值
-\@Cts@AppendixSect@True
 %移除section对chapter的依赖
 \@removefromreset{section}{chapter}
 %修改节计数器样式为小写字母
@@ -2258,7 +2188,7 @@ BoldFont=FZCukai.ttf]
 \renewcommand{\subsectionlabelfront}{小节}
 \renewcommand{\subsectionlabelback}{}
 %修改小小节标签
-\renewcommand{\subsubsectionlabelfront}{知识点}
+\renewcommand{\subsubsectionlabelfront}{要点}
 \renewcommand{\subsubsectionlabelback}{}
 %修改环境标识
 \renewcommand{\environmentmark}{}
@@ -2268,7 +2198,7 @@ BoldFont=FZCukai.ttf]
 \addtocontents{toc}{\protect\def\protect\sectionlabelback{}}
 \addtocontents{toc}{\protect\def\protect\subsectionlabelfront{小节}}
 \addtocontents{toc}{\protect\def\protect\subsectionlabelback{}}
-\addtocontents{toc}{\protect\def\protect\subsubsectionlabelfront{知识点}}
+\addtocontents{toc}{\protect\def\protect\subsubsectionlabelfront{要点}}
 \addtocontents{toc}{\protect\def\protect\subsubsectionlabelback{}}
 \addtocontents{lof}{\protect\def\protect\environmentmark{}}
 \addtocontents{lot}{\protect\def\protect\environmentmark{}}
@@ -2308,8 +2238,6 @@ BoldFont=FZCukai.ttf]
 \addtocontents{toc}{\protect\def\protect\subsubsectionlabelback{\@temp@subsubsectionlabelback}}
 \addtocontents{lof}{\protect\def\protect\environmentmark{\@temp@environmentmark}}
 \addtocontents{lot}{\protect\def\protect\environmentmark{\@temp@environmentmark}}
-%%重置布尔变量
-\@Cts@AppendixSect@False
 }
 
 %%
@@ -2334,8 +2262,6 @@ BoldFont=FZCukai.ttf]
 \fi
 %%设置环境层级
 \setcounter{@Environment@Depth}{2}
-%%设置环境内的布尔变量值
-\@Cts@Quiz@True
 %移除section对chapter的依赖
 \@removefromreset{section}{chapter}
 %移除subsubsection对subsection的依赖
@@ -2421,8 +2347,6 @@ BoldFont=FZCukai.ttf]
 \addtocontents{toc}{\protect\def\protect\subsubsectionlabelback{\@temp@subsubsectionlabelback}}
 \addtocontents{lof}{\protect\def\protect\environmentmark{\@temp@environmentmark}}
 \addtocontents{lot}{\protect\def\protect\environmentmark{\@temp@environmentmark}}
-%%重置布尔变量
-\@Cts@Quiz@False
 }
 %%%%
 
@@ -2447,8 +2371,6 @@ BoldFont=FZCukai.ttf]
 \fi
 %%设置环境层级
 \setcounter{@Environment@Depth}{2}
-%%设置环境内的布尔变量值
-\@Cts@Topic@True
 %移除section对chapter的依赖
 \@removefromreset{section}{chapter}
 %修改节计数器样式为阿拉伯数字
@@ -2476,7 +2398,7 @@ BoldFont=FZCukai.ttf]
 \renewcommand{\subsectionlabelfront}{考点}
 \renewcommand{\subsectionlabelback}{}
 %修改小小节标签
-\renewcommand{\subsubsectionlabelfront}{知识点}
+\renewcommand{\subsubsectionlabelfront}{要点}
 \renewcommand{\subsubsectionlabelback}{}
 %修改环境标识
 \renewcommand{\environmentmark}{T}
@@ -2486,7 +2408,7 @@ BoldFont=FZCukai.ttf]
 \addtocontents{toc}{\protect\def\protect\sectionlabelback{}}
 \addtocontents{toc}{\protect\def\protect\subsectionlabelfront{考点}}
 \addtocontents{toc}{\protect\def\protect\subsectionlabelback{}}
-\addtocontents{toc}{\protect\def\protect\subsubsectionlabelfront{知识点}}
+\addtocontents{toc}{\protect\def\protect\subsubsectionlabelfront{要点}}
 \addtocontents{toc}{\protect\def\protect\subsubsectionlabelback{}}
 \addtocontents{lof}{\protect\def\protect\environmentmark{T}}
 \addtocontents{lot}{\protect\def\protect\environmentmark{T}}
@@ -2526,8 +2448,6 @@ BoldFont=FZCukai.ttf]
 \addtocontents{toc}{\protect\def\protect\subsubsectionlabelback{\@temp@subsubsectionlabelback}}
 \addtocontents{lof}{\protect\def\protect\environmentmark{\@temp@environmentmark}}
 \addtocontents{lot}{\protect\def\protect\environmentmark{\@temp@environmentmark}}
-%%重置布尔变量
-\@Cts@Topic@False
 }
 %%%%
 %%设置课题环境%%
@@ -2551,8 +2471,6 @@ BoldFont=FZCukai.ttf]
 \fi
 %%设置环境层级
 \setcounter{@Environment@Depth}{2}
-%%设置环境内的布尔变量值
-\@Cts@Project@True
 %移除section对chapter的依赖
 \@removefromreset{section}{chapter}
 %修改节计数器样式为阿拉伯数字
@@ -2580,7 +2498,7 @@ BoldFont=FZCukai.ttf]
 \renewcommand{\subsectionlabelfront}{活动}
 \renewcommand{\subsectionlabelback}{}
 %修改小小节标签
-\renewcommand{\subsubsectionlabelfront}{知识点}
+\renewcommand{\subsubsectionlabelfront}{要点}
 \renewcommand{\subsubsectionlabelback}{}
 %修改环境标识
 \renewcommand{\environmentmark}{P}
@@ -2590,7 +2508,7 @@ BoldFont=FZCukai.ttf]
 \addtocontents{toc}{\protect\def\protect\sectionlabelback{}}
 \addtocontents{toc}{\protect\def\protect\subsectionlabelfront{活动}}
 \addtocontents{toc}{\protect\def\protect\subsectionlabelback{}}
-\addtocontents{toc}{\protect\def\protect\subsubsectionlabelfront{知识点}}
+\addtocontents{toc}{\protect\def\protect\subsubsectionlabelfront{要点}}
 \addtocontents{toc}{\protect\def\protect\subsubsectionlabelback{}}
 \addtocontents{lof}{\protect\def\protect\environmentmark{P}}
 \addtocontents{lot}{\protect\def\protect\environmentmark{P}}
@@ -2630,8 +2548,6 @@ BoldFont=FZCukai.ttf]
 \addtocontents{toc}{\protect\def\protect\subsubsectionlabelback{\@temp@subsubsectionlabelback}}
 \addtocontents{lof}{\protect\def\protect\environmentmark{\@temp@environmentmark}}
 \addtocontents{lot}{\protect\def\protect\environmentmark{\@temp@environmentmark}}
-%%重置布尔变量
-\@Cts@Project@False
 }
 %%%%
 %%目录页码右侧空格%%
@@ -2690,10 +2606,10 @@ BoldFont=FZCukai.ttf]
 %%%%
 %%章目录样式%%
 \newlength{\@Toc@ChapterContents@XSep}
-\setlength{\@Toc@ChapterContents@XSep}{2.45cm}
+\setlength{\@Toc@ChapterContents@XSep}{2.5cm}
 \newlength{\@Toc@ChapterLabelName@XSep}
 \setlength{\@Toc@ChapterLabelName@XSep}{2.0cm}
-%%\hypersetup{linkcolor=ColorA}
+%%
 \titlecontents{chapter}[\@Toc@ChapterContents@XSep]
 {\addvspace{5.0pt}\TocChapterFont\color{ColorA}}
 {\color{ColorA}\contentslabel[\chapterlabelfront{\sffamily\thecontentslabel}\chapterlabelback]{\@Toc@ChapterLabelName@XSep}}
@@ -2702,7 +2618,7 @@ BoldFont=FZCukai.ttf]
 %%%%
 %%节目录样式%%
 \newlength{\@Toc@SectionContents@XSep}
-\setlength{\@Toc@SectionContents@XSep}{2.45cm}
+\setlength{\@Toc@SectionContents@XSep}{3.0cm}
 \newlength{\@Toc@SectionLabelName@XSep}
 \setlength{\@Toc@SectionLabelName@XSep}{2.0cm}
 %%
@@ -2714,7 +2630,7 @@ BoldFont=FZCukai.ttf]
 %%%%
 %%小节目录样式%%
 \newlength{\@Toc@SubsecContents@XSep}
-\setlength{\@Toc@SubsecContents@XSep}{2.9cm}
+\setlength{\@Toc@SubsecContents@XSep}{3.5cm}
 \newlength{\@Toc@SubsecLabelName@XSep}
 \setlength{\@Toc@SubsecLabelName@XSep}{2.0cm}
 %%
@@ -2726,9 +2642,9 @@ BoldFont=FZCukai.ttf]
 %%%%
 %%小小节目录样式%%
 \newlength{\@Toc@SubsubsecContents@XSep}
-\setlength{\@Toc@SubsubsecContents@XSep}{3.9cm}
+\setlength{\@Toc@SubsubsecContents@XSep}{4.0cm}
 \newlength{\@Toc@SubsubsecLabelName@XSep}
-\setlength{\@Toc@SubsubsecLabelName@XSep}{2.5cm}
+\setlength{\@Toc@SubsubsecLabelName@XSep}{2.0cm}
 %%
 \titlecontents{subsubsection}[\@Toc@SubsubsecContents@XSep]
 {\addvspace{5.0pt}\TocSubsubsectionFont}
