@@ -728,7 +728,7 @@ BoldFont=FZCukai.ttf]
 ([xshift=-\@FrameWidth+0.15cm,yshift=-\@PageNumHeight]B)[sharp corners]--
 ([xshift=-\@FrameWidth+0.15cm]B)--cycle;
 %%%%
-\node[font=\PageNumberFont,text=white,anchor=south,inner ysep=2.5mm](P)at([xshift=-\@outerlen/2-\@FrameWidth/2+0.25cm,yshift=-\@PageNumHeight]B){\maxsizebox{\@PageNumWidth-2.0mm}{!}{\centering\thepage}};
+\node[font=\PageNumberFont,text=white,anchor=south,inner ysep=2.5mm](P)at([xshift=-\@outerlen/2-\@FrameWidth/2+0.25cm,yshift=-\@PageNumHeight]B){\maxsizebox{\@PageNumWidth-4.0mm}{!}{\centering\thepage}};
 %%绘制侧标%%
 \begin{pgfonlayer}{@MainPage@Top}
 \node[font=\ThumbFont,text=white,outer sep=0mm,inner xsep=2.5mm,inner ysep=3.5mm,anchor=east](T)at([xshift=-0.1cm,yshift=\MarkY]B){%
@@ -782,7 +782,7 @@ BoldFont=FZCukai.ttf]
 ([xshift=\@FrameWidth-0.15cm,yshift=-\@PageNumHeight]B)[sharp corners]--
 ([xshift=\@FrameWidth-0.15cm]B)--cycle;
 %%%%
-\node[font=\PageNumberFont,text=white,anchor=south,inner ysep=2.5mm](P)at([xshift=\@FrameWidth/2+\@outerlen/2-0.25cm,yshift=-\@PageNumHeight]B){\maxsizebox{\@PageNumWidth-2.0mm}{!}{\centering\thepage}};
+\node[font=\PageNumberFont,text=white,anchor=south,inner ysep=2.5mm](P)at([xshift=\@FrameWidth/2+\@outerlen/2-0.25cm,yshift=-\@PageNumHeight]B){\maxsizebox{\@PageNumWidth-4.0mm}{!}{\centering\thepage}};
 %%绘制侧标%%
 \begin{pgfonlayer}{@MainPage@Top}
 \node[font=\ThumbFont,text=white,outer sep=0mm,inner xsep=2.5mm,inner ysep=3.5mm,anchor=west](T)at([xshift=0.1cm,yshift=\MarkY]B){%
