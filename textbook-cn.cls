@@ -20,9 +20,37 @@
 %%加载book作为基础文档类%%
 \DeclareDefaultOption{\PassOptionsToClass{\CurrentOption}{book}}
 \ProcessKeyvalOptions*\relax
-\LoadClass[12pt]{book}
+\LoadClass{book}
 
-%%%%%%%%%%%%%%%%%%%% 文本内容风格宏包 %%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%% 对原生命令的改动 %%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%% 在所有包加载之前 %%%%%%%%%%%%%%%%%%%%%%
+%\def\@iiiminipage#1#2[#3]#4{%
+%\leavevmode
+%\@pboxswfalse
+%\setlength\@tempdima{#4}%
+%\def\@mpargs{{#1}{#2}[#3]{#4}}%
+%\setbox\@tempboxa\vbox\bgroup
+%\color@begingroup
+%\hsize\@tempdima
+%\textwidth\hsize \columnwidth\hsize
+%\if@in@minipage@env
+%\ifvoid\@mpfootins\else
+%\@latex@warning{Nested minipage: footnotes may be misplaced}%
+%\fi
+%\else
+%\@in@minipage@envtrue
+%\fi
+%\@parboxrestore
+%\def\@mpfn{footnote}\def\thempfn{\thefootnote}\c@mpfootnote\z@
+%\let\@footnotetext\@mpfootnotetext
+%\let\@listdepth\@mplistdepth \@mplistdepth\z@
+%\@minipagerestore
+%\@setminipage}
+
+%%%%%%%%%%%%%%%%%%%% 计算与文本内容风格宏包 %%%%%%%%%%%%%%%%%%%%
+\RequirePackage{calc}%优化长度计算和设置
+\RequirePackage{fp}%浮点数计算
+\RequirePackage{ragged2e}%更美观的对齐设置
 %%浮动环境设置%%
 \renewcommand*{\textfraction}{0.05}
 %%设置顶端和底端的浮动环境的最大比例%%
@@ -142,6 +170,7 @@
 \makeatother
 
 %%%%%%%%%%%%%%%%%%%% 字体设置 %%%%%%%%%%%%%%%%%%%%
+%\RequirePackage{extsizes}
 \RequirePackage[fontset=none]{ctex}%中文文本
 %%%%
 \xeCJKsetup{
@@ -201,73 +230,88 @@ BoldItalicFont=FZCukai.ttf
 Path=fonts/,
 BoldFont=FZCukai.ttf]
 
+%%单独修改行距命令%%
+\makeatletter
+\def\set@baselineskip#1#2{%
+\@defaultunits\@tempskipa#2pt\relax\@nnil
+\edef\f@baselineskip{\the\@tempskipa}%
+\edef\f@linespread{#1}%
+\let\baselinestretch\f@linespread
+\def\size@update{%
+\baselineskip\f@baselineskip\relax
+\baselineskip\f@linespread\baselineskip
+\normalbaselineskip\baselineskip
+\setbox\strutbox\hbox{%
+\vrule\@height.7\baselineskip
+\@depth.3\baselineskip
+\@width\z@}%
+\let\size@update\relax}%
+}
+\let\size@update\relax
+%%%%
+\DeclareRobustCommand\setbaselineskip[1]{%
+\set@baselineskip\baselinestretch{#1}%
+}
+\makeatother
 %%简化字体命令%%
-\newcommand{\FontSizeSet}[2]{\fontsize{#1}{#2}\selectfont}
+\ExplSyntaxOn
+\newcommand{\FontSizeSet}[2][1.5]{\fontsize{#2}{\fp_eval:n{#1*#2}}\selectfont}
+\ExplSyntaxOff
 %%字号设置%%
-\newcommand{\TitlepageNormalFont}{\rmfamily\bfseries\FontSizeSet{15pt}{18pt}}%标题页正常字体
-\newcommand{\TitlepageTitleFont}{\rmfamily\bfseries\FontSizeSet{40pt}{48pt}}%标题页主标题字体
-\newcommand{\TitlepageSubtitleFont}{\rmfamily\bfseries\FontSizeSet{30pt}{36pt}}%标题页次标题字体
-\newcommand{\TitlepageEnglishFont}{\sffamily\bfseries\FontSizeSet{18pt}{21.6pt}}%标题页次标题字体
-\newcommand{\PartLabelFont}{\rmfamily\bfseries\FontSizeSet{34pt}{40.8pt}}%部分标签字体
-\newcommand{\PartNameFont}{\rmfamily\bfseries\FontSizeSet{32pt}{38.4pt}}%部分名称字体
-\newcommand{\ChapterLabelFont}{\rmfamily\bfseries\FontSizeSet{27pt}{32.4pt}}%章标签字体
-\newcommand{\ChapterNameFont}{\rmfamily\bfseries\FontSizeSet{25pt}{30pt}}%章名称字体
-\newcommand{\ChapterSayingFont}{\itshape\kaiti\FontSizeSet{13pt}{15.6pt}}%章谚语字体
-\newcommand{\SectionFont}{\rmfamily\bfseries\FontSizeSet{18pt}{21.6pt}}%节字体
-\newcommand{\SubsectionFont}{\rmfamily\bfseries\FontSizeSet{15pt}{19.5pt}}%小节字体
-\newcommand{\SubsubsectionFont}{\rmfamily\bfseries\FontSizeSet{14.5pt}{17.4pt}}%小小节字体
-\newcommand{\ParagraphNameFont}{\rmfamily\bfseries\FontSizeSet{14pt}{16.8pt}}%段落名称字体
-\newcommand{\HeaderFont}{\rmfamily\bfseries\FontSizeSet{13pt}{16.9pt}}%页眉字体
-\newcommand{\FooterFont}{\rmfamily\bfseries\FontSizeSet{13pt}{16.9pt}}%页脚字体
-\newcommand{\PageNumberFont}{\sffamily\bfseries\FontSizeSet{16pt}{19.2pt}}%页码字体
-\newcommand{\PartNumberFont}{\rmfamily\bfseries\FontSizeSet{14pt}{18.2pt}}%部分标签字体
-\newcommand{\ThumbFont}{\rmfamily\bfseries\FontSizeSet{14pt}{18.2pt}}%侧标字体
-\newcommand{\CaptionFont}{\rmfamily\FontSizeSet{13pt}{19.5pt}}%图表标签字体
-\newcommand{\TocPartFont}{\rmfamily\bfseries\FontSizeSet{14.5pt}{18.85pt}}%目录部分字体
-\newcommand{\TocChapterFont}{\rmfamily\bfseries\FontSizeSet{14pt}{18.2pt}}%目录章字体
-\newcommand{\TocSectionFont}{\rmfamily\FontSizeSet{14pt}{15.6pt}}%目录节字体
-\newcommand{\TocSubsectionFont}{\rmfamily\FontSizeSet{14pt}{15.6pt}}%目录小节字体
-\newcommand{\TocSubsubsectionFont}{\rmfamily\FontSizeSet{14pt}{15.6pt}}%目录小小节字体
-\newcommand{\LofFont}{\rmfamily\FontSizeSet{14pt}{15.6pt}}%图列表字体
-\newcommand{\LotFont}{\rmfamily\FontSizeSet{14pt}{15.6pt}}%表列表字体
-\newcommand{\LTocTitleFont}{\rmfamily\bfseries\FontSizeSet{14pt}{15.6pt}}%小目录标题
-\newcommand{\TocLChapterFont}{\rmfamily\bfseries\FontSizeSet{14pt}{15.6pt}}%小目录章字体
-\newcommand{\TocLSectionFont}{\rmfamily\FontSizeSet{14pt}{15.6pt}}%小目录节字体
-\newcommand{\TocLSubsectionFont}{\rmfamily\FontSizeSet{14pt}{15.6pt}}%小目录小节字体
-\newcommand{\TocLSubsubsectionFont}{\rmfamily\FontSizeSet{14pt}{15.6pt}}%小目录小小节字体
-\newcommand{\ContentPageNumFont}{\sffamily\FontSizeSet{14pt}{15.6pt}}%目录页码字体
+\newcommand{\TitlepageNormalFont}{\rmfamily\bfseries\FontSizeSet[1.2]{15pt}}%标题页正常字体
+\newcommand{\TitlepageTitleFont}{\rmfamily\bfseries\FontSizeSet[1.2]{40pt}}%标题页主标题字体
+\newcommand{\TitlepageSubtitleFont}{\rmfamily\bfseries\FontSizeSet[1.2]{30pt}}%标题页次标题字体
+\newcommand{\TitlepageEnglishFont}{\sffamily\bfseries\FontSizeSet[1.2]{18pt}}%标题页次标题字体
+\newcommand{\PartLabelFont}{\rmfamily\bfseries\FontSizeSet[1.2]{34pt}}%部分标签字体
+\newcommand{\PartNameFont}{\rmfamily\bfseries\FontSizeSet[1.2]{32pt}}%部分名称字体
+\newcommand{\ChapterLabelFont}{\rmfamily\bfseries\FontSizeSet[1.2]{27pt}}%章标签字体
+\newcommand{\ChapterNameFont}{\rmfamily\bfseries\FontSizeSet[1.2]{25pt}}%章名称字体
+\newcommand{\ChapterSayingFont}{\itshape\kaiti\FontSizeSet[1.2]{14pt}}%章谚语字体
+\newcommand{\SectionFont}{\rmfamily\bfseries\FontSizeSet[1.2]{18pt}}%节字体
+\newcommand{\SubsectionFont}{\rmfamily\bfseries\FontSizeSet[1.3]{15pt}}%小节字体
+\newcommand{\SubsubsectionFont}{\rmfamily\bfseries\FontSizeSet[1.2]{14.5pt}}%小小节字体
+\newcommand{\ParagraphNameFont}{\rmfamily\bfseries\FontSizeSet{14pt}}%段落名称字体
+\newcommand{\HeaderFont}{\rmfamily\bfseries\FontSizeSet[1.2]{14pt}}%页眉字体
+\newcommand{\FooterFont}{\rmfamily\bfseries\FontSizeSet[1.2]{14pt}}%页脚字体
+\newcommand{\PageNumberFont}{\sffamily\bfseries\FontSizeSet{16pt}}%页码字体
+\newcommand{\PartNumberFont}{\rmfamily\bfseries\FontSizeSet[1.2]{14pt}}%部分标签字体
+\newcommand{\ThumbFont}{\rmfamily\bfseries\FontSizeSet[1.2]{14pt}}%侧标字体
+\newcommand{\CaptionFont}{\rmfamily\FontSizeSet{14pt}}%图表标签字体
+\newcommand{\TocPartFont}{\rmfamily\bfseries\FontSizeSet[1.3]{15pt}}%目录部分字体
+\newcommand{\TocChapterFont}{\rmfamily\bfseries\FontSizeSet[1.2]{14pt}}%目录章字体
+\newcommand{\TocSectionFont}{\rmfamily\FontSizeSet[1.2]{14pt}}%目录节字体
+\newcommand{\TocSubsectionFont}{\rmfamily\FontSizeSet[1.2]{14pt}}%目录小节字体
+\newcommand{\TocSubsubsectionFont}{\rmfamily\FontSizeSet[1.2]{14pt}}%目录小小节字体
+\newcommand{\LofFont}{\rmfamily\FontSizeSet[1.2]{14pt}}%图列表字体
+\newcommand{\LotFont}{\rmfamily\FontSizeSet[1.2]{14pt}}%表列表字体
+\newcommand{\LTocTitleFont}{\rmfamily\bfseries\FontSizeSet[1.2]{14pt}}%小目录标题
+\newcommand{\TocLChapterFont}{\rmfamily\bfseries\FontSizeSet[1.2]{14pt}}%小目录章字体
+\newcommand{\TocLSectionFont}{\rmfamily\FontSizeSet[1.2]{14pt}}%小目录节字体
+\newcommand{\TocLSubsectionFont}{\rmfamily\FontSizeSet[1.2]{14pt}}%小目录小节字体
+\newcommand{\TocLSubsubsectionFont}{\rmfamily\FontSizeSet[1.2]{14pt}}%小目录小小节字体
+\newcommand{\ContentPageNumFont}{\sffamily\FontSizeSet{14pt}}%目录页码字体
 \newcommand{\CiteNumFont}{\rmfamily}%引用字体
-\newcommand{\LineNumFont}{\sffamily\bfseries\FontSizeSet{10pt}{12pt}}%行号字体
-\newcommand{\ListNumFont}{\sffamily\bfseries\FontSizeSet{12pt}{14.4pt}}%列表序号字体
-\newcommand{\HeadingFont}{\rmfamily\bfseries\FontSizeSet{13pt}{16.9pt}}%一般标题字体
-\newcommand{\EgLabelFont}{\rmfamily\bfseries\FontSizeSet{13pt}{15.6pt}}%例题标签字体
-\newcommand{\BoxTitleFont}{\rmfamily\bfseries\FontSizeSet{13pt}{16.9pt}}%盒子标题字体
-\newcommand{\BoxSubtitleFont}{\rmfamily\bfseries\FontSizeSet{13pt}{16.9pt}}%盒子副标题字体
-\newcommand{\BoxLogoFont}{\rmfamily\bfseries\FontSizeSet{16pt}{24pt}}%盒子logo字体
-\newcommand{\BoxSublogoFont}{\rmfamily\bfseries\FontSizeSet{14pt}{15.6pt}}%盒子小logo字体
-\newcommand{\MarginNoteFont}{\itshape\kaiti\FontSizeSet{13pt}{16.9pt}}%边注字体
-\newcommand{\FootNoteFont}{\itshape\kaiti\FontSizeSet{13pt}{16.9pt}}%脚注字体
+\newcommand{\LineNumFont}{\sffamily\bfseries\FontSizeSet{10pt}}%行号字体
+\newcommand{\ListNumFont}{\sffamily\bfseries\FontSizeSet{12pt}}%列表序号字体
+\newcommand{\HeadingFont}{\rmfamily\bfseries\FontSizeSet[1.2]{13pt}}%一般标题字体
+\newcommand{\EgLabelFont}{\rmfamily\bfseries\FontSizeSet[1.3]{13pt}}%例题标签字体
+\newcommand{\BoxTitleFont}{\rmfamily\bfseries\FontSizeSet[1.3]{13pt}}%盒子标题字体
+\newcommand{\BoxSubtitleFont}{\rmfamily\bfseries\FontSizeSet{13pt}}%盒子副标题字体
+\newcommand{\BoxLogoFont}{\rmfamily\bfseries\FontSizeSet{16pt}}%盒子logo字体
+\newcommand{\BoxSublogoFont}{\rmfamily\bfseries\FontSizeSet{14pt}}%盒子小logo字体
+\newcommand{\MarginNoteFont}{\itshape\kaiti\FontSizeSet{13pt}}%边注字体
+\newcommand{\FootNoteFont}{\itshape\kaiti\FontSizeSet{13pt}}%脚注字体
 \newcommand{\ItemFont}{\kaiti}%列表字体
-\newcommand{\MainFont}{\FontSizeSet{14pt}{21pt}}%正文字体
+\newcommand{\MainFont}{\FontSizeSet{14pt}}%正文字体
 
 %%%%%%%%%%%%%%%%%%%% 页面布局设定宏包 %%%%%%%%%%%%%%%%%%%%
 \makeatletter
-\RequirePackage{calc}%优化长度计算和设置
-\RequirePackage{fp}%浮点数计算
-\RequirePackage{ragged2e}%更美观的对齐设置
+%%边注宽度设置%%
+\ExplSyntaxOn
 \gdef\@MarginColumn@Ratio{0.25}
-\FPeval\@MainColumn@Ratio{round(1-\@MarginColumn@Ratio:2)}
-\RequirePackage{multicol,paracol}%双栏%分栏、边注、中英对照
-\columnratio{\@MainColumn@Ratio}
-\footnotelayout{c}
-\twosided[pcm]
-%%设置栏间距和分割线颜色%%
-\setlength{\columnsep}{2.0em}
-\setlength{\columnseprule}{0em}
-\renewcommand{\columnseprulecolor}{\color{ColorA}}
-%%设置默认正文分栏环境%%
-\newenvironment{Paracol}[1][2]{\begin{paracol}{#1}}{\end{paracol}}
-%%页面布局设置%%
+\gdef\@MainColumn@Ratio{\fp_eval:n{1-\@MarginColumn@Ratio}}
+\ExplSyntaxOff
+%%%%
 \newlength{\@innerlen}
 \newlength{\@outerlen}
 \newlength{\@toplen}
@@ -279,13 +323,17 @@ BoldFont=FZCukai.ttf]
 \setlength{\@botlen}{2.5cm}
 %%%%
 \RequirePackage{geometry}
-\geometry{letterpaper,reversemarginpar,heightrounded,headsep=0.75cm,footskip=0.75cm,inner=\@innerlen,outer=\@outerlen,top=\@toplen,bottom=\@botlen}
+\geometry{letterpaper,headsep=0.75cm,footskip=0.75cm,inner=\@innerlen,outer=\@outerlen,top=\@toplen,bottom=\@botlen,columnsep=2.0em,reversemarginpar,heightrounded}
 %%
-\setlength{\marginparwidth}{\dimeval{\@MarginColumn@Ratio\textwidth-0.75em}}
+\ExplSyntaxOn
+\setlength{\marginparwidth}{\dim_eval:n{\@MarginColumn@Ratio\textwidth-0.75em}}
+\ExplSyntaxOff
+%%
 \setlength{\marginparsep}{-\marginparwidth}
-\makeatother
+\setlength{\columnseprule}{0pt}
 %%%%
 \RequirePackage{fancyhdr,extramarks}%页眉页脚样式设置%创建额外的标记，使用方法类似于\markboth和\markright
+%%
 \RequirePackage[strict]{changepage}%临时修改页面的尺寸
 %%边注格式%%
 \let\originmarginpar\marginpar
@@ -293,14 +341,92 @@ BoldFont=FZCukai.ttf]
 \setlength{\parindent}{2.0em}%
 \MarginNoteFont#1}}
 %%脚注格式%%
+\RequirePackage{footnotehyper}
 \gdef\footnoterule{}
-\gdef\footnotesize{\color{ColorB}\FootNoteFont}
-\makeatletter
-%%\strut盒子高度调整%%
-\newcommand{\AdjustStrut}[1]{
-\setbox\strutbox\hbox{
-\vrule height #1\ht\strutbox depth #1\dp\strutbox width\z@
-}}
+\gdef\footnotesize{\FootNoteFont}
+%%%%
+\RequirePackage{multicol,paracol}%多栏%分栏、边注、中英对照
+%%%%
+\columnratio{\@MainColumn@Ratio}
+\footnotelayout{m}
+\twosided[pcm]
+%%paracol源代码修正%%
+%%将默认的textheight储存起来%%
+\newlength{\defaulttextheight}
+\setlength{\defaulttextheight}{\textheight}
+%%Start New Page: \pcol@startpage在换页时（无论是被动或主动）调用%%
+\def\pcol@startpage{%
+\global\let\pcol@firstprevdepth\relax
+\global\pcol@toppage\pcol@page
+\ifx\pcol@currpage\@empty\else
+\pcol@getcurrpinfo{\global\c@page}\@tempdima\@tempskipa
+\@cons\pcol@pages
+{{\number\c@page}\pcol@spanning\pcol@currfoot
+{\pcol@sptextlist}{\pcol@mparbottom}}%
+\stepcounter{page}\ifpcol@paired\else \stepcounter{page}\fi
+\fi
+\textheight\defaulttextheight
+\global\@colht\textheight%
+\global\topskip\pcol@topskip
+\@dblfloatplacement \let\f@depth\z@
+\@tryfcolumn\@dbldeferlist
+\@whilesw\if@fcolmade\fi{%
+\pcol@Fb
+\@next\@currbox\@freelist{%
+\global\setbox\@currbox\box\@outputbox}\pcol@ovf
+\pcol@Fe{startpage(fcol)}%
+\global\dimen\@currbox-\maxdimen
+\global\skip\@currbox\pcol@topskip
+\@cons\pcol@pages{{\number\c@page}\@currbox\voidb@x{}{}}%
+\stepcounter{page}\ifpcol@paired\else \stepcounter{page}\fi
+\global\advance\pcol@page\@ne \global\pcol@toppage\pcol@page
+\@tryfcolumn\@dbldeferlist}%
+\begingroup
+\let\reserved@b\@dbldeferlist \let\reserved@c\@deferlist
+\global\let\@dbldeferlist\@empty \global\let\@deferlist\@empty
+\let\@elt\@sdblcolelt
+\reserved@b
+\let\@elt\relax \xdef\@dbldeferlist{\@dbldeferlist\@deferlist}%
+\global\let\@deferlist\reserved@c
+\endgroup
+\ifx\@dbltoplist\@empty
+\pcol@defcurrpage{\number\c@page}\voidb@x\voidb@x{}{}%
+\else
+\setbox\@tempboxa\vbox{}%
+\begingroup
+\let\@elt\@comdblflelt
+\@dbltoplist
+\let\@elt\relax
+\pcol@Fb
+\xdef\@freelist{\@freelist\@dbltoplist}%
+\pcol@Fe{startpage(dbltop)}%
+\global\let\@dbltoplist\@empty
+\pcol@Fb
+\@next\@currbox\@freelist{\global\setbox\@currbox\vbox{%
+\unvbox\@tempboxa \vskip-\dblfloatsep \dblfigrule
+\vskip\dbltextfloatsep}}\pcol@ovf
+\pcol@Fe{startpage(spanning)}%
+\global\dimen\@currbox\@colht
+\global\skip\@currbox\pcol@topskip
+\pcol@defcurrpage{\number\c@page}\@currbox\voidb@x{}{}%
+\endgroup
+\fi
+\gdef\pcol@footins{\voidb@x}
+}
+%%%%
+\def\pcol@flushfloats{%
+\textheight\defaulttextheight
+\global\@colht\textheight
+\@whilesw\if@fcolmade\fi{%
+\global\@fcolmadefalse
+\ifnum\pcol@ncolleft<\pcol@ncol
+\pcol@iflushfloats\pcol@ncolleft\pcol@ncol\pcol@rightpage
+\else
+\setbox\pcol@rightpage\box\voidb@x
+\fi
+\pcol@iflushfloats\z@\pcol@ncolleft\@outputbox
+\@outputpage}}
+%%%%
 \makeatother
 
 %%%%%%%%%%%%%%%%%%%% 图表插入宏包 %%%%%%%%%%%%%%%%%%%%
@@ -338,6 +464,8 @@ BoldFont=FZCukai.ttf]
 
 %%%%%%%%%%%%%%%%%%%% 目录宏包 %%%%%%%%%%%%%%%%%%%%
 \RequirePackage[explicit,newparttoc,notocpart*]{titlesec}%设置标题格式
+%%newparttoc: 可以修改部分在目录中的样式
+%%notocpart*: *版本的part不计入目录
 \RequirePackage{titletoc}%目录格式设置
 \RequirePackage{shorttoc}%简洁目录设置
 \def\shorttocname#1{#1}%定义简洁目录标题宏
@@ -349,17 +477,29 @@ BoldFont=FZCukai.ttf]
 \setcounter{secnumdepth}{3}
 \makeatletter
 %%重定义\tableofcontents%%
-\RenewDocumentCommand{\tableofcontents}{O{1} O{1}}{%
-\begingroup%确保计数器值只在局部生效
+\RenewDocumentCommand{\tableofcontents}{s O{1} +O{}}{%
 \chapter*{\contentsname}
-\c@tocdepth=#2%预设目录深度为1
-\ifnum#1=1%
+\begingroup%确保计数器值只在局部生效
+\c@tocdepth=1%预设目录深度为1
+\IfBooleanTF{#1}{%
+\ifnum#2=2
+\begin{paracol}{2}%
+\@starttoc{toc}%
+\switchcolumn%
+\noindent#3%
+\end{paracol}%
+\else%
+\@starttoc{toc}%
+\fi%
+}{%
+\ifnum#2=1%
 \@starttoc{toc}%
 \else%
-\begin{multicols}{#1}%
+\begin{multicols}{#2}%
 \@starttoc{toc}%
 \end{multicols}%
 \fi%
+}
 \endgroup}
 %%重定义\listoffigures%%
 \RenewDocumentCommand{\listoffigures}{O{1}}{%
@@ -384,10 +524,10 @@ BoldFont=FZCukai.ttf]
 \fi%
 }
 %%重定义\shorttableofcontents%%
-\RenewDocumentCommand{\shorttableofcontents}{O{1} O{0}}{%
+\RenewDocumentCommand{\shorttableofcontents}{O{1}}{%
 \begingroup%确保计数器值只在局部生效
 \chapter*{\shorttocname}
-\c@tocdepth=#2%预设目录深度为0
+\c@tocdepth=0%预设目录深度为0
 \ifnum#1=1%
 \@startshorttoc{toc}
 \else
@@ -408,8 +548,7 @@ BoldFont=FZCukai.ttf]
 
 %%%%%%%%%%%%%%%%%%%% 盒子和列表宏包 %%%%%%%%%%%%%%%%%%%%
 \RequirePackage[most]{tcolorbox}%彩色盒子
-\tcbuselibrary{xparse}
-\tcbuselibrary{minted}
+\tcbuselibrary{xparse,minted}
 \RequirePackage{empheq}%数学公式盒子
 \RequirePackage{adjustbox,varwidth}%自动调整字体大小的盒子%固定可变长度盒子
 \RequirePackage{enumitem,hlist}%控制列表环境格式%对齐列表环境
@@ -424,7 +563,9 @@ BoldFont=FZCukai.ttf]
 \RequirePackage{pifont,fontawesome5}%图标
 \RequirePackage{anyfontsize}%自由调整字体大小
 \RequirePackage{pgfplots,tikz,tikzpagenodes,tkz-euclide,eso-pic}%绘图
+\pgfplotsset{compat=1.18}
 \usetikzlibrary{fit,calc,math,scopes,backgrounds,positioning,intersections,decorations,shadows,shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,decorations.footprints}
+\makesavenoteenv{tikzpicture}
 \makeatletter
 %%修改addtolength的作用域%%
 \newcommand{\gaddtolength}[1]{\calc@assign@skip{\global\advance#1}}
@@ -434,6 +575,18 @@ BoldFont=FZCukai.ttf]
 \setlength\skip@{#2}
 \global#1=\skip@
 \endgroup}
+%%修改textheight%%
+\newcommand{\changetextheight}[1]{%
+\gaddtolength{\textheight}{#1}
+\gsetlength{\@colht}{\textheight}
+\gsetlength{\@colroom}{\textheight}
+\gsetlength{\vsize}{\textheight}
+}
+%%\strut盒子高度调整%%
+\newcommand{\AdjustStrut}[1]{%
+\setbox\strutbox\hbox{%
+\vrule height #1\ht\strutbox depth #1\dp\strutbox width\z@
+}}
 %%测量节点node尺寸%%
 \def\pgfgetnodeheight(#1)#2{
 \begin{pgfinterruptboundingbox}
@@ -467,6 +620,7 @@ BoldFont=FZCukai.ttf]
 \makeatletter
 \newcounter{@Thumb@Number}%记录侧标数
 \regtotcounter{@Thumb@Number}%获取侧标数最大值，需要编译两次才能正确获取
+\newcounter{@Chapter@Number}%记录章总数
 \newcounter{@egnum}[section]
 \newcounter{@varnum}[section]
 \newcounter{@def}[section]
@@ -1287,19 +1441,19 @@ BoldFont=FZCukai.ttf]
 
 %%章节页样式%%
 \newlength{\@Chapter@TitleBlockHeight}
-\newlength{\@Chapter@VSpace}
+\newlength{\ChapterVSpace}
 \newlength{\@Chapter@StripeWidth}
 \newlength{\@Chapter@LabelSep}
 \newlength{\@Chapter@LabelYShift@Down}
 \newlength{\@Chapter@PageSize}
-\newlength{\@Chapter@SayingBlockWidth}
+\newlength{\@Chapter@SayingBlockHeight}
 \newlength{\@Chapter@LabelYShift@Up}
 \setlength{\@Chapter@StripeWidth}{0.35cm}
 \setlength{\@Chapter@LabelSep}{0.5cm}
 \setlength{\@Chapter@LabelYShift@Down}{0.65cm}
 \setlength{\@Chapter@LabelYShift@Up}{0.5cm}
 \setlength{\@Chapter@PageSize}{\@PageNumWidth}
-\setlength{\@Chapter@SayingBlockWidth}{\@outerlen-2.5mm}
+\setlength{\@Chapter@SayingBlockHeight}{\@outerlen-2.5mm}
 %%%%
 \newcommand{\chaptersaying}[1]{\long\def\@chaptersaying{#1}}
 \newcommand{\chaptersubtitle}[1]{\long\def\@chaptersubtitle{#1}}
@@ -1319,8 +1473,8 @@ BoldFont=FZCukai.ttf]
 \coordinate(B)at(current page.north east);
 \coordinate(C)at(current page.south east);
 \coordinate(D)at(current page.south west);
-\coordinate(E)at([xshift=\@GutterWidth,yshift=\@Chapter@SayingBlockWidth]D);
-\coordinate(F)at([xshift=-5.0cm,yshift=\@Chapter@SayingBlockWidth]C);
+\coordinate(E)at([xshift=\@GutterWidth,yshift=\@Chapter@SayingBlockHeight]D);
+\coordinate(F)at([xshift=-5.0cm,yshift=\@Chapter@SayingBlockHeight]C);
 \coordinate(G)at([xshift=-3.0cm,yshift=\@FrameWidth]C);
 \coordinate(H)at([xshift=-\@FrameWidth,yshift=\@FrameWidth]C);
 \coordinate(N)at([yshift=\@Chapter@LabelYShift@Up]current page text area.north east);
@@ -1329,7 +1483,7 @@ BoldFont=FZCukai.ttf]
 \coordinate(Q)at($0.5*(Q1)+0.5*(Q2)$);
 \begin{pgfonlayer}{@Chapter@Top}
 %%编号%%
-\draw[ColorA,fill=ColorA,sharp corners]node[append after command={(T.south west)[rounded corners=2.5mm]--(T.south east)[sharp corners]--([yshift=\@toplen-\@Chapter@LabelYShift@Up]T.north east)--([yshift=\@toplen-\@Chapter@LabelYShift@Up]T.north west)[rounded corners=2.5mm]--cycle},anchor=north east,font=\ChapterLabelFont,text=white,inner xsep=\@Chapter@LabelSep,inner ysep=0mm,outer sep=0mm](T)at([yshift=\@Chapter@LabelYShift@Up]N){
+\draw[ColorA,fill=ColorA,sharp corners]node[append after command={(T.south west)[rounded corners=2.5mm]--(T.south east)[sharp corners]--([yshift=\@toplen-2\@Chapter@LabelYShift@Up]T.north east)--([yshift=\@toplen-2\@Chapter@LabelYShift@Up]T.north west)[rounded corners=2.5mm]--cycle},anchor=north east,font=\ChapterLabelFont,text=white,inner xsep=\@Chapter@LabelSep,inner ysep=0mm,outer sep=0mm](T)at([yshift=\@Chapter@LabelYShift@Up]N){
 \begin{varwidth}{\textwidth/3}
 \strut#1\strut
 \end{varwidth}};
@@ -1345,12 +1499,13 @@ BoldFont=FZCukai.ttf]
 \coordinate(J)at([xshift=-\@innerlen-\textwidth+\@GutterWidth,yshift=-2\@Chapter@LabelYShift@Down/3]P.south east);
 %%%%
 \coordinate(K)at([xshift=-\@innerlen-\textwidth,yshift=-2\@Chapter@LabelYShift@Down/3]P.south east);
-\coordinate(L)at([xshift=-\@innerlen-\textwidth,yshift=-3\@Chapter@LabelYShift@Down/4-\@Chapter@StripeWidth]T.south east);
+\coordinate(L)at([yshift=-\@toplen]current page.north west);
 %%%%
 %%获取标题区域的高度%%
 \pgfgetdistance(K)(L)\DistanceKL
-\gsetlength{\@Chapter@TitleBlockHeight}{\DistanceKL}
-\gsetlength{\@Chapter@VSpace}{\@Chapter@TitleBlockHeight+\@toplen-\@FrameWidth-1.0cm}
+\setlength{\@Chapter@TitleBlockHeight}{\DistanceKL}
+\gsetlength{\ChapterVSpace}{\@Chapter@TitleBlockHeight+\@toplen-\@FrameWidth}
+%%%%
 \begin{pgfonlayer}{@Chapter@Bottom}
 %%框架1%%
 \draw[ColorB!7.5,fill=ColorB!7.5,sharp corners](A)rectangle(C);
@@ -1362,7 +1517,7 @@ BoldFont=FZCukai.ttf]
 %%
 \begin{pgfonlayer}{@Chapter@Top}
 %%底部文字%%
-\node[anchor=west,font=\ChapterSayingFont,text=ColorA,text width=\paperwidth-\@innerlen-5.0cm,inner sep=0mm,outer sep=0mm](S)at([xshift=\@innerlen,yshift=\@Chapter@SayingBlockWidth/2]D){\@chaptersaying};
+\node[anchor=west,font=\ChapterSayingFont,text=ColorA,text width=\paperwidth-\@innerlen-5.0cm,inner sep=0mm,outer sep=0mm](S)at([xshift=\@innerlen,yshift=\@Chapter@SayingBlockHeight/2]D){\@chaptersaying};
 %%页码%%
 \path[fill=ColorA,rounded corners=2.0mm](Q1)rectangle(Q2);
 \node[font=\PageNumberFont,text=white,anchor=center,align=center](PP)at(Q){\maxsizebox{\@Chapter@PageSize-0.3cm}{!}{\thepage}};
@@ -1372,8 +1527,8 @@ BoldFont=FZCukai.ttf]
 \coordinate(B)at(current page.north west);
 \coordinate(C)at(current page.south west);
 \coordinate(D)at(current page.south east);
-\coordinate(E)at([xshift=-\@GutterWidth,yshift=\@Chapter@SayingBlockWidth]D);
-\coordinate(F)at([xshift=5.0cm,yshift=\@Chapter@SayingBlockWidth]C);
+\coordinate(E)at([xshift=-\@GutterWidth,yshift=\@Chapter@SayingBlockHeight]D);
+\coordinate(F)at([xshift=5.0cm,yshift=\@Chapter@SayingBlockHeight]C);
 \coordinate(G)at([xshift=3.0cm,yshift=\@FrameWidth]C);
 \coordinate(H)at([xshift=\@FrameWidth,yshift=\@FrameWidth]C);
 \coordinate(N)at([yshift=\@Chapter@LabelYShift@Up]current page text area.north west);
@@ -1382,7 +1537,7 @@ BoldFont=FZCukai.ttf]
 \coordinate(Q)at($0.5*(Q1)+0.5*(Q2)$);
 \begin{pgfonlayer}{@Chapter@Top}
 %%编号%%
-\draw[ColorA,fill=ColorA,sharp corners]node[append after command={(T.south west)[rounded corners=2.5mm]--(T.south east)[sharp corners]--([yshift=\@toplen-\@Chapter@LabelYShift@Up]T.north east)--([yshift=\@toplen-\@Chapter@LabelYShift@Up]T.north west)[rounded corners=2.5mm]--cycle},anchor=north west,font=\ChapterLabelFont,text=white,inner xsep=\@Chapter@LabelSep,inner ysep=0mm,outer sep=0mm](T)at([yshift=\@Chapter@LabelYShift@Up]N){%
+\draw[ColorA,fill=ColorA,sharp corners]node[append after command={(T.south west)[rounded corners=2.5mm]--(T.south east)[sharp corners]--([yshift=\@toplen-2\@Chapter@LabelYShift@Up]T.north east)--([yshift=\@toplen-2\@Chapter@LabelYShift@Up]T.north west)[rounded corners=2.5mm]--cycle},anchor=north west,font=\ChapterLabelFont,text=white,inner xsep=\@Chapter@LabelSep,inner ysep=0mm,outer sep=0mm](T)at([yshift=\@Chapter@LabelYShift@Up]N){%
 \begin{varwidth}{\textwidth/3}%
 \strut#1\strut
 \end{varwidth}};
@@ -1398,12 +1553,12 @@ BoldFont=FZCukai.ttf]
 \coordinate(J)at([xshift=\@innerlen+\textwidth-\@GutterWidth,yshift=-2\@Chapter@LabelYShift@Down/3]P.south west);
 %%%%
 \coordinate(K)at([xshift=\@innerlen+\textwidth,yshift=-2\@Chapter@LabelYShift@Down/3]P.south west);
-\coordinate(L)at([xshift=\@innerlen+\textwidth,yshift=-3\@Chapter@LabelYShift@Down/4-\@Chapter@StripeWidth]T.south west);
+\coordinate(L)at([yshift=-\@toplen]current page.north east);
 %%%%
 %%获取标题区域的高度%%
 \pgfgetdistance(K)(L)\DistanceKL
-\gsetlength{\@Chapter@TitleBlockHeight}{\DistanceKL}
-\gsetlength{\@Chapter@VSpace}{\@Chapter@TitleBlockHeight+\@toplen-\@FrameWidth-1.0cm}
+\setlength{\@Chapter@TitleBlockHeight}{\DistanceKL}
+\gsetlength{\ChapterVSpace}{\@Chapter@TitleBlockHeight+\@toplen-\@FrameWidth}
 %%%%
 \begin{pgfonlayer}{@Chapter@Bottom}
 %%框架1%%
@@ -1416,7 +1571,7 @@ BoldFont=FZCukai.ttf]
 %%
 \begin{pgfonlayer}{@Chapter@Top}
 %%底部文字%%
-\node[anchor=east,font=\ChapterSayingFont,text=ColorA,text width=\paperwidth-\@innerlen-5.0cm,inner sep=0mm,outer sep=0mm](S)at([xshift=-\@innerlen,yshift=\@Chapter@SayingBlockWidth/2]D){\@chaptersaying};
+\node[anchor=east,font=\ChapterSayingFont,text=ColorA,text width=\paperwidth-\@innerlen-5.0cm,inner sep=0mm,outer sep=0mm](S)at([xshift=-\@innerlen,yshift=\@Chapter@SayingBlockHeight/2]D){\@chaptersaying};
 %%页码%%
 \path[fill=ColorA,rounded corners=2.0mm](Q1)rectangle(Q2);
 \node[font=\PageNumberFont,text=white,anchor=center,align=center](PP)at(Q){\maxsizebox{\@Chapter@PageSize-0.3cm}{!}{\thepage}};
@@ -1442,15 +1597,14 @@ BoldFont=FZCukai.ttf]
 \coordinate(B)at(current page.north east);
 \coordinate(C)at(current page.south east);
 \coordinate(D)at(current page.south west);
-\coordinate(E)at([xshift=\@GutterWidth,yshift=\@Chapter@SayingBlockWidth]D);
-\coordinate(F)at([xshift=-5.0cm,yshift=\@Chapter@SayingBlockWidth]C);
+\coordinate(E)at([xshift=\@GutterWidth,yshift=\@Chapter@SayingBlockHeight]D);
+\coordinate(F)at([xshift=-5.0cm,yshift=\@Chapter@SayingBlockHeight]C);
 \coordinate(G)at([xshift=-3.0cm,yshift=\@FrameWidth]C);
 \coordinate(H)at([xshift=-\@FrameWidth,yshift=\@FrameWidth]C);
 \coordinate(N)at([yshift=\@Chapter@Star@LabelYShift@Up]current page text area.north west);
 \coordinate(Q1)at([xshift=-\@FrameWidth+0.15cm,yshift=\@FrameWidth-0.15cm]C);
 \coordinate(Q2)at([xshift=-\@Chapter@PageSize,yshift=\@Chapter@PageSize]Q1);
 \coordinate(Q)at($0.5*(Q1)+0.5*(Q2)$);
-%%
 \begin{pgfonlayer}{@Chapter@Star@Top}%
 \begingroup%
 \ChapterLabelFont%
@@ -1481,12 +1635,12 @@ BoldFont=FZCukai.ttf]
 \coordinate(J)at([xshift=-\textwidth-\@innerlen+\@GutterWidth,yshift=-2\@Chapter@LabelYShift@Down/3]P.south east);
 %%%%
 \coordinate(K)at([xshift=-\@innerlen-\textwidth,yshift=-2\@Chapter@LabelYShift@Down/3]P.south east);
-\coordinate(L)at([xshift=-\@innerlen-\textwidth,yshift=-3\@Chapter@LabelYShift@Down/4-\@Chapter@StripeWidth]TT.south east);
+\coordinate(L)at([yshift=-\@toplen]current page.north west);
 %%%%
 %%获取标题区域的高度%%
 \pgfgetdistance(K)(L)\DistanceKL
-\gsetlength{\@Chapter@TitleBlockHeight}{\DistanceKL}
-\gsetlength{\@Chapter@VSpace}{\@Chapter@TitleBlockHeight+\@toplen-\@FrameWidth-1.0cm}
+\setlength{\@Chapter@TitleBlockHeight}{\DistanceKL}
+\gsetlength{\ChapterVSpace}{\@Chapter@TitleBlockHeight+\@toplen-\@FrameWidth}
 %%%%
 \begin{pgfonlayer}{@Chapter@Star@Bottom}
 %%框架1%%
@@ -1499,7 +1653,7 @@ BoldFont=FZCukai.ttf]
 %%
 \begin{pgfonlayer}{@Chapter@Star@Top}
 %%底部文字%%
-\node[anchor=west,font=\ChapterSayingFont,text=ColorA,text width=\paperwidth-\@innerlen-5.0cm,inner sep=0mm,outer sep=0mm](S)at([xshift=\@innerlen,yshift=\@Chapter@SayingBlockWidth/2]D){\@chaptersaying};
+\node[anchor=west,font=\ChapterSayingFont,text=ColorA,text width=\paperwidth-\@innerlen-5.0cm,inner sep=0mm,outer sep=0mm](S)at([xshift=\@innerlen,yshift=\@Chapter@SayingBlockHeight/2]D){\@chaptersaying};
 %%页码%%
 \path[fill=ColorA,rounded corners=2.0mm](Q1)rectangle(Q2);
 \node[font=\PageNumberFont,text=white,anchor=center,align=center](PP)at(Q){\maxsizebox{\@Chapter@PageSize-0.3cm}{!}{\thepage}};
@@ -1510,8 +1664,8 @@ BoldFont=FZCukai.ttf]
 \coordinate(B)at(current page.north west);
 \coordinate(C)at(current page.south west);
 \coordinate(D)at(current page.south east);
-\coordinate(E)at([xshift=-\@GutterWidth,yshift=\@Chapter@SayingBlockWidth]D);
-\coordinate(F)at([xshift=5.0cm,yshift=\@Chapter@SayingBlockWidth]C);
+\coordinate(E)at([xshift=-\@GutterWidth,yshift=\@Chapter@SayingBlockHeight]D);
+\coordinate(F)at([xshift=5.0cm,yshift=\@Chapter@SayingBlockHeight]C);
 \coordinate(G)at([xshift=3.0cm,yshift=\@FrameWidth]C);
 \coordinate(H)at([xshift=\@FrameWidth,yshift=\@FrameWidth]C);
 \coordinate(N)at([yshift=\@Chapter@Star@LabelYShift@Up]current page text area.north east);
@@ -1550,12 +1704,12 @@ BoldFont=FZCukai.ttf]
 \coordinate(J)at([xshift=\textwidth+\@innerlen-\@GutterWidth,yshift=-2\@Chapter@LabelYShift@Down/3]P.south west);
 %%%%
 \coordinate(K)at([xshift=\@innerlen+\textwidth,yshift=-2\@Chapter@LabelYShift@Down/3]P.south west);
-\coordinate(L)at([xshift=\@innerlen+\textwidth,yshift=-3\@Chapter@LabelYShift@Down/4-\@Chapter@StripeWidth]TT.south west);
+\coordinate(L)at([yshift=-\@toplen]current page.north east);
 %%%%
 %%获取标题区域的高度%%
 \pgfgetdistance(K)(L)\DistanceKL
-\gsetlength{\@Chapter@TitleBlockHeight}{\DistanceKL}
-\gsetlength{\@Chapter@VSpace}{\@Chapter@TitleBlockHeight+\@toplen-\@FrameWidth-1.0cm}
+\setlength{\@Chapter@TitleBlockHeight}{\DistanceKL}
+\gsetlength{\ChapterVSpace}{\@Chapter@TitleBlockHeight+\@toplen-\@FrameWidth}
 %%%%
 \begin{pgfonlayer}{@Chapter@Star@Bottom}
 %%框架1%%
@@ -1568,7 +1722,7 @@ BoldFont=FZCukai.ttf]
 %%
 \begin{pgfonlayer}{@Chapter@Star@Top}
 %%底部文字%%
-\node[anchor=east,font=\ChapterSayingFont,text=ColorA,text width=\paperwidth-\@innerlen-5.0cm,inner sep=0mm,outer sep=0mm](S)at([xshift=-\@innerlen,yshift=\@Chapter@SayingBlockWidth/2]D){\@chaptersaying};
+\node[anchor=east,font=\ChapterSayingFont,text=ColorA,text width=\paperwidth-\@innerlen-5.0cm,inner sep=0mm,outer sep=0mm](S)at([xshift=-\@innerlen,yshift=\@Chapter@SayingBlockHeight/2]D){\@chaptersaying};
 %%页码%%
 \path[fill=ColorA,rounded corners=2.0mm](Q1)rectangle(Q2);
 \node[font=\PageNumberFont,text=white,anchor=center,align=center](PP)at(Q){\maxsizebox{\@Chapter@PageSize-0.3cm}{!}{\thepage}};
@@ -1576,9 +1730,8 @@ BoldFont=FZCukai.ttf]
 \fi
 \end{tikzpicture}
 }
-
 %%侧标更新规则%%
-\newcommand{\@Thumb@Update@Rule}{
+\newcommand{\@Thumb@Update@Rule}{%
 \stepcounter{@Thumb@Number}%侧标数计数
 \ifnum\value{@Thumb@Number}=1%
 \relax%
@@ -1586,32 +1739,42 @@ BoldFont=FZCukai.ttf]
 \gaddtolength{\MarkY}{-\SepH}%更新侧标位置
 \fi}
 %%
-\newlength{\@PageHeightCut}
-\setlength{\@PageHeightCut}{-\@Chapter@SayingBlockWidth+\@FrameWidth}
+\newlength{\ChapterPageHeightCut}
+\setlength{\ChapterPageHeightCut}{-\@Chapter@SayingBlockHeight+\@FrameWidth}
 %%编号章节页%%
-\titleformat{\chapter}
-{}{}{0em}
+\titleformat{\chapter}[block]
+{\setbaselineskip{0pt}\selectfont}{}{0em}
 {\@Thumb@Update@Rule%
 \@ChapterStyle{\chapterlabelfront{\sffamily\thechapter}\chapterlabelback}{#1}%章样式
-\enlargethispage{\@PageHeightCut}%修改页面大小
 }
 [\global\chapterimage{}%清空\chapterimage
-\global\chaptersaying{}]%清空\chaptersaying
+\global\chaptersaying{}%清空\chaptersaying
+]
 %%不编号章节页%%
-\titleformat{name=\chapter,numberless}
-{}{}{0em}
+\titleformat{name=\chapter,numberless}[block]
+{\setbaselineskip{0pt}\selectfont}{}{0em}
 {\@Thumb@Update@Rule%
 \@ChapterStarStyle{#1}{\@chaptersubtitle}%章样式
-\enlargethispage{\@PageHeightCut}%修改页面大小
 }
 [\global\chaptersubtitle{}%清空\chaptersubtitle
 \global\chapterimage{}%清空\chapterimage
-\global\chaptersaying{}]%清空\chaptersaying
+\global\chaptersaying{}%清空\chaptersaying
+]
 %%间距设置%%
-\titlespacing*{\chapter}{0pt}{0pt}{0pt}
+\titlespacing*{\chapter}{0pt}{-\baselineskip/2}{-\baselineskip/2}
 %%页面风格设置%%
 \assignpagestyle{\chapter}{empty}
-
+%%章标题顶格放置%%
+\titleclass{\chapter}{top}
+%%修改chapter断页方式%%
+\newcommand{\chapterbreak}{%
+\if@openright%
+\cleardoublepage%
+\else%
+\clearpage%
+\fi%
+\changetextheight{\ChapterPageHeightCut}%
+}
 %%为\chapter*添加短页眉%%
 \NewCommandCopy{\OriginChapter}{\chapter}
 %%
@@ -1619,7 +1782,8 @@ BoldFont=FZCukai.ttf]
 \IfBooleanTF{#1}%
 {\OriginChapter*{#3\@mkboth{#2}{#2}}}%
 {\OriginChapter[#2]{#3}}%
-\addvspace{\@Chapter@VSpace}%
+\AddToHookNext{shipout}{\changetextheight{-\ChapterPageHeightCut}}%
+\vspace*{\ChapterVSpace}
 }
 
 %%节样式%%
@@ -1657,13 +1821,14 @@ BoldFont=FZCukai.ttf]
 }}{\@Section@Star@LabelNameXSep}{#1}
 %%间距设置%%
 \titlespacing*{\section}{0pt}{0pt}{2.0cm}
-%%修改章节断页方式，使\section另起一页，而\section*不换页，并且为\section*添加短页眉%%
+%%修改section断页方式%%
 \NewCommandCopy{\OriginSection}{\section}
 \RenewDocumentCommand{\section}{s +O{#3} +m}{%
+\clearpage%
 \IfBooleanTF{#1}
 {\OriginSection*{#3\markright{#2}}}
 {\if@mainmatter%
-\clearpage\OriginSection[#2]{#3}%
+\OriginSection[#2]{#3}%
 \else%
 \phantomsection
 \OriginSection*{#3\markright{#2}\addcontentsline{toc}{section}{#2}}%
@@ -1771,11 +1936,11 @@ BoldFont=FZCukai.ttf]
 
 %%%%
 %%编号小节样式%%
-\titleformat{\subsection}
+\titleformat{\subsection}[block]
 {}{}{0mm}
 {\@SubsectionStyle{\subsectionlabelfront}{#1}{\thesubsection}}
 %%不编号小节样式%%
-\titleformat{name=\subsection,numberless}
+\titleformat{name=\subsection,numberless}[block]
 {}{}{0mm}
 {\@SubsectionStarStyle{#1}{\@subsectionsubtitle}}
 [\global\subsectionsubtitle{}]%清空\subsectionsubtitle
@@ -1827,7 +1992,6 @@ BoldFont=FZCukai.ttf]
 \newlength{\@ComplexHeading@LabelCriticWidth}
 \setlength{\@ComplexHeading@LabelCriticWidth}{4.0cm}
 \NewDocumentCommand{\ComplexHeading}{m +m +m}{%
-\begingroup%
 \begin{flushleft}%
 \begin{tikzpicture}%
 \SubsectionFont%
@@ -1865,7 +2029,8 @@ BoldFont=FZCukai.ttf]
 \node[circle,text=ColorB,inner sep=0mm,outer sep=0mm,font=\MainFont](F)at(C){\centering#3};
 \end{tikzpicture}%
 \end{flushleft}%
-\endgroup}
+\par
+}
 %%%%
 \NewDocumentCommand{\AdjustiveHeading}{ +m }{
 \begin{center}
@@ -1887,14 +2052,16 @@ BoldFont=FZCukai.ttf]
 %%%%
 %%索引分组标题样式%%
 \newcommand{\LongHeading}[1]{%
-\begingroup%
-\centering\tikz{%
+\begin{center}%
+\begin{tikzpicture}%
 \node[font=\HeadingFont,text=ColorA,draw=ColorB!7.5,fill=ColorB!7.5,ultra thick,rounded corners,inner sep=0mm](P){%
 \hspace*{1.5mm}%
 \parbox{\linewidth-3.0mm}{\centering\strut#1\strut}%
 \hspace*{1.5mm}%
-};}
-\endgroup}
+};
+\end{tikzpicture}%
+\end{center}%
+}
 %%%%
 %%习题标题设置%%
 \def\@Exercise@Title{课后习题}
@@ -2952,6 +3119,9 @@ IfBlankTF={#1}{}{title={\strut#1\strut}}
 }}
 
 %%设置节前盒子%%
+%盒子内脚注设置，使得脚注位于页面最下方而不是盒子最下方
+\makesavenoteenv{box0}
+%%
 \DeclareTColorBox{box0}{O{} +m O{ColorB}}{ItemBox=#2/#3,#1}
 
 \newenvironment{Point}{\begin{box0}{本章要点}[ColorA]}{\end{box0}}
@@ -2962,11 +3132,15 @@ IfBlankTF={#1}{}{title={\strut#1\strut}}
 %%%%
 
 %%设置易错点盒子%%
+%盒子内脚注设置，使得脚注位于页面最下方而不是盒子最下方
+\makesavenoteenv{box1}
+%%
 \DeclareTColorBox{box1}{+O{} +m +O{} +O{} O{ColorA} O{\faQuestion}}{
 ColorfulBox=#2/#3/#4/#5,
 %%%%
-underlay boxed title={
-\BoxTitleFont
+underlay boxed title={%
+\begingroup%
+\BoxTitleFont%
 \def\@BoxTitle@Radius{\dimexpr\baselineskip/2\relax}%0.85
 \draw[white,fill=white,rounded corners=\@BoxTitle@Radius,line width=10.0pt](title.north west)rectangle(title.south east);
 \draw[#5,fill=#5,ultra thick,rounded corners=\@BoxTitle@Radius](title.north west)rectangle(title.south east);
@@ -2975,7 +3149,7 @@ underlay boxed title={
 \draw[#5,fill=#5,line width=2.75pt]([xshift=\@BoxTitle@Radius,yshift=-\@BoxTitle@Radius]title.north west)circle(\@BoxTitle@Radius);
 %%%%
 \node[circle,align=center,inner sep=0mm,font=\BoxLogoFont,text=white](P)at([xshift=\@BoxTitle@Radius,yshift=-\@BoxTitle@Radius]title.north west){#6};
-},
+\endgroup},
 #1}
 
 %%%%
@@ -2986,11 +3160,15 @@ underlay boxed title={
 {\end{box1}}
 
 %%设置演示盒子%%
+%盒子内脚注设置，使得脚注位于页面最下方而不是盒子最下方
+\makesavenoteenv{box2}
+%%
 \DeclareTColorBox{box2}{+O{} +m +O{} +O{} O{ColorA} O{\faLayerGroup}}{
 ColorfulBox=#2/#3/#4/#5,
 %%%%
-underlay boxed title={
-\BoxTitleFont
+underlay boxed title={%
+\begingroup%
+\BoxTitleFont%
 \def\@BoxTitle@Radius{\dimexpr\baselineskip/2\relax}%0.85
 \draw[white,fill=white,line width=10.0pt,rounded corners=\@BoxTitle@Radius](title.north east)rectangle(title.south west);
 %%%%
@@ -3013,7 +3191,7 @@ underlay boxed title={
 \fi
 %%%%
 \node[circle,align=center,inner sep=0mm,font=\BoxLogoFont,text=white](T)at([xshift=\@BoxTitle@Radius,yshift=-\@BoxTitle@Radius]title.north west){#6};
-},
+\endgroup},
 #1}
 
 %%%%
@@ -3024,11 +3202,15 @@ underlay boxed title={
 %%简化序号命令%%
 \newcommand{\the@prenumber}{\thechapter.\thesection}
 %%设置定义定理盒子%%
+%盒子内脚注设置，使得脚注位于页面最下方而不是盒子最下方
+\makesavenoteenv{box3}
+%%
 \DeclareTColorBox{box3}{+O{} +m +O{} +O{} O{ColorA} O{\faCodepen}}{
 ColorfulBox=#2/#3/#4/#5,
 %%%%
-underlay boxed title={
-\BoxTitleFont
+underlay boxed title={%
+\begingroup%
+\BoxTitleFont%
 \def\@BoxTitle@Radius{\dimexpr\baselineskip/2\relax}%0.85
 \pgfgetnodeheight(title)\@BoxTitle@Height
 \ifdim\@BoxTitle@Height>2\@BoxTitle@Radius
@@ -3039,7 +3221,7 @@ underlay boxed title={
 \draw[#5,fill=#5!90,line width=2.0pt](title.north east)--([xshift={sqrt(15)*\@BoxTitle@Radius/7+\@BoxTitle@Radius}]title.north west)arc(asin(7/8):{360-asin(7/8)}:{8*\@BoxTitle@Radius/7})[rounded corners=\@BoxTitle@Radius]--(title.south east)--cycle;
 \fi
 \node[circle,align=center,inner sep=0mm,font=\BoxLogoFont,text=white](P)at([xshift=\@BoxTitle@Radius,yshift=-\@BoxTitle@Radius]title.north west){#6};
-},
+\endgroup},
 #1}
 
 %%%%
@@ -3053,8 +3235,8 @@ underlay boxed title={
 \def\@Axiom@Number{\the@prenumber.\the@axm}
 
 %%编号定义盒子%%
-\DeclareDocumentEnvironment{Definition}{ +O{} +O{} }{\begin{box3}[phantom={
-\if@mainmatter
+\DeclareDocumentEnvironment{Definition}{ +O{} +O{} }{\begin{box3}[phantom={%
+\if@mainmatter%
 \refstepcounter{@def}
 \fi}]{%
 \@Definiton@Title%
@@ -3063,8 +3245,8 @@ underlay boxed title={
 \fi}
 [#1][#2][ColorA][\faCrosshairs]}{\end{box3}}
 %%%%
-\DeclareDocumentEnvironment{Theorem}{ +O{} +O{} }{\begin{box3}[phantom={
-\if@mainmatter
+\DeclareDocumentEnvironment{Theorem}{ +O{} +O{} }{\begin{box3}[phantom={%
+\if@mainmatter%
 \refstepcounter{@thm}
 \fi}]{%
 \@Theorem@Title%
@@ -3073,8 +3255,8 @@ underlay boxed title={
 \fi}
 [#1][#2][ColorB][\faCrosshairs]}{\end{box3}}
 %%%%
-\DeclareDocumentEnvironment{Axiom}{ +O{} +O{} }{\begin{box3}[phantom={
-\if@mainmatter
+\DeclareDocumentEnvironment{Axiom}{ +O{} +O{} }{\begin{box3}[phantom={%
+\if@mainmatter%
 \refstepcounter{@axm}
 \fi}]{%
 \@Axiom@Title%
@@ -3089,18 +3271,24 @@ underlay boxed title={
 \DeclareDocumentEnvironment{Theorem*}{ +O{} +O{} }{\begin{box3}{\@Theorem@Title}[#1][#2][ColorB][\faCrosshairs]}{\end{box3}}
 \DeclareDocumentEnvironment{Axiom*}{ +O{} +O{} }{\begin{box3}{\@Axiom@Title}[#1][#2][ColorI][\faCompactDisc]}{\end{box3}}
 %%%%
+
 %%设置引理盒子%%
+%盒子内脚注设置，使得脚注位于页面最下方而不是盒子最下方
+\makesavenoteenv{box4}
+%%
 \DeclareTColorBox{box4}{+O{} +m +O{} +O{} O{ColorA} O{\faDiceD20}}{
 ColorfulBox=#2/#3/#4/#5,
 %%%%
-underlay boxed title={
-\BoxTitleFont
+underlay boxed title={%
+\begingroup%
+\BoxTitleFont%
 \def\@BoxTitle@Radius{\dimexpr\baselineskip/2\relax}%0.85
 \draw[white,fill=white,line width=10.0pt]([xshift=\@BoxTitle@Radius,yshift=-\@BoxTitle@Radius]title.north west)circle({8*\@BoxTitle@Radius/7});
 \draw[white,fill=white,rounded corners=\@BoxTitle@Radius,line width=10.0pt](title.north west)rectangle(title.south east);
 \draw[#5,fill=#5,rounded corners=\@BoxTitle@Radius,ultra thick](title.north west)rectangle(title.south east);
 \draw[#5,fill=white,line width=2.75pt]([xshift=\@BoxTitle@Radius,yshift=-\@BoxTitle@Radius]title.north west)circle({8*\@BoxTitle@Radius/7});
-\node[circle,align=center,inner sep=0mm,font=\BoxLogoFont,text=#5](P)at([xshift=\@BoxTitle@Radius,yshift=-\@BoxTitle@Radius]title.north west){#6};},
+\node[circle,align=center,inner sep=0mm,font=\BoxLogoFont,text=#5](P)at([xshift=\@BoxTitle@Radius,yshift=-\@BoxTitle@Radius]title.north west){#6};
+\endgroup},
 #1}
 
 %%%%
@@ -3114,8 +3302,8 @@ underlay boxed title={
 \def\@Proposition@Number{\the@prenumber.\the@prop}
 
 %%编号引理盒子%%
-\DeclareDocumentEnvironment{Lemma}{ +O{} +O{}}{\begin{box4}[phantom={
-\if@mainmatter
+\DeclareDocumentEnvironment{Lemma}{ +O{} +O{}}{\begin{box4}[phantom={%
+\if@mainmatter%
 \refstepcounter{@lem}
 \fi}]{%
 \@Lemma@Title%
@@ -3124,8 +3312,8 @@ underlay boxed title={
 \fi}
 [#1][#2][ColorE][\faGlobe]}{\end{box4}}
 %%%%
-\DeclareDocumentEnvironment{Corollary}{ +O{} +O{} }{\begin{box4}[phantom={
-\if@mainmatter
+\DeclareDocumentEnvironment{Corollary}{ +O{} +O{} }{\begin{box4}[phantom={%
+\if@mainmatter%
 \refstepcounter{@colry}
 \fi
 }]{%
@@ -3135,8 +3323,8 @@ underlay boxed title={
 \fi}
 [#1][#2][ColorG][\faCompactDisc]}{\end{box4}}
 %%%%
-\DeclareDocumentEnvironment{Proposition}{ +O{} +O{} }{\begin{box4}[phantom={
-\if@mainmatter
+\DeclareDocumentEnvironment{Proposition}{ +O{} +O{} }{\begin{box4}[phantom={%
+\if@mainmatter%
 \refstepcounter{@prop}
 \fi
 }]{%
@@ -3152,17 +3340,22 @@ underlay boxed title={
 \DeclareDocumentEnvironment{Proposition*}{ +O{} +O{} }{\begin{box4}{\@Propostion@Title}[#1][#2][ColorH][\faGlobe]}{\end{box4}}
 %%%%
 %设置拓展盒子%%
+%盒子内脚注设置，使得脚注位于页面最下方而不是盒子最下方
+\makesavenoteenv{box5}
+%%
 \DeclareTColorBox{box5}{+O{} +m +O{} +O{} O{ColorA} O{\faLink}}{
 ColorfulBox=#2/#3/#4/#5,
 %%%%
-underlay boxed title={
-\BoxTitleFont
+underlay boxed title={%
+\begingroup%
+\BoxTitleFont%
 \def\@BoxTitle@Radius{\dimexpr\baselineskip/2\relax}%0.85
 \draw[white,fill=white,rounded corners=\@BoxTitle@Radius,line width=10.0pt](title.north west)rectangle(title.south east);
 \draw[#5,fill=#5,rounded corners=\@BoxTitle@Radius,ultra thick](title.north west)rectangle(title.south east);
 \fill[white,draw=white,line width=10.0pt]([xshift=\@BoxTitle@Radius,yshift=-\@BoxTitle@Radius]title.north west)circle({8*\@BoxTitle@Radius/7});
 \fill[white,draw=#5,line width=2.75pt]([xshift=\@BoxTitle@Radius,yshift=-\@BoxTitle@Radius]title.north west)circle({8*\@BoxTitle@Radius/7});
-\node[circle,align=center,inner sep=0mm,font=\BoxLogoFont,text=#5] at([xshift=\@BoxTitle@Radius,yshift=-\@BoxTitle@Radius]title.north west){#6};},
+\node[circle,align=center,inner sep=0mm,font=\BoxLogoFont,text=#5] at([xshift=\@BoxTitle@Radius,yshift=-\@BoxTitle@Radius]title.north west){#6};
+\endgroup},
 #1}
 
 \DeclareDocumentEnvironment{Link}{ +O{} +O{} }{\begin{box5}{拓展链接}[#1][#2][ColorE][\faLink]}{\end{box5}}
@@ -3172,11 +3365,15 @@ underlay boxed title={
 {\end{box5}}
 
 %%设置案例盒子%%
-\DeclareTColorBox{box6}{+O{} +m +O{} +O{} O{ColorA} O{\faFile*}}{
+%盒子内脚注设置，使得脚注位于页面最下方而不是盒子最下方
+\makesavenoteenv{box6}
+%%
+\DeclareTColorBox{box6}{+O{} +m +O{} +O{} O{ColorA} O{\faFile*}}{%
 ColorfulBox=#2/#3/#4/#5,
 %%%%
-underlay boxed title={
-\BoxTitleFont
+underlay boxed title={%
+\begingroup%
+\BoxTitleFont%
 \def\@BoxTitle@Radius{\dimexpr\baselineskip/2\relax}%0.85
 \draw[white,fill=white,line width=10.0pt,rounded corners=\@BoxTitle@Radius](title.north east)rectangle(title.south west);
 \draw[#5!90,fill=#5!90,line width=2.0pt,rounded corners=\@BoxTitle@Radius](title.north east)rectangle(title.south west);
@@ -3199,14 +3396,18 @@ underlay boxed title={
 (title.south east)[rounded corners=\@BoxTitle@Radius]--cycle;
 \fi
 %%%%
-\node[circle,align=center,inner sep=0mm,font=\BoxLogoFont,text=#5](T)at([xshift=\@BoxTitle@Radius,yshift=-\@BoxTitle@Radius]title.north west){#6};},
+\node[circle,align=center,inner sep=0mm,font=\BoxLogoFont,text=#5](T)at([xshift=\@BoxTitle@Radius,yshift=-\@BoxTitle@Radius]title.north west){#6};
+\endgroup},
 #1}
 
 \DeclareDocumentEnvironment{Information}{ +O{} +O{} }{\begin{box6}{资料卡片}[#1][#2][ColorI][\faFile*]}{\end{box6}}
 \DeclareDocumentEnvironment{Application}{ +O{} +O{} }{\begin{box6}{案例分析}[#1][#2][ColorA][\faTools]}{\end{box6}}
 \DeclareDocumentEnvironment{Review}{ +O{} +O{} }{\begin{box6}{知识回顾}[#1][#2][ColorC][\faFan]}{\end{box6}}
 
-%%%%
+%%设置色块盒子%%
+%盒子内脚注设置，使得脚注位于页面最下方而不是盒子最下方
+\makesavenoteenv{box7}
+%%
 \DeclareTColorBox{box7}{ +O{} +O{} }{BlockBox=#2,#1}
 %%
 \newenvironment{Proof}{\begin{box7}[][\faBars~~证明]}{\end{box7}}
@@ -3215,7 +3416,10 @@ underlay boxed title={
 %%
 \DeclareDocumentEnvironment{Block}{ +O{} }{\begin{box7}[][#1]}{\end{box7}}
 
-%%%%
+%%设置英文与代码盒子%%
+%盒子内脚注设置，使得脚注位于页面最下方而不是盒子最下方
+\makesavenoteenv{box8}
+%%
 \DeclareTColorBox{box8}{+O{} +m +O{} +O{} O{ColorA} O{}}{CodeBox=#2/#3/#4/#5/#6,#1}
 
 \NewDocumentEnvironment{Comprehension}{ +O{} +O{} }{\begin{box8}[step=@comprehension]{阅读理解{\sffamily\the@comprehension}}[#1][#2][ColorB]}{\end{box8}}
@@ -3259,8 +3463,10 @@ minted language=#2}
 
 %%%%
 %设置注释盒子%%
+%盒子内脚注设置，使得脚注位于页面最下方而不是盒子最下方
+\makesavenoteenv{box9}
+%%
 \DeclareTColorBox{box9}{ +O{} O{ColorA} O{\faCommentDots} +m }{NoteBox=#2/{#3~~#4},#1}
-
 %%%%
 %%+m表示允许换行、空行的参数%%
 \DeclareDocumentCommand{\RelaInfo}{ s +m }
