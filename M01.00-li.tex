@@ -7,18 +7,62 @@
 \begin{Appendix}
 
 
-\chapter{附录}
-\begin{Paracol}
+\lipsum[1-4]
+
+\the\defaulttextheight
+
+
+\chapter{附录附录附录附录附录附录附录附录附录附录附录附录}
+
+%\FontSizeSet{14pt}{42pt}
+
+\begin{paracol}{2}
+
+\footnote{测试文字}
+\lipsum[1-2]\footnote{测试文字}
+
+
+\lipsum[3-4]
+
+
+\end{paracol}
+
+
+\footnote{测试文字}
+	\lipsum[1-2]
+
+
+
+
+
+
+\lipsum[3-7]
+
+
+\begin{paracol}{2}
+\the\defaulttextheight
+
 \lipsum
-\end{Paracol}
+\switchcolumnsloppy
+
+\zhlipsum[1]
+%\footnote{呀嘞呀嘞}
+\end{paracol}
+\lipsum
 
 \begin{Example}
-	
+	\the\textheight
 \end{Example}
 
-\chapter{附录}
-\zhlipsum[1]
 
+
+%\addtocontents{toc}{\protect\begin{minipage}{2\linewidth/3}}
+\chapter{附录}
+%\begin{tikzpicture}[overlay,remember picture]
+%	\draw(current page text area.south east)rectangle(current page text area.north west);
+%\end{tikzpicture}
+\lipsum[1]
+%\zhlipsum
 
 \section{附录测试}
 
@@ -47,6 +91,12 @@
 \end{Topic}
 
 \section{附录测试}
+
+
+
+
+{\FontSizeSet[1.2]{14pt}\zhlipsum[1]}
+
 	
 \end{Appendix}
 
@@ -72,15 +122,25 @@
 
 \subsubsection*{看目录}
 
+
+
+%\addtocontents{toc}{\protect\end{minipage}}
+%
+%\addtocontents{toc}{\protect\begin{minipage}{\linewidth/3}\protect\end{minipage}}
+
 \chapter{彩色计时器}
 
 \section{测量物体，包含长度测量}
+
+\footnote{测试文字}
+
+
 %\end{Topic}
 
 \chaptersaying{文王拘而演周易，仲尼厄而作春秋。}
 \chapter{测量}
 
-\zhlipsum[1]
+\footnote{看看我}\zhlipsum
 
 \section{测量物体，包含长度测量}
 
@@ -89,9 +149,12 @@
 \end{Example}
 
 
+
+
 \section{测量物体，包含长度测量}
 
 \section{测量物体，包含长度测量}
+\footnote{测试文字}\lipsum
 
 
 
@@ -107,7 +170,7 @@
 \begin{Point*}
 	学习完这一单元，你应当能够: 识别国际单位制(SI)中的基本量; 正确称呼国际单位制中最常用的词头; 利用链环变换法改变单位(这里是对于长度、面积和体积); 说明米是如何用真空中光速来定义的。
 	\tcblower
-	\tcbsubtitle{本节重点}
+	\tcbsubtitle{本节重点\footnote{脚注}}
 	物理学是以物理量的测量为基础的。一些物理量被选作基本物理量; 每一种基本物理量都已经通过一种标准来定义并给定测量的单位。另一些物理量是用这些基本物理量和它们的标准及单位来定义。
 %	
 %	本书主要用的单位制是国际单位制(SI)。基本物理量的标准必须都是可以得到并且是不变的，这些基本量的标准都已经通过国际协议确立了。这些标准用在所有的物理测量中，基本量和从这些基本量导出的量都是如此。
@@ -118,9 +181,7 @@
 \end{Point*}
 
 测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字
-\makeatletter
-%\the\KV@Gm@lmargin
-\makeatother
+
 
 
 %\begin{Case*}
@@ -129,22 +190,23 @@
 
 
 
-\begin{Paracol}
+\begin{paracol}{2}
 	\subsection{什么是物理学？}
 
 	
 	科学和工程学建立在测量和比较的基础上。因此，我们就需要关于如何测量和比较物体的规则，并且我们还需要通过实验来建立这种测量和比较的单位。物理学(以及工程学)的一个目的就是设计和实施这些实验。
-	\marginpar{测试文字测试文字测试文字测试文字测试文字测试文字}
+%	\marginpar{测试文字测试文字测试文字测试文字测试文字测试文字}
 	
 	例如，物理学家们尽力开发极其准确的时钟从而使任何时间或时间间隔都可以精确地确定和比较。你们可能要问，这样的准确度是否真正需要，或者是否值得花这么大的精力。这里给出一个是否值得的例子：如果没有极其准确的时钟的话，那么现在全世界范围的航行必不可少的全球定位系统(GPS)就会变得毫无意义。
-	\RelaInfo*{测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字}
+	\RelaInfo*{测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字%\footnote{看看我}
+	}
 	
 	\subsection{测量物体}
 	\NoteArea
 	
 	\subsubsection{测试文字}
 	
-	我们通过学习怎样测量物理学中的量来学习物理学。这些物理量包括长度、时间、质量、温度、压强和电流。
+	我们通过学习怎样测量物理学中的量来学习物理学。这些物理量包括长度、时间、质量、温度、压强和电流。\footnote{看看我}
 	
 	我们通过和一个标准相比较，用它们各自的单位来量度各个
 	
@@ -152,7 +214,7 @@
 	
 	
 	
-\end{Paracol}
+\end{paracol}
 
 \subsection{力的三要素}
 
@@ -183,14 +245,14 @@
 		\draw (-1,1)--(-1,1.1);
 		\draw (-0.6,1)--(-0.6,1.1);
 		\draw[-] (-1,1)--(-0.6,1);
-		\node at (-0.8,1.35){$\qty{20}{N}$};
+		\node at (-0.8,1.35){$20$N};
 	\end{tikzpicture}
 	\caption{图中的虚线表示力的作用线}
 \end{wrapfigure}
 为了直观地说明力的作用，常常用一根带箭头的线段来表示力．线段是按一定比
-例（标度）画出的，它的长短表示力的大小，它的指向表示力的方向，箭头或箭尾表示力的作用点，箭头所沿的直线叫做力的作用线．这种表示力的方法，叫做\textbf{力的图示}．图1.1中表示的是作用在小车上的$\qty{100}{N}$的力．
+例（标度）画出的，它的长短表示力的大小，它的指向表示力的方向，箭头或箭尾表示力的作用点，箭头所沿的直线叫做力的作用线．这种表示力的方法，叫做\textbf{力的图示}．图1.1中表示的是作用在小车上的$100$N的力．
 
-\subsection{力的分类}
+\subsection{力的分类\protect\footnote{测试文字}}
 
 我们从初中开始学习物理以来，见过的力的名称已经相当多了．各种力可以用不同的方法来分类．一种是根据力的性质来分类的，如重力、弹力、摩擦力、分子力、电磁力等；另一种是根据力的效果来分类的，如拉力、压力、支持力、动力、阻力等等．拉力、压力、支持力实际上都是弹力，只是效果不同．不论是什么性质的力，只要效果是加快物体的运动，就可以叫它为动力；效果是阻碍物体的运动，就可以叫它为阻力．今后我们还会遇到根据效果来命名的力的名称．
 
@@ -205,7 +267,7 @@
 \end{Example}
 
 \begin{Example}
-	测试文字测试文字
+	测试文字测试文字\footnote{看看我}
 \end{Example}
 
 
@@ -279,8 +341,8 @@
 	\end{QuestionItem}
 
 
-\begin{Definition}[测试文字]
-	测试文字
+\begin{Definition}[测试文字\footnote{测试脚注}]
+	测试文字\footnote{脚注}
 	\begin{flalign}
 		\Psi=\int_\Omega\left[f\left(\phi\right)+\kappa\left|\nabla\phi\right|^2\right]{\rm d}V
 	\end{flalign}
@@ -305,11 +367,13 @@
 
 
 \begin{Corollary}
-	测试文字
+	\lipsum[1]
 \end{Corollary}
 
-\begin{Lemma}
-	测试文字
+\begin{Lemma}[测试文字\footnote{脚注}]
+%	\def\@mpfn{footnote}%
+%	\def\thempfn{\thefootnote}%
+	测试文字\footnote{看看我}
 \end{Lemma}
 
 
@@ -323,12 +387,21 @@
 	\tcbsubtitle{测试文字}
 	\zhlipsum[2]
 	\tcbsubtitle{副标题}
-	\zhlipsum[2]
+	\zhlipsum[2]\footnote{看看我}
 \end{Lemma*}
 
 
+
+\begin{linenumbers} % 只对这部分内容编号
+\lipsum[1]
+\end{linenumbers}
+
+
+
+
+
 \begin{multicols}{3}
-\LongHeading{测试文字}
+\LongHeading{测试文字\footnote{看看我}}
 测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字
 \LongHeading{测试文字}
 测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字
@@ -347,6 +420,10 @@
 
 \Speaking
 
+\AdjustiveHeading{测试文字\footnote{看看我}}
+
+\lipsum[1][1-5]
+
 \begin{UnnumberedItem}[3]
 
 \item test
@@ -363,13 +440,13 @@
 \begin{NumberedItem}
 	\item 测试文字
 	\item test
-	\item testqjply
+	\item testqjply\footnote{看看我}
 \end{NumberedItem}
 
 
 
 \begin{Proof}
-	\lipsum[1]
+	\lipsum[1]\footnote{看看我}
 	\tcblower
 	\lipsum
 \end{Proof}
@@ -397,8 +474,10 @@
 
 
 
-\begin{Comprehension}
-	\lipsum
+\begin{Comprehension}[测试文字\footnote{脚注}]
+%	\pagewiselinenumbers
+%	\internallinenumbers
+		\lipsum
 	\begin{NumberedItem}
 		\item 测试文字
 	\end{NumberedItem}
@@ -412,8 +491,38 @@
 import pytorch as pt
 import numpy as np
 import pandas as pd
+import pytorch as pt
+import numpy as np
+import pandas as pd
+import pytorch as pt
+import numpy as np
+import pytorch as pt
+import numpy as np
+import pandas as pd
+import pytorch as pt
+import numpy as np
+import pandas as pd
+import pandas as pd
+import pytorch as pt
+import numpy as np
+import pandas as pd
+import pytorch as pt
+import numpy as np
+import pandas as pd
 \end{PythonBox}
 
+
+
+
+
+
+
+
+
+
+
+
+%\lipsum[1]
 
 \Homework
 \Basis
@@ -449,7 +558,8 @@ import pandas as pd
 
 \subsection{测试文字}
 \subsubsection{测试文字}
-
+\subsubsection{测试文字}
+\subsubsection{测试文字}
 
 \begin{Example}
 	测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字
@@ -495,6 +605,8 @@ import pandas as pd
 
 
 \chapter{测试文字}
+
+\zhlipsum
 
 \section{测试文字}
 

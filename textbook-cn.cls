@@ -427,6 +427,14 @@ BoldFont=FZCukai.ttf]
 \pcol@iflushfloats\z@\pcol@ncolleft\@outputbox
 \@outputpage}}
 %%%%
+%%添加了\sloppy命令的\switchcolumn，实现对狭长列对齐的优化%%
+\NewDocumentCommand{\switchcolumnsloppy}{s O{1} s +O{}}{%
+\IfBooleanTF{#1}{%
+\IfBooleanTF{#3}{\switchcolumn*[#2]*[#4]}{\switchcolumn*[#2][#4]}
+}{%
+\IfBooleanTF{#3}{\switchcolumn[#2]*}{\switchcolumn[#2]}
+}
+\sloppy}
 \makeatother
 
 %%%%%%%%%%%%%%%%%%%% 图表插入宏包 %%%%%%%%%%%%%%%%%%%%
@@ -549,15 +557,18 @@ BoldFont=FZCukai.ttf]
 %%%%%%%%%%%%%%%%%%%% 盒子和列表宏包 %%%%%%%%%%%%%%%%%%%%
 \RequirePackage[most]{tcolorbox}%彩色盒子
 \tcbuselibrary{xparse,minted}
+\makesavenoteenv{tcolorbox}%确保tcb环境内的脚注正确生成
 \RequirePackage{empheq}%数学公式盒子
 \RequirePackage{adjustbox,varwidth}%自动调整字体大小的盒子%固定可变长度盒子
+\makesavenoteenv{varwidth}%确保varwidth环境内的脚注正确生成
 \RequirePackage{enumitem,hlist}%控制列表环境格式%对齐列表环境
 \RequirePackage{listings,minted}%伪代码环境
 \usemintedstyle{xcode}
 %为了使宏包minted正常工作，需要在xelatex编译器参数中添加-shell-escape
 \RequirePackage{lineno}%行号宏包
+\modulolinenumbers[5]%每5行显示一个行号
 \renewcommand{\linenumberfont}{\color{ColorA}\LineNumFont}%修改行号字体
-\setlength{\linenumbersep}{5.5mm}%修改行号与正文的间距
+\setlength{\linenumbersep}{5.0mm}%修改行号与正文的间距
 
 %%%%%%%%%%%%%%%%%%%% 绘图与表格宏包 %%%%%%%%%%%%%%%%%%%%
 \RequirePackage{pifont,fontawesome5}%图标
@@ -565,7 +576,8 @@ BoldFont=FZCukai.ttf]
 \RequirePackage{pgfplots,tikz,tikzpagenodes,tkz-euclide,eso-pic}%绘图
 \pgfplotsset{compat=1.18}
 \usetikzlibrary{fit,calc,math,scopes,backgrounds,positioning,intersections,decorations,shadows,shadings,fadings,arrows,arrows.meta,patterns.meta,patterns,shapes.geometric,decorations.footprints}
-\makesavenoteenv{tikzpicture}
+\makesavenoteenv{tikzpicture}%确保tikz环境内的脚注正确生成
+\makesavenoteenv{pgfonlayer}%确保pgfonlayer环境内的脚注正确生成
 \makeatletter
 %%修改addtolength的作用域%%
 \newcommand{\gaddtolength}[1]{\calc@assign@skip{\global\advance#1}}
@@ -870,6 +882,8 @@ BoldFont=FZCukai.ttf]
 \node[font=\ThumbFont,text=white,outer sep=0mm,inner xsep=2.5mm,inner ysep=3.5mm,anchor=east](T)at([xshift=-0.1cm,yshift=\MarkY]B){%
 \rotatebox[origin=c]{90}{%
 \begin{varwidth}{\DeltaH}
+\def\@mpfn{footnote}%修改minipage中的脚注计数器
+\def\thempfn{\thefootnote}%
 \centering\strut\@title\strut
 \end{varwidth}}%
 };
@@ -883,6 +897,8 @@ BoldFont=FZCukai.ttf]
 \begin{pgfonlayer}{@MainPage@Top}
 \node[font=\PartNumberFont,text=white,outer sep=0mm,inner xsep=3.5mm,inner ysep=2.5mm,anchor=south](PTN)at([yshift=0.1cm]I){%
 \begin{varwidth}{\textwidth/3}%
+\def\@mpfn{footnote}%修改minipage中的脚注计数器
+\def\thempfn{\thefootnote}%
 \centering\strut\firstrightxmark\strut
 \end{varwidth}};
 \end{pgfonlayer}
@@ -924,6 +940,8 @@ BoldFont=FZCukai.ttf]
 \node[font=\ThumbFont,text=white,outer sep=0mm,inner xsep=2.5mm,inner ysep=3.5mm,anchor=west](T)at([xshift=0.1cm,yshift=\MarkY]B){%
 \rotatebox[origin=c]{-90}{%
 \begin{varwidth}{\DeltaH}
+\def\@mpfn{footnote}%修改minipage中的脚注计数器
+\def\thempfn{\thefootnote}%
 \centering\strut\@title\strut
 \end{varwidth}}%
 };
@@ -937,6 +955,8 @@ BoldFont=FZCukai.ttf]
 \begin{pgfonlayer}{@MainPage@Top}
 \node[font=\PartNumberFont,text=white,outer sep=0mm,inner xsep=3.5mm,inner ysep=2.5mm,anchor=south](PTN)at([yshift=0.1cm]I){%
 \begin{varwidth}{\textwidth/3}%
+\def\@mpfn{footnote}%修改minipage中的脚注计数器
+\def\thempfn{\thefootnote}%
 \centering\strut\firstleftxmark\strut
 \end{varwidth}};
 \end{pgfonlayer}
@@ -1044,6 +1064,8 @@ BoldFont=FZCukai.ttf]
 %%部分编号%%
 \node[align=flush right,anchor=south east,font=\PartLabelFont,text=ColorA,inner xsep=0mm](NL)at([yshift=\@Part@StripeWidth+0.25cm]U){%
 \begin{varwidth}{\textwidth-5.0cm}%
+\def\@mpfn{footnote}%修改minipage中的脚注计数器
+\def\thempfn{\thefootnote}%
 \strut#1\strut
 \end{varwidth}};
 %%页面中部色块坐标2%%
@@ -1064,11 +1086,15 @@ BoldFont=FZCukai.ttf]
 %%部分名%%
 \node[align=flush right,anchor=north east,font=\PartNameFont,text=ColorA,inner xsep=0mm](PT)at([yshift=-\@Part@StripeWidth-0.25cm]X){%
 \begin{varwidth}{\textwidth-2.45cm}%
+\def\@mpfn{footnote}%修改minipage中的脚注计数器
+\def\thempfn{\thefootnote}%
 \strut#2\strut
 \end{varwidth}};
 %%部分简介%%
 \node[align=flush right,anchor=north east,font=\itshape\kaiti,text=ColorA,inner xsep=0mm](IT)at([yshift=-0.5cm]PT.south east){%
 \begin{varwidth}{\textwidth-2.45cm}%
+\def\@mpfn{footnote}%修改minipage中的脚注计数器
+\def\thempfn{\thefootnote}%
 \@partintro
 \end{varwidth}};
 %%部分目录%%
@@ -1131,6 +1157,8 @@ BoldFont=FZCukai.ttf]
 %%部分编号%%
 \node[align=flush left,anchor=south west,font=\PartLabelFont,text=ColorA,inner xsep=0mm](NL)at([yshift=\@Part@StripeWidth+0.25cm]U){%
 \begin{varwidth}{\textwidth-5.0cm}%
+\def\@mpfn{footnote}%修改minipage中的脚注计数器
+\def\thempfn{\thefootnote}%
 \strut#1\strut
 \end{varwidth}};
 %%页面中部色块坐标2%%
@@ -1152,11 +1180,15 @@ BoldFont=FZCukai.ttf]
 %%部分名%%
 \node[align=flush left,anchor=north west,font=\PartNameFont,text=ColorA,inner xsep=0mm](PT)at([yshift=-\@Part@StripeWidth-0.25cm]X){%
 \begin{varwidth}{\textwidth-2.45cm}%
+\def\@mpfn{footnote}%修改minipage中的脚注计数器
+\def\thempfn{\thefootnote}%
 \strut#2\strut
 \end{varwidth}};
 %%部分简介%%
 \node[align=flush left,anchor=north west,font=\itshape\kaiti,text=ColorA,inner xsep=0mm](IT)at([yshift=-0.5cm]PT.south west){%
 \begin{varwidth}{\textwidth-2.45cm}%
+\def\@mpfn{footnote}%修改minipage中的脚注计数器
+\def\thempfn{\thefootnote}%
 \@partintro
 \end{varwidth}};
 %%部分目录%%
@@ -1246,6 +1278,8 @@ BoldFont=FZCukai.ttf]
 \node[inner sep=0mm,outer sep=0mm,anchor=west](HC3)at(HC2.east){\@HalfCircle@Label{ColorA!60}{\@Part@Star@LabelRadius}};
 \node[align=flush left,inner sep=0mm,outer sep=0mm,anchor=north west,text=ColorA,font=\PartNameFont](PST)at([xshift=0.5cm,yshift=\@Part@Star@LabelYShift]HC3.north east){%
 \begin{varwidth}{\textwidth-5.0cm}
+\def\@mpfn{footnote}%修改minipage中的脚注计数器
+\def\thempfn{\thefootnote}%
 \strut#1\strut
 \end{varwidth}};}};
 \endgroup%
@@ -1268,11 +1302,15 @@ BoldFont=FZCukai.ttf]
 %%部分副标题%%
 \node[align=flush left,anchor=north east,font=\PartNameFont,text=ColorA,inner xsep=0mm](PSST)at([yshift=-\@Part@StripeWidth-0.25cm]X){%
 \begin{varwidth}{\textwidth-2.45cm}%
+\def\@mpfn{footnote}%修改minipage中的脚注计数器
+\def\thempfn{\thefootnote}%
 \expandafter\ifblank\expandafter{\@partsubtitle}{\relax}{\strut\@partsubtitle\strut}%要展开宏再进行非空判断
 \end{varwidth}};
 %%部分简介%%
 \node[align=flush left,anchor=north east,font=\itshape\kaiti,text=ColorA,inner xsep=0mm](IT)at([yshift=-0.5cm]PSST.south east){%
 \begin{varwidth}{\textwidth-2.45cm}%
+\def\@mpfn{footnote}%修改minipage中的脚注计数器
+\def\thempfn{\thefootnote}%
 \@partintro
 \end{varwidth}};
 %%部分目录%%
@@ -1343,6 +1381,8 @@ BoldFont=FZCukai.ttf]
 \node[inner sep=0mm,outer sep=0mm,anchor=west](HC3)at(HC2.east){\@HalfCircle@Label{ColorA!60}{\@Part@Star@LabelRadius}};
 \node[align=flush left,inner sep=0mm,outer sep=0mm,anchor=north west,text=ColorA,font=\PartNameFont](PST)at([xshift=0.5cm,yshift=\@Part@Star@LabelYShift]HC3.north east){%
 \begin{varwidth}{\textwidth-5.0cm}
+\def\@mpfn{footnote}%修改minipage中的脚注计数器
+\def\thempfn{\thefootnote}%
 \strut#1\strut
 \end{varwidth}};}};
 \endgroup%
@@ -1365,11 +1405,15 @@ BoldFont=FZCukai.ttf]
 %%部分副标题%%
 \node[align=flush left,anchor=north west,font=\PartNameFont,text=ColorA,inner xsep=0mm](PSST)at([yshift=-\@Part@StripeWidth-0.25cm]X){%
 \begin{varwidth}{\textwidth-2.45cm}%
+\def\@mpfn{footnote}%修改minipage中的脚注计数器
+\def\thempfn{\thefootnote}%
 \expandafter\ifblank\expandafter{\@partsubtitle}{\relax}{\strut\@partsubtitle\strut}%要展开宏再进行非空判断
 \end{varwidth}};
 %%部分简介%%
 \node[align=flush left,anchor=north west,font=\itshape\kaiti,text=ColorA,inner xsep=0mm](IT)at([yshift=-0.5cm]PSST.south west){%
 \begin{varwidth}{\textwidth-2.45cm}%
+\def\@mpfn{footnote}%修改minipage中的脚注计数器
+\def\thempfn{\thefootnote}%
 \@partintro
 \end{varwidth}};
 %%部分目录%%
@@ -1485,12 +1529,17 @@ BoldFont=FZCukai.ttf]
 %%编号%%
 \draw[ColorA,fill=ColorA,sharp corners]node[append after command={(T.south west)[rounded corners=2.5mm]--(T.south east)[sharp corners]--([yshift=\@toplen-2\@Chapter@LabelYShift@Up]T.north east)--([yshift=\@toplen-2\@Chapter@LabelYShift@Up]T.north west)[rounded corners=2.5mm]--cycle},anchor=north east,font=\ChapterLabelFont,text=white,inner xsep=\@Chapter@LabelSep,inner ysep=0mm,outer sep=0mm](T)at([yshift=\@Chapter@LabelYShift@Up]N){
 \begin{varwidth}{\textwidth/3}
+\def\@mpfn{footnote}%修改minipage中的脚注计数器
+\def\thempfn{\thefootnote}%
 \strut#1\strut
 \end{varwidth}};
 %%渐变带%%
 \path[fill=ColorB,opacity=0.4]([xshift=\@outerlen,yshift=-3\@Chapter@LabelYShift@Down/4]T.south east)rectangle([xshift=-\@innerlen-\textwidth,yshift=-3\@Chapter@LabelYShift@Down/4-\@Chapter@StripeWidth]T.south east);
 %%标题%%
-\node[inner sep=0mm,anchor=north east,font=\ChapterNameFont,text=ColorA](P)at([yshift=-4\@Chapter@LabelYShift@Down/3-\@Chapter@StripeWidth]T.south east){\begin{varwidth}{\textwidth}
+\node[inner sep=0mm,anchor=north east,font=\ChapterNameFont,text=ColorA](P)at([yshift=-4\@Chapter@LabelYShift@Down/3-\@Chapter@StripeWidth]T.south east){%
+\begin{varwidth}{\textwidth}
+\def\@mpfn{footnote}%修改minipage中的脚注计数器
+\def\thempfn{\thefootnote}%
 \strut#2\strut
 \end{varwidth}};
 \end{pgfonlayer}
@@ -1539,12 +1588,17 @@ BoldFont=FZCukai.ttf]
 %%编号%%
 \draw[ColorA,fill=ColorA,sharp corners]node[append after command={(T.south west)[rounded corners=2.5mm]--(T.south east)[sharp corners]--([yshift=\@toplen-2\@Chapter@LabelYShift@Up]T.north east)--([yshift=\@toplen-2\@Chapter@LabelYShift@Up]T.north west)[rounded corners=2.5mm]--cycle},anchor=north west,font=\ChapterLabelFont,text=white,inner xsep=\@Chapter@LabelSep,inner ysep=0mm,outer sep=0mm](T)at([yshift=\@Chapter@LabelYShift@Up]N){%
 \begin{varwidth}{\textwidth/3}%
+\def\@mpfn{footnote}%修改minipage中的脚注计数器
+\def\thempfn{\thefootnote}%
 \strut#1\strut
 \end{varwidth}};
 %%渐变带%%
 \path[fill=ColorB,opacity=0.4]([xshift=-\@outerlen,yshift=-3\@Chapter@LabelYShift@Down/4]T.south west)rectangle([xshift=\@innerlen+\textwidth,yshift=-3\@Chapter@LabelYShift@Down/4-\@Chapter@StripeWidth]T.south west);
 %%标题%%
-\node[inner sep=0mm,anchor=north west,font=\ChapterNameFont,text=ColorA](P)at([yshift=-4\@Chapter@LabelYShift@Down/3-\@Chapter@StripeWidth]T.south west){\begin{varwidth}{\textwidth}
+\node[inner sep=0mm,anchor=north west,font=\ChapterNameFont,text=ColorA](P)at([yshift=-4\@Chapter@LabelYShift@Down/3-\@Chapter@StripeWidth]T.south west){%
+\begin{varwidth}{\textwidth}
+\def\@mpfn{footnote}%修改minipage中的脚注计数器
+\def\thempfn{\thefootnote}%
 \strut#2\strut
 \end{varwidth}};
 \end{pgfonlayer}
@@ -1617,6 +1671,8 @@ BoldFont=FZCukai.ttf]
 \node[inner sep=0mm,outer sep=0mm,anchor=west](P2)at(P1.east){\@HalfCircle@Label{ColorA!80}{\@Chapter@Star@LabelRadius}};
 \node[inner sep=0mm,outer sep=0mm,anchor=north west,text=ColorA,font=\ChapterLabelFont](P3)at([xshift=\@Chapter@Star@LabelNameXSep,yshift=\@Chapter@Star@LabelYShift]P2.north east){%
 \begin{varwidth}{\textwidth-2\@Chapter@Star@LabelRadius-\@Chapter@Star@LabelNameXSep}
+\def\@mpfn{footnote}%修改minipage中的脚注计数器
+\def\thempfn{\thefootnote}%
 \strut#1\strut
 \end{varwidth}};}};
 \endgroup%
@@ -1627,6 +1683,8 @@ BoldFont=FZCukai.ttf]
 %%副标题%%
 \node[inner sep=0mm,outer sep=0mm,anchor=north east,text=ColorA,font=\ChapterNameFont,align=flush right](P)at([yshift=-4\@Chapter@LabelYShift@Down/3-\@Chapter@StripeWidth]TT.south east){%
 \begin{varwidth}{2\textwidth/3}
+\def\@mpfn{footnote}%修改minipage中的脚注计数器
+\def\thempfn{\thefootnote}%
 \strut#2\strut
 \end{varwidth}};
 \end{pgfonlayer}
@@ -1685,6 +1743,8 @@ BoldFont=FZCukai.ttf]
 \node[inner sep=0mm,outer sep=0mm,anchor=west](P2)at(P1.east){\@HalfCircle@Label{ColorA!80}{\@Chapter@Star@LabelRadius}};
 \node[inner sep=0mm,outer sep=0mm,anchor=north west,text=ColorA,font=\ChapterLabelFont](P3)at([xshift=\@Chapter@Star@LabelNameXSep,yshift=\@Chapter@Star@LabelYShift]P2.north east){%
 \begin{varwidth}{\textwidth-2\@Chapter@Star@LabelRadius-\@Chapter@Star@LabelNameXSep}
+\def\@mpfn{footnote}%修改minipage中的脚注计数器
+\def\thempfn{\thefootnote}%
 \strut#1\strut
 \end{varwidth}};
 }};
@@ -1694,8 +1754,10 @@ BoldFont=FZCukai.ttf]
 \path[fill=ColorB,opacity=0.4]([xshift=\@innerlen,yshift=-3\@Chapter@LabelYShift@Down/4]TT.south east)rectangle([xshift=-\@outerlen,yshift=-3\@Chapter@LabelYShift@Down/4-\@Chapter@StripeWidth]TT.south west);
 %%
 %%副标题%%
-\node[inner sep=0mm,outer sep=0mm,anchor=north west,text=ColorA,font=\ChapterNameFont,align=flush left](P)at([yshift=-4\@Chapter@LabelYShift@Down/3-\@Chapter@StripeWidth]TT.south west){
+\node[inner sep=0mm,outer sep=0mm,anchor=north west,text=ColorA,font=\ChapterNameFont,align=flush left](P)at([yshift=-4\@Chapter@LabelYShift@Down/3-\@Chapter@StripeWidth]TT.south west){%
 \begin{varwidth}{2\textwidth/3}
+\def\@mpfn{footnote}%修改minipage中的脚注计数器
+\def\thempfn{\thefootnote}%
 \strut#2\strut
 \end{varwidth}};
 \end{pgfonlayer}
@@ -1853,6 +1915,8 @@ BoldFont=FZCukai.ttf]
 \pgfsetlayers{@Subsection@Bottom,main}%
 \node[text=white,font=\SubsectionFont,inner xsep=\@Subsection@Radius,inner ysep=0mm,outer sep=0mm](L){%
 \begin{varwidth}{\@Subsection@LabelCriticWidth}
+\def\@mpfn{footnote}%修改minipage中的脚注计数器
+\def\thempfn{\thefootnote}%
 %\AdjustStrut{0.9}%
 \strut#1\strut
 \end{varwidth}%
@@ -1861,6 +1925,8 @@ BoldFont=FZCukai.ttf]
 %%
 \node[text=ColorA,font=\SubsectionFont,inner xsep=\@Subsection@Radius,inner ysep=0mm,outer sep=0mm,minimum width=\linewidth-\@Subsection@LabelWidth,anchor=north west](N)at(L.north east){\hspace*{\@Subsection@LabelHSkip}%
 \begin{minipage}{\linewidth-\@Subsection@LabelWidth-2\@Subsection@Radius-\@Subsection@LabelHSkip}
+\def\@mpfn{footnote}%修改minipage中的脚注计数器
+\def\thempfn{\thefootnote}%
 %\AdjustStrut{0.9}%
 \strut#2\strut
 \end{minipage}};
@@ -1902,6 +1968,8 @@ BoldFont=FZCukai.ttf]
 \node[text=white,font=\SubsectionFont,inner xsep=\@Subsection@Star@Radius,inner ysep=0mm,outer sep=0mm](L){%
 \hspace*{\@Subsection@Star@Radius+0.5em}%
 \begin{varwidth}{\@Subsection@Star@LabelCriticWidth}
+\def\@mpfn{footnote}%修改minipage中的脚注计数器
+\def\thempfn{\thefootnote}%
 %\AdjustStrut{0.9}%
 \strut#1\strut
 \end{varwidth}};%
@@ -1910,6 +1978,8 @@ BoldFont=FZCukai.ttf]
 %%
 \node[text=ColorA,font=\SubsectionFont,inner xsep=\@Subsection@Star@Radius,inner ysep=0mm,outer sep=0mm,anchor=north west](N)at(L.north east){%
 \begin{minipage}{\linewidth-\@Subsection@Star@LabelWidth-2\@Subsection@Star@Radius-\@Subsection@Star@SRadius}
+\def\@mpfn{footnote}%修改minipage中的脚注计数器
+\def\thempfn{\thefootnote}%
 %\AdjustStrut{0.9}%
 \strut#2\strut
 \end{minipage}};
@@ -2002,6 +2072,8 @@ BoldFont=FZCukai.ttf]
 \node[text=white,inner xsep=\@ComplexHeading@Radius,inner ysep=0mm,outer sep=0mm](L){%
 \hspace*{\@ComplexHeading@Radius+0.5em}%
 \begin{varwidth}{\@ComplexHeading@LabelCriticWidth}
+\def\@mpfn{footnote}%修改minipage中的脚注计数器
+\def\thempfn{\thefootnote}%
 \strut#1\strut
 \end{varwidth}};%
 \pgfgetnodewidth(L)\@ComplexHeading@LabelWidth%
@@ -2009,6 +2081,8 @@ BoldFont=FZCukai.ttf]
 %%
 \node[text=ColorB,inner xsep=\@ComplexHeading@Radius,inner ysep=0mm,outer sep=0mm,anchor=north west](N)at(L.north east){%
 \begin{minipage}{\linewidth-\@ComplexHeading@LabelWidth-2\@ComplexHeading@Radius}
+\def\@mpfn{footnote}%修改minipage中的脚注计数器
+\def\thempfn{\thefootnote}%
 \strut#2\strut
 \end{minipage}};
 \pgfgetnodeheight(N)\@ComplexHeading@NameHeight%
@@ -2041,8 +2115,11 @@ BoldFont=FZCukai.ttf]
 \pgfsetlayers{@AdjustiveHeading@Bottom,main}%
 \node[draw=ColorB!75,fill=ColorB!75,rounded corners,text=white,outer sep=0mm,inner xsep=0.5em,inner ysep=0mm,align=center](E){%
 \begin{varwidth}{\linewidth/2}
+\def\@mpfn{footnote}%修改minipage中的脚注计数器
+\def\thempfn{\thefootnote}%
 \strut#1\strut
-\end{varwidth}};
+\end{varwidth}
+};
 \begin{pgfonlayer}{@AdjustiveHeading@Bottom}
 \draw[ColorB!50,fill=ColorB!50,line width=6.0pt,rounded corners=\@AdjustiveHeading@Radius]([xshift=-\@AdjustiveHeading@Radius]E.north west)rectangle([xshift=\@AdjustiveHeading@Radius]E.south east);
 \end{pgfonlayer}
@@ -2112,26 +2189,16 @@ BoldFont=FZCukai.ttf]
 \newcommand{\NoteArea}{%
 \marginpar{\upshape\LongHeading{\faPenSquare~~笔记区}}
 }
-%%%%
-\newcommand{\Listening}{%
-\AdjustiveHeading{\faMusic~~听力模块}
-}
-%%%%
-\newcommand{\Reading}{%
-\AdjustiveHeading{\faBookReader~~阅读模块}
-}
-%%%%
-\newcommand{\Speaking}{%
-\AdjustiveHeading{\faHeadSideMask~~口语模块}
-}
-%%%%
-\newcommand{\Writing}{%
-\AdjustiveHeading{\faPenNib~~写作模块}
-}
-%%%%
-\newcommand{\Homework}{%
-\section*{作业习题}
-}
+%%
+\newcommand{\Listening}{\AdjustiveHeading{\faMusic~~听力模块}}
+%%
+\newcommand{\Reading}{\AdjustiveHeading{\faBookReader~~阅读模块}}
+%%
+\newcommand{\Speaking}{\AdjustiveHeading{\faHeadSideMask~~口语模块}}
+%%
+\newcommand{\Writing}{\AdjustiveHeading{\faPenNib~~写作模块}}
+%%
+\newcommand{\Homework}{\section*{作业习题}}
 \makeatother
 
 %%%%%%%%%%%%%%%%%% 环境、文档层次和目录 %%%%%%%%%%%%%%%%%%%%%
@@ -2722,6 +2789,8 @@ BoldFont=FZCukai.ttf]
 \pgfsetlayers{@PartToc@Bottom,main}%
 \node[text=white,inner xsep=\@PartToc@Radius,inner ysep=0mm,outer sep=0mm](L){%
 \begin{varwidth}{\@PartToc@LabelCriticWidth}
+\def\@mpfn{footnote}%修改minipage中的脚注计数器
+\def\thempfn{\thefootnote}%
 %\AdjustStrut{0.9}%
 \strut#1\strut
 \end{varwidth}};
@@ -2730,6 +2799,8 @@ BoldFont=FZCukai.ttf]
 %%
 \node[text=ColorA,inner xsep=\@PartToc@Radius,inner ysep=0mm,outer sep=0mm,minimum width=\linewidth-\@PartToc@LabelWidth,anchor=north west](N)at(L.north east){%
 \begin{minipage}{\linewidth-\@PartToc@LabelWidth-2\@PartToc@Radius+1.0mm}
+\def\@mpfn{footnote}%修改minipage中的脚注计数器
+\def\thempfn{\thefootnote}%
 %\AdjustStrut{0.9}%
 \strut#2\strut
 \end{minipage}};
@@ -2876,6 +2947,8 @@ BoldFont=FZCukai.ttf]
 \node[text=white,inner sep=0mm,outer sep=0mm](L){%
 \hspace*{\@Example@Radius}%
 \begin{varwidth}{\@Example@LabelCriticWidth}
+\def\@mpfn{footnote}%修改minipage中的脚注计数器
+\def\thempfn{\thefootnote}%
 %\AdjustStrut{0.75}%
 \strut#1\strut
 \end{varwidth}%
@@ -2886,6 +2959,8 @@ BoldFont=FZCukai.ttf]
 %%
 \node[text=#3,inner xsep=\@Example@Radius,inner ysep=0mm,outer sep=0mm,anchor=north west](N)at(L.north east){%
 \begin{varwidth}{\@Example@NameCriticWidth}
+\def\@mpfn{footnote}%修改minipage中的脚注计数器
+\def\thempfn{\thefootnote}%
 %\AdjustStrut{0.75}%
 \strut\sffamily#2\strut
 \end{varwidth}};
@@ -2915,6 +2990,8 @@ BoldFont=FZCukai.ttf]
 \def\@Example@Radius{\dimexpr\baselineskip/2\relax}%0.75
 \node[draw=#2,fill=#2,rounded corners=\@Example@Radius,text=white,inner xsep=\@Example@Radius,inner ysep=0mm,outer sep=0mm](L){%
 \begin{varwidth}{\@Answer@CriticWidth}
+\def\@mpfn{footnote}%修改minipage中的脚注计数器
+\def\thempfn{\thefootnote}%
 %\AdjustStrut{0.75}%
 \strut#1\strut
 \end{varwidth}
@@ -2990,10 +3067,16 @@ fontupper=\MarginNoteFont,colupper=#1,
 fonttitle=\BoxTitleFont,coltitle=#1,
 varwidth boxed title=\@Box@CriticTitleWidth,
 title={\strut#2\strut},
+before title={\def\@mpfn{footnote}%修改minipage中的脚注计数器
+\def\thempfn{\thefootnote}},
 boxed title style={empty,left=0mm,bottom=1.5mm,boxsep=0mm},
 attach boxed title to top left,
-before upper={\setlength{\parindent}{2.0em}},
-before lower={\setlength{\parindent}{2.0em}},
+before upper={\setlength{\parindent}{2.0em}
+\def\@mpfn{footnote}%修改minipage中的脚注计数器
+\def\thempfn{\thefootnote}},
+before lower={\setlength{\parindent}{2.0em}
+\def\@mpfn{footnote}%修改minipage中的脚注计数器
+\def\thempfn{\thefootnote}},
 subtitle style={empty,fontupper=\BoxSubtitleFont\centering,colupper=#1,top=-3.0mm,bottom=-3.0mm},
 segmentation engine=path,
 segmentation style={cap=round,line width=2.25pt,draw=#2!25,loosely dashed},
@@ -3005,8 +3088,12 @@ empty,breakable,
 boxsep=3.0mm,
 top=2.0mm,bottom=-3.0mm,left=-3.0mm,right=-3.0mm,
 varwidth boxed title=\@Box@CriticTitleWidth,
-before upper={\setlength{\parindent}{2.0em}},
-before lower={\setlength{\parindent}{2.0em}},
+before upper={\setlength{\parindent}{2.0em}
+\def\@mpfn{footnote}%修改minipage中的脚注计数器
+\def\thempfn{\thefootnote}},
+before lower={\setlength{\parindent}{2.0em}
+\def\@mpfn{footnote}%修改minipage中的脚注计数器
+\def\thempfn{\thefootnote}},
 before=\par\medskip,after=\par\medskip,
 fontupper=\ItemFont,fontlower=\ItemFont,
 fonttitle=\BoxTitleFont,coltitle=white,
@@ -3014,6 +3101,8 @@ title={%
 %\AdjustStrut{0.85}
 \strut#1\strut%
 },
+before title={\def\@mpfn{footnote}%修改minipage中的脚注计数器
+\def\thempfn{\thefootnote}},
 attach boxed title to top left={yshift*=-\tcboxedtitleheight},
 boxed title style={size=minimal,empty,valign=center,left=2.25em,right=1.0em},
 subtitle style={empty,fontupper=\BoxSubtitleFont,colupper=#2,top=-3.0mm,bottom=-3.0mm},
@@ -3033,7 +3122,7 @@ underlay boxed title={
 \draw[#2!80,fill=#2!80,ultra thin]([xshift=-5*\@BoxTitle@Radius,yshift=-\@BoxTitle@Radius]frame.north east)circle({2*\@BoxTitle@Radius/3});}
 }}
 %%设置彩色盒子样式%%
-\tcbset{ColorfulBox/.style args={#1/#2/#3/#4}{
+\tcbset{ColorfulBox/.style args={#1/#2/#3/#4}{%
 enhanced standard,breakable,
 pad after break=5.0mm,
 grow to left by=-2.0pt,
@@ -3046,14 +3135,23 @@ varwidth boxed title=\@Box@CriticTitleWidth,
 before=\par\bigskip,after=\par\bigskip,
 fonttitle=\BoxTitleFont,coltitle=white,
 title={\strut#1\strut},
+before title={\def\@mpfn{footnote}%修改minipage中的脚注计数器
+\def\thempfn{\thefootnote}},
 IfBlankTF={#2}{}{after title={\strut~:~~#2\strut}},
 attach boxed title to top left={yshift*=-\tcboxedtitleheight+1.5mm},
 boxed title style={size=minimal,empty,valign=center,left=2.5em,right=1.0em},
-IfBlankTF={#3}{before upper={\setlength{\parindent}{2.0em}}
+IfBlankTF={#3}{
+before upper={\setlength{\parindent}{2.0em}%
+\def\@mpfn{footnote}%修改minipage中的脚注计数器
+\def\thempfn{\thefootnote}}
 }{before upper={\setlength{\parindent}{2.0em}%
-\noindent{\BoxTitleFont\color{#4}#3}\hspace{1.0em}}
+\noindent{\BoxTitleFont\color{#4}#3}\hspace{1.0em}%
+\def\@mpfn{footnote}%修改minipage中的脚注计数器
+\def\thempfn{\thefootnote}}
 },
-before lower={\setlength{\parindent}{2.0em}},
+before lower={\setlength{\parindent}{2.0em}%
+\def\@mpfn{footnote}%修改minipage中的脚注计数器
+\def\thempfn{\thefootnote}},
 subtitle style={empty,fontupper=\BoxSubtitleFont,colupper=#4,top=-3.0mm,bottom=-3.0mm},
 segmentation style={cap=round,line width=2.25pt,draw=#4!25,solid,shorten <= 5.0mm,shorten >= 5.0mm},
 segmentation at break=false
@@ -3069,13 +3167,22 @@ boxsep=3.0mm,
 top=1.5mm,bottom=1.5mm,left=2.0em+0.5mm,right=2.0mm,
 before=\par\bigskip,after=\par\bigskip,
 IfEmptyTF={#3}{
-before upper={\setlength{\parindent}{2.0em}}
+before upper={\setlength{\parindent}{2.0em}%
+\def\@mpfn{footnote}%修改minipage中的脚注计数器
+\def\thempfn{\thefootnote}}
 }{before upper={\setlength{\parindent}{2.0em}%
-\noindent{\BoxTitleFont\color{#4}#3}\hspace{1.0em}}},
-before lower={\setlength{\parindent}{2.0em}},
+\noindent{\BoxTitleFont\color{#4}#3}\hspace{1.0em}%
+\def\@mpfn{footnote}%修改minipage中的脚注计数器
+\def\thempfn{\thefootnote}}
+},
+before lower={\setlength{\parindent}{2.0em}%
+\def\@mpfn{footnote}%修改minipage中的脚注计数器
+\def\thempfn{\thefootnote}},
 fonttitle=\BoxTitleFont,coltitle=white,
 varwidth boxed title=\@Box@CriticTitleWidth,
 title={\strut#1\strut},
+before title={\def\@mpfn{footnote}%修改minipage中的脚注计数器
+\def\thempfn{\thefootnote}},
 IfBlankTF={#2}{}{after title={\strut~:~~#2\strut}},
 boxed title style={size=minimal,empty,left=1.2em,right=1.2em,top=0.25em,bottom=0.05em},
 attach boxed title to top left={yshift*=-\tcboxedtitleheight},
@@ -3087,18 +3194,22 @@ underlay boxed title={
 \BoxTitleFont
 \def\@BoxTitle@Radius{\dimexpr\baselineskip/2\relax}
 \begin{tcbclipinterior}
-\fill[#4!7.5,draw=#4!7.5](frame.south west)rectangle([xshift=1.9em]frame.north west);
+\fill[#4!7.5,draw=#4!7.5](frame.south west)rectangle([xshift=2.0em]frame.north west);
 \draw[#4!7.5,fill=#4!7.5](frame.north east)rectangle(title.south west);
 \draw[#4,fill=#4](title.north west)--(title.north east)[rounded corners=5.0pt]--(title.south east)[sharp corners]--(title.south west)--cycle;
 \end{tcbclipinterior}
 \node[font=\BoxTitleFont,text=#4,anchor=east,outer sep=0mm,inner xsep=5.0mm](ST)at([yshift={-\tcboxedtitleheight/2}]interior.north east){
 \begin{varwidth}{\linewidth-\@Box@CriticTitleWidth}
+\def\@mpfn{footnote}%修改minipage中的脚注计数器
+\def\thempfn{\thefootnote}%
 #5
 \end{varwidth}};},
 overlay middle and last={
 \begin{tcbclipinterior}
 \fill[#4!7.5,draw=#4!7.5](frame.south west)rectangle([xshift=1.9em]frame.north west);
-\end{tcbclipinterior}}
+\end{tcbclipinterior}},
+code={\setlength{\linenumbersep}{7.5mm}%修改行号与正文的间距
+}
 }}
 %%%%
 \tcbset{BlockBox/.style args={#1}{
@@ -3109,13 +3220,19 @@ top=1.5mm,bottom=1.5mm,left=2.0mm,right=2.0mm,
 bottomtitle=-4.5mm,
 colframe=ColorB!7.5,colback=ColorB!7.5,colbacktitle=ColorB!7.5,rounded corners,arc=7.5pt,
 before=\par\medskip,after=\par\medskip,
-before upper={\setlength{\parindent}{2.0em}},
-before lower={\setlength{\parindent}{2.0em}},
+before upper={\setlength{\parindent}{2.0em}%
+\def\@mpfn{footnote}%修改minipage中的脚注计数器
+\def\thempfn{\thefootnote}},
+before lower={\setlength{\parindent}{2.0em}%
+\def\@mpfn{footnote}%修改minipage中的脚注计数器
+\def\thempfn{\thefootnote}},
 fonttitle=\BoxTitleFont,coltitle=ColorA,
 subtitle style={empty,fontupper=\BoxSubtitleFont,colupper=ColorA,top=-3.0mm,bottom=-3.0mm},
 segmentation style={cap=round,line width=2.25pt,draw=ColorA!25,solid,shorten <= 5.0mm,shorten >= 5.0mm,loosely dashed},
 segmentation at break=false,
-IfBlankTF={#1}{}{title={\strut#1\strut}}
+IfBlankTF={#1}{}{title={\strut#1\strut}},
+before title={\def\@mpfn{footnote}%修改minipage中的脚注计数器
+\def\thempfn{\thefootnote}}
 }}
 
 %%设置节前盒子%%
@@ -3435,29 +3552,25 @@ underlay boxed title={%
 %%%%
 \newtcblisting{PythonBox}[1][]{
 CodeBox={代码示例}/#1/{}/ColorA/{\uppercase{\sffamily python}},
-before upper={},before lower={},
-minted options={breaklines,autogobble,linenos,numbersep=8.5mm},
+minted options={breaklines,autogobble,linenos,numbersep=7.5mm},
 listing only,listing engine=minted,
 minted language=python}
 
 \newtcblisting{CppBox}[1][]{
 CodeBox={代码示例}/#1/{}/ColorB/{\uppercase{\sffamily cpp}},
-before upper={},before lower={},
-minted options={breaklines,autogobble,linenos,numbersep=8.5mm},
+minted options={breaklines,autogobble,linenos,numbersep=7.5mm},
 listing only,listing engine=minted,
 minted language=cpp}
 
 \newtcblisting{JavaBox}[1][]{
 CodeBox={代码示例}/#1/{}/ColorC/{\uppercase{\sffamily java}},
-before upper={},before lower={},
-minted options={breaklines,autogobble,linenos,numbersep=8.5mm},
+minted options={breaklines,autogobble,linenos,numbersep=7.5mm},
 listing only,listing engine=minted,
 minted language=java}
 
 \newtcblisting{CodeBox}[3][]{
 CodeBox={代码示例}/#1/{}/#3/{\uppercase{\sffamily#2}},
-before upper={},before lower={},
-minted options={breaklines,autogobble,linenos,numbersep=8.5mm},
+minted options={breaklines,autogobble,linenos,numbersep=7.5mm},
 listing only,listing engine=minted,
 minted language=#2}
 
