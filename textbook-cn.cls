@@ -24,28 +24,7 @@
 
 %%%%%%%%%%%%%%%%%%%% 对原生命令的改动 %%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%% 在所有包加载之前 %%%%%%%%%%%%%%%%%%%%%%
-%\def\@iiiminipage#1#2[#3]#4{%
-%\leavevmode
-%\@pboxswfalse
-%\setlength\@tempdima{#4}%
-%\def\@mpargs{{#1}{#2}[#3]{#4}}%
-%\setbox\@tempboxa\vbox\bgroup
-%\color@begingroup
-%\hsize\@tempdima
-%\textwidth\hsize \columnwidth\hsize
-%\if@in@minipage@env
-%\ifvoid\@mpfootins\else
-%\@latex@warning{Nested minipage: footnotes may be misplaced}%
-%\fi
-%\else
-%\@in@minipage@envtrue
-%\fi
-%\@parboxrestore
-%\def\@mpfn{footnote}\def\thempfn{\thefootnote}\c@mpfootnote\z@
-%\let\@footnotetext\@mpfootnotetext
-%\let\@listdepth\@mplistdepth \@mplistdepth\z@
-%\@minipagerestore
-%\@setminipage}
+
 
 %%%%%%%%%%%%%%%%%%%% 计算与文本内容风格宏包 %%%%%%%%%%%%%%%%%%%%
 \RequirePackage{calc}%优化长度计算和设置
@@ -258,49 +237,49 @@ BoldFont=FZCukai.ttf]
 \newcommand{\FontSizeSet}[2][1.5]{\fontsize{#2}{\fp_eval:n{#1*#2}}\selectfont}
 \ExplSyntaxOff
 %%字号设置%%
-\newcommand{\TitlepageNormalFont}{\rmfamily\bfseries\FontSizeSet[1.2]{15pt}}%标题页正常字体
-\newcommand{\TitlepageTitleFont}{\rmfamily\bfseries\FontSizeSet[1.2]{40pt}}%标题页主标题字体
-\newcommand{\TitlepageSubtitleFont}{\rmfamily\bfseries\FontSizeSet[1.2]{30pt}}%标题页次标题字体
-\newcommand{\TitlepageEnglishFont}{\sffamily\bfseries\FontSizeSet[1.2]{18pt}}%标题页次标题字体
-\newcommand{\PartLabelFont}{\rmfamily\bfseries\FontSizeSet[1.2]{34pt}}%部分标签字体
-\newcommand{\PartNameFont}{\rmfamily\bfseries\FontSizeSet[1.2]{32pt}}%部分名称字体
-\newcommand{\ChapterLabelFont}{\rmfamily\bfseries\FontSizeSet[1.2]{27pt}}%章标签字体
-\newcommand{\ChapterNameFont}{\rmfamily\bfseries\FontSizeSet[1.2]{25pt}}%章名称字体
+\newcommand{\TitlepageNormalFont}{\upshape\rmfamily\bfseries\FontSizeSet[1.2]{15pt}}%标题页正常字体
+\newcommand{\TitlepageTitleFont}{\upshape\rmfamily\bfseries\FontSizeSet[1.2]{40pt}}%标题页主标题字体
+\newcommand{\TitlepageSubtitleFont}{\upshape\rmfamily\bfseries\FontSizeSet[1.2]{30pt}}%标题页次标题字体
+\newcommand{\TitlepageEnglishFont}{\upshape\sffamily\bfseries\FontSizeSet[1.2]{18pt}}%标题页次标题字体
+\newcommand{\PartLabelFont}{\upshape\rmfamily\bfseries\FontSizeSet[1.2]{34pt}}%部分标签字体
+\newcommand{\PartNameFont}{\upshape\rmfamily\bfseries\FontSizeSet[1.2]{32pt}}%部分名称字体
+\newcommand{\ChapterLabelFont}{\upshape\rmfamily\bfseries\FontSizeSet[1.2]{27pt}}%章标签字体
+\newcommand{\ChapterNameFont}{\upshape\rmfamily\bfseries\FontSizeSet[1.2]{25pt}}%章名称字体
 \newcommand{\ChapterSayingFont}{\itshape\kaiti\FontSizeSet[1.2]{14pt}}%章谚语字体
-\newcommand{\SectionFont}{\rmfamily\bfseries\FontSizeSet[1.2]{18pt}}%节字体
-\newcommand{\SubsectionFont}{\rmfamily\bfseries\FontSizeSet[1.3]{15pt}}%小节字体
-\newcommand{\SubsubsectionFont}{\rmfamily\bfseries\FontSizeSet[1.2]{14.5pt}}%小小节字体
-\newcommand{\ParagraphNameFont}{\rmfamily\bfseries\FontSizeSet{14pt}}%段落名称字体
-\newcommand{\HeaderFont}{\rmfamily\bfseries\FontSizeSet[1.2]{14pt}}%页眉字体
-\newcommand{\FooterFont}{\rmfamily\bfseries\FontSizeSet[1.2]{14pt}}%页脚字体
-\newcommand{\PageNumberFont}{\sffamily\bfseries\FontSizeSet{16pt}}%页码字体
-\newcommand{\PartNumberFont}{\rmfamily\bfseries\FontSizeSet[1.2]{14pt}}%部分标签字体
-\newcommand{\ThumbFont}{\rmfamily\bfseries\FontSizeSet[1.2]{14pt}}%侧标字体
-\newcommand{\CaptionFont}{\rmfamily\FontSizeSet{14pt}}%图表标签字体
-\newcommand{\TocPartFont}{\rmfamily\bfseries\FontSizeSet[1.3]{15pt}}%目录部分字体
-\newcommand{\TocChapterFont}{\rmfamily\bfseries\FontSizeSet[1.2]{14pt}}%目录章字体
-\newcommand{\TocSectionFont}{\rmfamily\FontSizeSet[1.2]{14pt}}%目录节字体
-\newcommand{\TocSubsectionFont}{\rmfamily\FontSizeSet[1.2]{14pt}}%目录小节字体
-\newcommand{\TocSubsubsectionFont}{\rmfamily\FontSizeSet[1.2]{14pt}}%目录小小节字体
-\newcommand{\LofFont}{\rmfamily\FontSizeSet[1.2]{14pt}}%图列表字体
-\newcommand{\LotFont}{\rmfamily\FontSizeSet[1.2]{14pt}}%表列表字体
-\newcommand{\LTocTitleFont}{\rmfamily\bfseries\FontSizeSet[1.2]{14pt}}%小目录标题
-\newcommand{\TocLChapterFont}{\rmfamily\bfseries\FontSizeSet[1.2]{14pt}}%小目录章字体
-\newcommand{\TocLSectionFont}{\rmfamily\FontSizeSet[1.2]{14pt}}%小目录节字体
-\newcommand{\TocLSubsectionFont}{\rmfamily\FontSizeSet[1.2]{14pt}}%小目录小节字体
-\newcommand{\TocLSubsubsectionFont}{\rmfamily\FontSizeSet[1.2]{14pt}}%小目录小小节字体
-\newcommand{\ContentPageNumFont}{\sffamily\FontSizeSet{14pt}}%目录页码字体
-\newcommand{\CiteNumFont}{\rmfamily}%引用字体
-\newcommand{\LineNumFont}{\sffamily\bfseries\FontSizeSet{10pt}}%行号字体
-\newcommand{\ListNumFont}{\sffamily\bfseries\FontSizeSet{12pt}}%列表序号字体
-\newcommand{\HeadingFont}{\rmfamily\bfseries\FontSizeSet[1.2]{13pt}}%一般标题字体
-\newcommand{\EgLabelFont}{\rmfamily\bfseries\FontSizeSet[1.3]{13pt}}%例题标签字体
-\newcommand{\BoxTitleFont}{\rmfamily\bfseries\FontSizeSet[1.3]{13pt}}%盒子标题字体
-\newcommand{\BoxSubtitleFont}{\rmfamily\bfseries\FontSizeSet{13pt}}%盒子副标题字体
-\newcommand{\BoxLogoFont}{\rmfamily\bfseries\FontSizeSet{16pt}}%盒子logo字体
-\newcommand{\BoxSublogoFont}{\rmfamily\bfseries\FontSizeSet{14pt}}%盒子小logo字体
-\newcommand{\MarginNoteFont}{\itshape\kaiti\FontSizeSet{13pt}}%边注字体
-\newcommand{\FootNoteFont}{\itshape\kaiti\FontSizeSet{13pt}}%脚注字体
+\newcommand{\SectionFont}{\upshape\rmfamily\bfseries\FontSizeSet[1.2]{18pt}}%节字体
+\newcommand{\SubsectionFont}{\upshape\rmfamily\bfseries\FontSizeSet[1.3]{15pt}}%小节字体
+\newcommand{\SubsubsectionFont}{\upshape\rmfamily\bfseries\FontSizeSet[1.2]{14.5pt}}%小小节字体
+\newcommand{\ParagraphNameFont}{\upshape\rmfamily\bfseries\FontSizeSet{14pt}}%段落名称字体
+\newcommand{\HeaderFont}{\upshape\rmfamily\bfseries\FontSizeSet[1.2]{14pt}}%页眉字体
+\newcommand{\FooterFont}{\upshape\rmfamily\bfseries\FontSizeSet[1.2]{14pt}}%页脚字体
+\newcommand{\PageNumberFont}{\upshape\sffamily\bfseries\FontSizeSet{16pt}}%页码字体
+\newcommand{\PartNumberFont}{\upshape\rmfamily\bfseries\FontSizeSet[1.2]{14pt}}%部分标签字体
+\newcommand{\ThumbFont}{\upshape\rmfamily\bfseries\FontSizeSet[1.2]{14pt}}%侧标字体
+\newcommand{\CaptionFont}{\upshape\rmfamily\FontSizeSet[1.2]{14pt}}%图表标签字体
+\newcommand{\TocPartFont}{\upshape\rmfamily\bfseries\FontSizeSet[1.3]{15pt}}%目录部分字体
+\newcommand{\TocChapterFont}{\upshape\rmfamily\bfseries\FontSizeSet[1.2]{14pt}}%目录章字体
+\newcommand{\TocSectionFont}{\upshape\rmfamily\FontSizeSet[1.2]{14pt}}%目录节字体
+\newcommand{\TocSubsectionFont}{\upshape\rmfamily\FontSizeSet[1.2]{14pt}}%目录小节字体
+\newcommand{\TocSubsubsectionFont}{\upshape\rmfamily\FontSizeSet[1.2]{14pt}}%目录小小节字体
+\newcommand{\LofFont}{\upshape\rmfamily\FontSizeSet[1.2]{14pt}}%图列表字体
+\newcommand{\LotFont}{\upshape\rmfamily\FontSizeSet[1.2]{14pt}}%表列表字体
+\newcommand{\LTocTitleFont}{\upshape\rmfamily\bfseries\FontSizeSet[1.2]{14pt}}%小目录标题
+\newcommand{\TocLChapterFont}{\upshape\rmfamily\bfseries\FontSizeSet[1.2]{14pt}}%小目录章字体
+\newcommand{\TocLSectionFont}{\upshape\rmfamily\FontSizeSet[1.2]{14pt}}%小目录节字体
+\newcommand{\TocLSubsectionFont}{\upshape\rmfamily\FontSizeSet[1.2]{14pt}}%小目录小节字体
+\newcommand{\TocLSubsubsectionFont}{\upshape\rmfamily\FontSizeSet[1.2]{14pt}}%小目录小小节字体
+\newcommand{\ContentPageNumFont}{\upshape\sffamily\FontSizeSet{14pt}}%目录页码字体
+\newcommand{\CiteNumFont}{\upshape\rmfamily}%引用字体
+\newcommand{\LineNumFont}{\upshape\sffamily\bfseries\FontSizeSet{10pt}}%行号字体
+\newcommand{\ListNumFont}{\upshape\sffamily\bfseries\FontSizeSet{12pt}}%列表序号字体
+\newcommand{\HeadingFont}{\upshape\rmfamily\bfseries\FontSizeSet[1.2]{13pt}}%一般标题字体
+\newcommand{\EgLabelFont}{\upshape\rmfamily\bfseries\FontSizeSet[1.3]{13pt}}%例题标签字体
+\newcommand{\BoxTitleFont}{\upshape\rmfamily\bfseries\FontSizeSet[1.3]{13pt}}%盒子标题字体
+\newcommand{\BoxSubtitleFont}{\upshape\rmfamily\bfseries\FontSizeSet{13pt}}%盒子副标题字体
+\newcommand{\BoxLogoFont}{\upshape\rmfamily\bfseries\FontSizeSet{16pt}}%盒子logo字体
+\newcommand{\BoxSublogoFont}{\upshape\rmfamily\bfseries\FontSizeSet{14pt}}%盒子小logo字体
+\newcommand{\MarginNoteFont}{\itshape\kaiti\FontSizeSet[1.2]{13pt}}%边注字体
+\newcommand{\FootNoteFont}{\itshape\kaiti\FontSizeSet[1.2]{13pt}}%脚注字体
 \newcommand{\ItemFont}{\kaiti}%列表字体
 \newcommand{\MainFont}{\FontSizeSet{14pt}}%正文字体
 
@@ -568,7 +547,7 @@ BoldFont=FZCukai.ttf]
 \RequirePackage{lineno}%行号宏包
 \modulolinenumbers[5]%每5行显示一个行号
 \renewcommand{\linenumberfont}{\color{ColorA}\LineNumFont}%修改行号字体
-\setlength{\linenumbersep}{5.0mm}%修改行号与正文的间距
+\setlength{\linenumbersep}{4.0mm}%修改行号与正文的间距
 
 %%%%%%%%%%%%%%%%%%%% 绘图与表格宏包 %%%%%%%%%%%%%%%%%%%%
 \RequirePackage{pifont,fontawesome5}%图标
@@ -3058,30 +3037,35 @@ BoldFont=FZCukai.ttf]
 \newlength{\@Box@CriticTitleWidth}
 \setlength{\@Box@CriticTitleWidth}{2\linewidth/3}
 %%设置注释盒子样式%%
-\tcbset{NoteBox/.style args={#1/#2}{
+\tcbset{NoteBox/.style args={#1/#2/#3}{
 empty,breakable,
 boxsep=3.0mm,
-top=-3.0mm,bottom=-3.0mm,right=-3.0mm,left=-3.0mm,
+top=-3.0mm,bottom=-3.0mm,left=-3.0mm,right=-3.0mm,
 before=\par\medskip,after=\par\medskip,
-fontupper=\MarginNoteFont,colupper=#1,
-fonttitle=\BoxTitleFont,coltitle=#1,
+fonttitle=\BoxTitleFont,coltitle=#2,
 varwidth boxed title=\@Box@CriticTitleWidth,
-title={\strut#2\strut},
+title={\strut#1\strut},
 before title={\def\@mpfn{footnote}%修改minipage中的脚注计数器
 \def\thempfn{\thefootnote}},
-boxed title style={empty,left=0mm,bottom=1.5mm,boxsep=0mm},
-attach boxed title to top left,
-before upper={\setlength{\parindent}{2.0em}
+boxed title style={size=minimal,empty,valign=center,boxsep=0mm,left=1.5em,right=0mm,top=0mm,bottom=0mm},
+attach boxed title to top left={yshift=2.5mm},
+before upper={\setlength{\parindent}{2.0em}%
 \def\@mpfn{footnote}%修改minipage中的脚注计数器
 \def\thempfn{\thefootnote}},
-before lower={\setlength{\parindent}{2.0em}
+before lower={\setlength{\parindent}{2.0em}%
 \def\@mpfn{footnote}%修改minipage中的脚注计数器
 \def\thempfn{\thefootnote}},
-subtitle style={empty,fontupper=\BoxSubtitleFont\centering,colupper=#1,top=-3.0mm,bottom=-3.0mm},
+subtitle style={empty,fontupper=\BoxSubtitleFont,colupper=#2,top=-3.0mm,bottom=-3.0mm},
+underlay boxed title={%
+\BoxTitleFont%
+\def\@BoxTitleLogo@Size{\baselineskip}%
+\node[font=\BoxTitleFont,text=#2,anchor=north west,outer sep=0mm,minimum height=\@BoxTitleLogo@Size,inner xsep=0mm](ST)at(title.north west){#3};
+},
 segmentation engine=path,
-segmentation style={cap=round,line width=2.25pt,draw=#2!25,loosely dashed},
+segmentation style={cap=round,draw=#2!25,loosely dashed},
 segmentation at break=false
 }}
+
 %%%%
 \tcbset{ItemBox/.style args={#1/#2}{
 empty,breakable,
@@ -3121,6 +3105,7 @@ underlay boxed title={
 \draw[#2!90,fill=#2!90,ultra thin]([xshift=-3*\@BoxTitle@Radius,yshift=-\@BoxTitle@Radius]frame.north east)circle({2*\@BoxTitle@Radius/3});
 \draw[#2!80,fill=#2!80,ultra thin]([xshift=-5*\@BoxTitle@Radius,yshift=-\@BoxTitle@Radius]frame.north east)circle({2*\@BoxTitle@Radius/3});}
 }}
+
 %%设置彩色盒子样式%%
 \tcbset{ColorfulBox/.style args={#1/#2/#3/#4}{%
 enhanced standard,breakable,
@@ -3579,41 +3564,41 @@ minted language=#2}
 %盒子内脚注设置，使得脚注位于页面最下方而不是盒子最下方
 \makesavenoteenv{box9}
 %%
-\DeclareTColorBox{box9}{ +O{} O{ColorA} O{\faCommentDots} +m }{NoteBox=#2/{#3~~#4},#1}
+\DeclareTColorBox{box9}{ +O{} +m O{ColorA} O{\faCommentDots} }{NoteBox=#2/#3/#4,#1}
 %%%%
 %%+m表示允许换行、空行的参数%%
 \DeclareDocumentCommand{\RelaInfo}{ s +m }
 {\IfBooleanTF{#1}
-{\marginpar{\upshape%
-\begin{box9}[][ColorH][\faCommentDots]{相关信息}
+{\marginpar{%
+\begin{box9}[fontupper=\MarginNoteFont,fontlower=\MarginNoteFont]{相关信息}[ColorH][\faCommentDots]
 #2
 \end{box9}}
 }{%
-\begin{box9}[][ColorH][\faCommentDots]{相关信息}
+\begin{box9}[fontupper=\MainFont\kaiti\itshape,fontlower=\MainFont\kaiti\itshape]{相关信息}[ColorH][\faCommentDots]
 #2
 \end{box9}}
 }
 %%%%
 \DeclareDocumentCommand{\DeepThink}{ s +m }
 {\IfBooleanTF{#1}
-{\newmarginpar{\upshape%
-\begin{box9}[][ColorB!90!black][\faTh]{深入思考}
+{\marginpar{%
+\begin{box9}[fontupper=\MarginNoteFont,fontlower=\MarginNoteFont]{深入思考}[ColorB!90!black][\faTh]
 #2
 \end{box9}}
 }{%
-\begin{box9}[][ColorB!90!black][\faTh]{深入思考}
+\begin{box9}[fontupper=\MainFont\kaiti\itshape,fontlower=\MainFont\kaiti\itshape]{深入思考}[ColorB!90!black][\faTh]
 #2
 \end{box9}}
 }
 %%%%
 \DeclareDocumentCommand{\Remark}{ s +m }
 {\IfBooleanTF{#1}
-{\newmarginpar{\upshape%
-\begin{box9}[][ColorF][\faChrome]{重点注释}
+{\marginpar{%
+\begin{box9}[fontupper=\MarginNoteFont,fontlower=\MarginNoteFont]{重点注释}[ColorF][\faChrome]
 #2
 \end{box9}}
 }{%
-\begin{box9}[][ColorF][\faChrome]{重点注释}
+\begin{box9}[fontupper=\MainFont\kaiti\itshape,fontlower=\MainFont\kaiti\itshape]{重点注释}[ColorF][\faChrome]
 #2
 \end{box9}}
 }
