@@ -12,14 +12,23 @@
 \the\defaulttextheight
 
 
+
+
 \chapter{附录附录附录附录附录附录附录附录附录附录附录附录}
+%\changepage{-\ChapterVSpace}{}{}{}{}{}{\ChapterVSpace}{}{}
 
 %\FontSizeSet{14pt}{42pt}
 
 \begin{paracol}{2}
 
 \footnote{测试文字}
-\lipsum[1-2]\footnote{测试文字}
+\lipsum
+
+
+\clearpage
+
+
+%\footnote{测试文字}
 
 
 \lipsum[3-4]
@@ -29,11 +38,7 @@
 
 
 \footnote{测试文字}
-	\lipsum[1-2]
-
-
-
-
+\lipsum[1-2]
 
 
 \lipsum[3-7]
@@ -46,6 +51,16 @@
 \switchcolumnsloppy
 
 \zhlipsum[1]
+
+%\vspace*{5.0mm}%
+
+测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字
+
+%\includegraphics[width=\linewidth]{leaf.jpg}
+
+
+
+
 %\footnote{呀嘞呀嘞}
 \end{paracol}
 \lipsum
@@ -56,13 +71,19 @@
 
 
 
-%\addtocontents{toc}{\protect\begin{minipage}{2\linewidth/3}}
-\chapter{附录}
-%\begin{tikzpicture}[overlay,remember picture]
-%	\draw(current page text area.south east)rectangle(current page text area.north west);
-%\end{tikzpicture}
-\lipsum[1]
-%\zhlipsum
+
+\chapter{附录1}
+{%\fontsize{14pt}{42pt}\selectfont
+\zhlipsum[1]
+}
+
+\chapter{附录2}
+{\FontSizeSet[2.5]{14pt}
+\zhlipsum
+}
+
+
+
 
 \section{附录测试}
 
@@ -341,7 +362,7 @@
 	\end{QuestionItem}
 
 
-\begin{Definition}[测试文字\footnote{测试脚注}]
+\begin{Definition}[测试文字\footnote{测试脚注测试脚注测试脚注测试脚注测试脚注测试脚注测试脚注测试脚注测试脚注测试脚注测试脚注测试脚注测试脚注测试脚注测试脚注测试脚注测试脚注}]
 	测试文字\footnote{脚注}
 	\begin{flalign}
 		\Psi=\int_\Omega\left[f\left(\phi\right)+\kappa\left|\nabla\phi\right|^2\right]{\rm d}V
@@ -352,7 +373,7 @@
 	测试文字
 \end{Lemma}
 
-\begin{Theorem}[测试文字]
+\begin{Theorem}[测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字]
 	测试文字
 \end{Theorem}
 
@@ -454,7 +475,7 @@
 \begin{Block}%[测试文字]
 	\lipsum[1]
 	\tcblower
-	\lipsum
+	\footnote{测试文字}\lipsum
 \end{Block}
 
 
@@ -485,7 +506,17 @@
 
 
 
-\Remark{\lipsum[1-2]}
+\Remark{\zhlipsum[1]%
+\tcblower%
+\zhlipsum[2]}
+
+
+
+
+
+
+
+
 
 \begin{PythonBox}[神经网络]
 import pytorch as pt

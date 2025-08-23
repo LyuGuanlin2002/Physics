@@ -65,8 +65,12 @@
 %
 \tableofcontents*[2][%
 \includegraphics[width=\linewidth]{leaf.jpg}\\
-\vspace*{5.0mm}%
-\includegraphics[width=\linewidth]{leaf.jpg}%
+\vspace*{5.0mm}\\
+\includegraphics[width=\linewidth]{leaf.jpg}\\
+\vspace*{5.0mm}\\
+\includegraphics[width=\linewidth]{leaf.jpg}\\
+\vspace*{5.0mm}\\
+\includegraphics[width=\linewidth]{leaf.jpg}\\
 ]
 %
 \lipsum[1-3]
@@ -116,7 +120,11 @@
 %%% 第十章
 %%\include{body/M010.00-xueshengshiyan}
 \chapter{测试测试测试测试测试测试}
-\zhlipsum
+
+{\FontSizeSet[2.0]{14pt}
+\zhlipsum[1]
+
+}
 %
 \backmatter
 %
@@ -146,14 +154,16 @@
 \chapter{测试文字}
 
 
-{\FontSizeSet{15pt}\zhlipsum}
 
 
 
 
 \chapter{哈哈哈}
-\zhlipsum[2]
 
+{
+\FontSizeSet[0.8]{14pt}
+\zhlipsum[2]
+}
 
 %\partsubtitle{副标题测试副标题测试副标题测试副标题测试}
 \partintro{\lipsum[2]}
@@ -168,6 +178,19 @@
 \part*{测试文字测试文字}
 %
 \zhlipsum
+
+你这样也太没有 \leaders \hrule\hskip 2cm plus 0.5cm minus 0.5cm 了。
+
+我一定会让你 \leaders \hrule height
+-2.6pt depth 3pt \hskip 2cm 满意的
+
+
+
+
+
+
+
+
 
 \end{document}
 

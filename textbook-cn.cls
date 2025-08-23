@@ -228,7 +228,7 @@ BoldFont=FZCukai.ttf]
 }
 \let\size@update\relax
 %%%%
-\DeclareRobustCommand\setbaselineskip[1]{%
+\DeclareRobustCommand{\setbaselineskip}[1]{%
 \set@baselineskip\baselinestretch{#1}%
 }
 \makeatother
@@ -281,7 +281,7 @@ BoldFont=FZCukai.ttf]
 \newcommand{\MarginNoteFont}{\itshape\kaiti\FontSizeSet[1.2]{13pt}}%边注字体
 \newcommand{\FootNoteFont}{\itshape\kaiti\FontSizeSet[1.2]{13pt}}%脚注字体
 \newcommand{\ItemFont}{\kaiti}%列表字体
-\newcommand{\MainFont}{\FontSizeSet{14pt}}%正文字体
+\newcommand{\MainFont}{\FontSizeSet{14pt}}%正文字体[1.4]
 
 %%%%%%%%%%%%%%%%%%%% 页面布局设定宏包 %%%%%%%%%%%%%%%%%%%%
 \makeatletter
@@ -1791,6 +1791,7 @@ BoldFont=FZCukai.ttf]
 [\global\chapterimage{}%清空\chapterimage
 \global\chaptersaying{}%清空\chaptersaying
 ]
+
 %%不编号章节页%%
 \titleformat{name=\chapter,numberless}[block]
 {\setbaselineskip{0pt}\selectfont}{}{0em}
@@ -1802,11 +1803,16 @@ BoldFont=FZCukai.ttf]
 \global\chaptersaying{}%清空\chaptersaying
 ]
 %%间距设置%%
-\titlespacing*{\chapter}{0pt}{-\baselineskip/2}{-\baselineskip/2}
+\titlespacing*{\chapter}{0pt}{0pt}{0pt}
 %%页面风格设置%%
 \assignpagestyle{\chapter}{empty}
 %%章标题顶格放置%%
 \titleclass{\chapter}{top}
+
+\newlength{\defaulttopskip}
+\setlength{\defaulttopskip}{\topskip}
+\newlength{\defaultparskip}
+\setlength{\defaultparskip}{\parskip}
 %%修改chapter断页方式%%
 \newcommand{\chapterbreak}{%
 \if@openright%
@@ -1814,7 +1820,9 @@ BoldFont=FZCukai.ttf]
 \else%
 \clearpage%
 \fi%
-\changetextheight{\ChapterPageHeightCut}%
+\changetextheight{\ChapterPageHeightCut}%临时修改章首页的版心高度为章底部文字留出空间
+\gsetlength{\topskip}{0pt}%临时清除章上方的垂直空白距离
+\gsetlength{\parskip}{0pt}%临时清除段间距，使得章首页的文字与章标题之间的垂直间距始终保持不变
 }
 %%为\chapter*添加短页眉%%
 \NewCommandCopy{\OriginChapter}{\chapter}
@@ -1823,8 +1831,13 @@ BoldFont=FZCukai.ttf]
 \IfBooleanTF{#1}%
 {\OriginChapter*{#3\@mkboth{#2}{#2}}}%
 {\OriginChapter[#2]{#3}}%
-\AddToHookNext{shipout}{\changetextheight{-\ChapterPageHeightCut}}%
-\vspace*{\ChapterVSpace}
+\AddToHookNext{shipout}{%
+\changetextheight{-\ChapterPageHeightCut}%恢复默认版心高度
+\gsetlength{\topskip}{\defaulttopskip}%恢复默认\topskip
+\gsetlength{\parskip}{\defaultparskip}%恢复默认\parskip
+}%
+\nointerlineskip%清除章首页其他的额外垂直空白距离
+\vtop to\ChapterVSpace{}%
 }
 
 %%节样式%%
@@ -3043,6 +3056,7 @@ boxsep=3.0mm,
 top=-3.0mm,bottom=-3.0mm,left=-3.0mm,right=-3.0mm,
 before=\par\medskip,after=\par\medskip,
 fonttitle=\BoxTitleFont,coltitle=#2,
+colupper=#2,collower=#2,
 varwidth boxed title=\@Box@CriticTitleWidth,
 title={\strut#1\strut},
 before title={\def\@mpfn{footnote}%修改minipage中的脚注计数器
