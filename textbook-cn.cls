@@ -2260,13 +2260,14 @@ BoldFont=FZCukai.ttf]
 \newenvironment{Appendix}{%
 %%判断环境所在位置的环境层级计数器的数值，若为2，则说明本环境嵌套于一个section层级的环境中，需要报错；若为1，则说明本环境嵌套于另一个chapter层级的环境中，需要报错；若为0，则说明本环境不嵌套于任何一个类似的环境中，可以运行%%
 \ifnum\value{@Environment@Depth}=2
-\ClassError{textbook-cn}{The environment with depth=2 must not be used in the environment with depth=1!}
+\ClassError{textbook-cn}{The environment with depth=1 must not be used in the environment with depth=2!}{}
 \else
 \ifnum\value{@Environment@Depth}=1
-\ClassError{textbook-cn}{The environment with depth=1 must not be used in the environment with depth=1!}
+\ClassError{textbook-cn}{The environment with depth=1 must not be used in the environment with depth=1!}{}
 \else
+\ifnum\value{@Environment@Depth}=0
 \relax
-\fi\fi
+\fi\fi\fi
 %%设置环境层级
 \setcounter{@Environment@Depth}{1}
 %修改章计数器样式为大写字母
@@ -2374,10 +2375,14 @@ BoldFont=FZCukai.ttf]
 \newenvironment{Appendix*}{%
 %%判断环境所在位置的环境层级计数器的数值，若为2，则说明本环境嵌套于一个section层级的环境中，需要报错；若为0，则说明本环境不嵌套于任何一个类似的环境中，可以运行%%
 \ifnum\value{@Environment@Depth}=2
-\ClassError{textbook-cn}{The environment with depth=1 must not be used in the environment with depth=1!}
+\ClassError{textbook-cn}{The environment with depth=2 must not be used in the environment with depth=1!}{}
 \else
+\ifnum\value{@Environment@Depth}=1
 \relax
-\fi
+\else
+\ifnum\value{@Environment@Depth}=0
+\relax
+\fi\fi\fi
 %%设置环境层级
 \setcounter{@Environment@Depth}{2}
 %移除section对chapter的依赖
@@ -2475,10 +2480,14 @@ BoldFont=FZCukai.ttf]
 \newenvironment{Quiz}{%
 %%判断环境所在位置的环境层级计数器的数值，若为2，则说明本环境嵌套于另一个同为section层级的环境中，需要报错；若为1，则说明本环境嵌套于另一个chapter层级的环境中，正常运行%%
 \ifnum\value{@Environment@Depth}=2
-\ClassError{textbook-cn}{The environment with depth=2 must not be used in the environment with depth=1!}
+\ClassError{textbook-cn}{The environment with depth=2 must not be used in the environment with depth=1!}{}
 \else
+\ifnum\value{@Environment@Depth}=1
 \relax
-\fi
+\else
+\ifnum\value{@Environment@Depth}=0
+\relax
+\fi\fi\fi
 %%设置环境层级
 \setcounter{@Environment@Depth}{2}
 %移除section对chapter的依赖
@@ -2584,10 +2593,14 @@ BoldFont=FZCukai.ttf]
 \newenvironment{Topic}{%
 %%判断环境所在位置的环境层级计数器的数值，若为2，则说明本环境嵌套于另一个同为section层级的环境中，需要报错；若为1，则说明本环境嵌套于另一个chapter层级的环境中，正常运行%%
 \ifnum\value{@Environment@Depth}=2
-\ClassError{textbook-cn}{The environment with depth=2 must not be used in the environment with depth=1!}
+\ClassError{textbook-cn}{The environment with depth=2 must not be used in the environment with depth=1!}{}
 \else
+\ifnum\value{@Environment@Depth}=1
 \relax
-\fi
+\else
+\ifnum\value{@Environment@Depth}=0
+\relax
+\fi\fi\fi
 %%设置环境层级
 \setcounter{@Environment@Depth}{2}
 %移除section对chapter的依赖
@@ -2684,10 +2697,14 @@ BoldFont=FZCukai.ttf]
 \newenvironment{Project}{%
 %%判断环境所在位置的环境层级计数器的数值，若为2，则说明本环境嵌套于另一个同为section层级的环境中，需要报错；若为1，则说明本环境嵌套于另一个chapter层级的环境中，正常运行%%
 \ifnum\value{@Environment@Depth}=2
-\ClassError{textbook-cn}{The environment with depth=2 must not be used in the environment with depth=1!}
+\ClassError{textbook-cn}{The environment with depth=2 must not be used in the environment with depth=1!}{}
 \else
+\ifnum\value{@Environment@Depth}=1
 \relax
-\fi
+\else
+\ifnum\value{@Environment@Depth}=0
+\relax
+\fi\fi\fi
 %%设置环境层级
 \setcounter{@Environment@Depth}{2}
 %移除section对chapter的依赖
