@@ -30,8 +30,11 @@
 %%
 \newcommand{\Hinputlogo}[2]{\href{#2}{\inputlogo{#1}}}
 
-
-
+\newcommand{\cutimage}[4]{%
+\tikz{%
+\clip[rounded corners=2.5mm](-\linewidth/2,-\linewidth/2)rectangle(\linewidth/2,\linewidth/2);
+\node at(#2,#3){\includegraphics[width=#1]{#4}};}%
+}
 
 
 
@@ -106,7 +109,7 @@
 
 
 
-
+\chapterimage{\includegraphics[height=\paperheight]{parasol.jpg}}
 
 \chapter{测试文字}
 
@@ -144,14 +147,34 @@
 %
 \lipsum[1-9]
 %
-\tableofcontents*[2][%
-\includegraphics[width=\linewidth]{iris.jpg}\\
-\vspace*{5.0mm}\\
-\includegraphics[width=\linewidth]{iris.jpg}\\
-\vspace*{5.0mm}\\
-\includegraphics[width=\linewidth]{iris.jpg}\\
-\vspace*{5.0mm}\\
-\includegraphics[width=\linewidth]{iris.jpg}\\
+\tableofcontents*[2][\noindent%
+\cutimage{1.5\linewidth}{-3.0mm}{0}{iris.jpg}
+\vspace*{3.0mm}\\
+\cutimage{1.5\linewidth}{3.0mm}{0}{starry.jpg}
+\vspace*{3.0mm}\\
+\includegraphics[width=\linewidth]{vineyard.jpg}\\
+\vspace*{3.0mm}\\
+\includegraphics[width=\linewidth]{olive.jpg}\\
+\vspace*{3.0mm}\\
+\includegraphics[width=\linewidth]{rhone.jpg}\\
+\vspace*{3.0mm}\\
+\includegraphics[width=\linewidth]{harvest.jpg}\\
+\vspace*{3.0mm}\\
+\includegraphics[width=\linewidth]{sunflower.jpg}\\
+\vspace*{3.0mm}\\
+\includegraphics[width=\linewidth]{iris1.jpg}\\
+\vspace*{3.0mm}\\
+\cutimage{\linewidth}{0}{-5.0mm}{cypresses.jpg}
+\vspace*{3.0mm}\\
+\includegraphics[width=\linewidth]{thunderclouds.jpg}\\
+\vspace*{3.0mm}\\
+\includegraphics[width=\linewidth]{poppies.jpg}\\
+\vspace*{3.0mm}\\
+\includegraphics[width=\linewidth]{clifftop.jpg}\\
+\vspace*{3.0mm}\\
+\includegraphics[width=\linewidth]{garden.jpg}\\
+\vspace*{3.0mm}\\
+\includegraphics[width=\linewidth]{parasol.jpg}\\
 %\lipsum[1]
 ]
 %
@@ -171,8 +194,13 @@
 %
 %
 \partintro{\lipsum[2]}
+\partimage{\includegraphics[height=\paperheight]{garden.jpg}}
 \part[短标题]{力学}
 \lipsum
+
+
+
+
 
 
 \begin{figure}
@@ -233,6 +261,10 @@
 %%
 %%% 第十章
 %%\include{body/M010.00-xueshengshiyan}
+
+
+
+\chapterimage{\includegraphics[height=\paperheight]{harvest.jpg}}
 \chapter{测试测试测试测试测试测试}
 
 {\FontSizeSet[3.0]{14pt}
@@ -293,10 +325,8 @@
 %
 \zhlipsum
 
-你这样也太没有 \leaders \hrule\hskip 2cm plus 0.5cm minus 0.5cm 了。
 
-我一定会让你 \leaders \hrule height
--2.6pt depth 3pt \hskip 2cm 满意的
+我一定会让你 \leaders\hrule height -2.6pt depth 3pt \hskip 3.0cm 满意的。
 
 
 

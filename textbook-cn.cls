@@ -486,7 +486,7 @@ BoldFont=FZCukai.ttf]
 \begin{paracol}{#2}%
 \@starttoc{toc}%
 \switchcolumnsloppy[1]%
-\noindent#3%
+#3%
 \end{paracol}%
 \fi%
 }{%
@@ -852,7 +852,7 @@ BoldFont=FZCukai.ttf]
 \coordinate(H)at([xshift=\@GutterWidth,yshift=-\@FrameWidth]current page.north west);
 \coordinate(I)at(current page.south);
 %%绘制页面框架%%
-\draw[ColorB!7.5,fill=ColorB!7.5,sharp corners]
+\filldraw[draw=ColorB!7.5,fill=ColorB!7.5,even odd rule,sharp corners]
 (A)--(B)--(C)--(D)--cycle
 (E)[rounded corners=5.0mm]--(F)[rounded corners=5.0mm]--(G)[sharp corners]--(H)[sharp corners]--cycle;
 %%绘制页码%%
@@ -910,7 +910,7 @@ BoldFont=FZCukai.ttf]
 \coordinate(H)at([xshift=-\@GutterWidth,yshift=-\@FrameWidth]current page.north east);
 \coordinate(I)at(current page.south);
 %%绘制页面框架%%
-\draw[ColorB!7.5,fill=ColorB!7.5,sharp corners]
+\filldraw[draw=ColorB!7.5,fill=ColorB!7.5,even odd rule,sharp corners]
 (A)--(B)--(C)--(D)--cycle
 (E)[rounded corners=5.0mm]--(F)[rounded corners=5.0mm]--(G)[sharp corners]--(H)[sharp corners]--cycle;
 %%绘制页码%%
@@ -1548,12 +1548,14 @@ BoldFont=FZCukai.ttf]
 \gsetlength{\ChapterVSpace}{\@Chapter@TitleBlockHeight+\@toplen-\@FrameWidth}
 %%%%
 \begin{pgfonlayer}{@Chapter@Bottom}
-%%框架1%%
-\draw[ColorB!7.5,fill=ColorB!7.5,sharp corners](A)rectangle(C);
+%%框架%%
+\filldraw[draw=ColorB!7.5,fill=ColorB!7.5,even odd rule,sharp corners]
+(A)--(B)--(C)--(D)--cycle
+(J)[rounded corners=5.0mm]--(I)[rounded corners=5.0mm]--(H)[rounded corners=2.5mm]--(G)[in=0,out=180]to(F)[sharp corners]--(E)--cycle;
 %%章节图片%%
 \node[anchor=north west,outer sep=0mm,inner sep=0mm](U)at(A){\@chapterimage};
-%%框架2%%
-\draw[white,fill=white](J)[rounded corners=5.0mm]--(I)[rounded corners=5.0mm]--(H)[rounded corners=2.5mm]--(G)[in=0,out=180]to(F)[sharp corners]--(E)--cycle;
+%%白色半透明蒙版%%
+\draw[white,fill=white,opacity=0.65](J)[rounded corners=5.0mm]--(I)[rounded corners=5.0mm]--(H)[rounded corners=2.5mm]--(G)[in=0,out=180]to(F)[sharp corners]--(E)--cycle;
 \end{pgfonlayer}
 %%
 \begin{pgfonlayer}{@Chapter@Top}
@@ -1607,12 +1609,14 @@ BoldFont=FZCukai.ttf]
 \gsetlength{\ChapterVSpace}{\@Chapter@TitleBlockHeight+\@toplen-\@FrameWidth}
 %%%%
 \begin{pgfonlayer}{@Chapter@Bottom}
-%%框架1%%
-\draw[ColorB!7.5,fill=ColorB!7.5,sharp corners](A)rectangle(C);
+%%框架%%
+\filldraw[draw=ColorB!7.5,fill=ColorB!7.5,even odd rule,sharp corners]
+(A)--(B)--(C)--(D)--cycle
+(J)[rounded corners=5.0mm]--(I)[rounded corners=5.0mm]--(H)[rounded corners=2.5mm]--(G)[in=180,out=0]to(F)[sharp corners]--(E)--cycle;
 %%章节图片%%
 \node[anchor=north east,outer sep=0mm,inner sep=0mm](U)at(A){\@chapterimage};
-%%框架2%%
-\draw[white,fill=white](J)[rounded corners=5.0mm]--(I)[rounded corners=5.0mm]--(H)[rounded corners=2.5mm]--(G)[in=180,out=0]to(F)[sharp corners]--(E)--cycle;
+%%白色半透明蒙版%%
+\draw[white,fill=white,opacity=0.65](J)[rounded corners=5.0mm]--(I)[rounded corners=5.0mm]--(H)[rounded corners=2.5mm]--(G)[in=180,out=0]to(F)[sharp corners]--(E)--cycle;
 \end{pgfonlayer}
 %%
 \begin{pgfonlayer}{@Chapter@Top}
@@ -1693,12 +1697,14 @@ BoldFont=FZCukai.ttf]
 \gsetlength{\ChapterVSpace}{\@Chapter@TitleBlockHeight+\@toplen-\@FrameWidth}
 %%%%
 \begin{pgfonlayer}{@Chapter@Star@Bottom}
-%%框架1%%
-\draw[ColorB!7.5,fill=ColorB!7.5,sharp corners](A)rectangle(C);
+%%框架%%
+\filldraw[draw=ColorB!7.5,fill=ColorB!7.5,even odd rule,sharp corners]
+(A)--(B)--(C)--(D)--cycle
+(J)[rounded corners=5.0mm]--(I)[rounded corners=5.0mm]--(H)[rounded corners=2.5mm]--(G)[in=0,out=180]to(F)[sharp corners]--(E)--cycle;
 %%章节图片%%
 \node[anchor=north west,outer sep=0mm,inner sep=0mm](U)at(A){\@chapterimage};
-%%框架2%%
-\draw[white,fill=white](J)[rounded corners=5.0mm]--(I)[rounded corners=5.0mm]--(H)[rounded corners=2.5mm]--(G)[in=0,out=180]to(F)[sharp corners]--(E)--cycle;
+%%白色半透明蒙版%%
+\draw[white,fill=white,opacity=0.65](J)[rounded corners=5.0mm]--(I)[rounded corners=5.0mm]--(H)[rounded corners=2.5mm]--(G)[in=0,out=180]to(F)[sharp corners]--(E)--cycle;
 \end{pgfonlayer}
 %%
 \begin{pgfonlayer}{@Chapter@Star@Top}
@@ -1766,12 +1772,14 @@ BoldFont=FZCukai.ttf]
 \gsetlength{\ChapterVSpace}{\@Chapter@TitleBlockHeight+\@toplen-\@FrameWidth}
 %%%%
 \begin{pgfonlayer}{@Chapter@Star@Bottom}
-%%框架1%%
-\draw[ColorB!7.5,fill=ColorB!7.5,sharp corners](A)rectangle(C);
+%%框架%%
+\filldraw[draw=ColorB!7.5,fill=ColorB!7.5,even odd rule,sharp corners]
+(A)--(B)--(C)--(D)--cycle
+(J)[rounded corners=5.0mm]--(I)[rounded corners=5.0mm]--(H)[rounded corners=2.5mm]--(G)[in=180,out=0]to(F)[sharp corners]--(E)--cycle;
 %%章节图片%%
 \node[anchor=north east,outer sep=0mm,inner sep=0mm](U)at(A){\@chapterimage};
-%%框架2%%
-\draw[white,fill=white](J)[rounded corners=5.0mm]--(I)[rounded corners=5.0mm]--(H)[rounded corners=2.5mm]--(G)[in=180,out=0]to(F)[sharp corners]--(E)--cycle;
+%%白色半透明蒙版%%
+\draw[white,fill=white,opacity=0.65](J)[rounded corners=5.0mm]--(I)[rounded corners=5.0mm]--(H)[rounded corners=2.5mm]--(G)[in=180,out=0]to(F)[sharp corners]--(E)--cycle;
 \end{pgfonlayer}
 %%
 \begin{pgfonlayer}{@Chapter@Star@Top}
