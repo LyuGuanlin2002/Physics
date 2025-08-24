@@ -135,6 +135,18 @@
 \definecolor{ColorH}{RGB}{231,120,12}
 \definecolor{ColorI}{RGB}{171,68,171}
 }{\relax}
+%%梵高鸢尾花主题%%
+\ifdefstring{\TextBook@themecolor}{iris}{
+\definecolor{ColorA}{RGB}{33,48,137}
+\definecolor{ColorB}{RGB}{49,82,160}
+\definecolor{ColorC}{RGB}{209,128,50}
+\definecolor{ColorD}{RGB}{76,125,59}
+\definecolor{ColorE}{RGB}{167,43,28}
+\definecolor{ColorF}{RGB}{101,164,126}
+\definecolor{ColorG}{RGB}{98,159,202}
+\definecolor{ColorH}{RGB}{122,42,15}
+\definecolor{ColorI}{RGB}{166,201,92}
+}{\relax}
 
 \makeatletter
 %%定义书籍信息%%
@@ -149,7 +161,6 @@
 \makeatother
 
 %%%%%%%%%%%%%%%%%%%% 字体设置 %%%%%%%%%%%%%%%%%%%%
-%\RequirePackage{extsizes}
 \RequirePackage[fontset=none]{ctex}%中文文本
 %%%%
 \xeCJKsetup{
@@ -469,14 +480,14 @@ BoldFont=FZCukai.ttf]
 \begingroup%确保计数器值只在局部生效
 \c@tocdepth=1%预设目录深度为1
 \IfBooleanTF{#1}{%
-\ifnum#2=2%
-\begin{paracol}{2}%
+\ifnum#2=1%
 \@starttoc{toc}%
-\switchcolumn%
+\else%
+\begin{paracol}{#2}%
+\@starttoc{toc}%
+\switchcolumnsloppy[1]%
 \noindent#3%
 \end{paracol}%
-\else%
-\@starttoc{toc}%
 \fi%
 }{%
 \ifnum#2=1%

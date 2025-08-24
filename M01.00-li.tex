@@ -4,7 +4,7 @@
 %\begin{Appendix}
 
 
-\begin{Appendix}
+%\begin{Appendix}
 
 
 \lipsum[1-4]
@@ -69,6 +69,29 @@
 	\the\textheight
 \end{Example}
 
+\begin{figure}
+	\centering
+	\begin{tikzpicture}[>=stealth, thick]
+		\draw (0,0)--(2,0)--(2,1)--(0,1)--(0,0);
+		\fill [pattern = north east lines] (-1,-.75) rectangle (3,-.5);
+		\draw(-1,-.5)--(3,-.5);
+		\draw (.5,-.25) circle (.225);
+		\draw (1.5,-.25) circle (.225);
+		\draw (.5,-.25) circle (.1);
+		\draw (1.5,-.25) circle (.1);
+		\draw[->, dashed](3,0.5)--(-2,0.5);
+		\draw[very thick](0,.5)--(-2,0.5);
+		\foreach \i in {-.4,-.8,-1.2,-1.6,-2}
+		{
+			\draw (\i,0.6)--(\i,.5);
+		}
+		\draw (-1,1)--(-1,1.1);
+		\draw (-0.6,1)--(-0.6,1.1);
+		\draw[-] (-1,1)--(-0.6,1);
+		\node at (-0.8,1.35){$20$N};
+	\end{tikzpicture}
+	\caption{图中的虚线表示力的作用线}
+\end{figure}
 
 
 
@@ -77,28 +100,80 @@
 \zhlipsum[1]
 }
 
+
+\begin{figure}
+	\centering
+	\begin{tikzpicture}[>=stealth, thick]
+		\draw (0,0)--(2,0)--(2,1)--(0,1)--(0,0);
+		\fill [pattern = north east lines] (-1,-.75) rectangle (3,-.5);
+		\draw(-1,-.5)--(3,-.5);
+		\draw (.5,-.25) circle (.225);
+		\draw (1.5,-.25) circle (.225);
+		\draw (.5,-.25) circle (.1);
+		\draw (1.5,-.25) circle (.1);
+		\draw[->, dashed](3,0.5)--(-2,0.5);
+		\draw[very thick](0,.5)--(-2,0.5);
+		\foreach \i in {-.4,-.8,-1.2,-1.6,-2}
+		{
+			\draw (\i,0.6)--(\i,.5);
+		}
+		\draw (-1,1)--(-1,1.1);
+		\draw (-0.6,1)--(-0.6,1.1);
+		\draw[-] (-1,1)--(-0.6,1);
+		\node at (-0.8,1.35){$20$N};
+	\end{tikzpicture}
+	\caption{图中的虚线表示力的作用线}
+\end{figure}
+
+
+
+
+
 \chapter{附录2}
-{\FontSizeSet[2.5]{14pt}
-\zhlipsum
+{\FontSizeSet[2.0]{16pt}
+\lipsum
 }
 
+\begin{figure}
+	\centering
+	\begin{tikzpicture}[>=stealth, thick]
+		\draw (0,0)--(2,0)--(2,1)--(0,1)--(0,0);
+		\fill [pattern = north east lines] (-1,-.75) rectangle (3,-.5);
+		\draw(-1,-.5)--(3,-.5);
+		\draw (.5,-.25) circle (.225);
+		\draw (1.5,-.25) circle (.225);
+		\draw (.5,-.25) circle (.1);
+		\draw (1.5,-.25) circle (.1);
+		\draw[->, dashed](3,0.5)--(-2,0.5);
+		\draw[very thick](0,.5)--(-2,0.5);
+		\foreach \i in {-.4,-.8,-1.2,-1.6,-2}
+		{
+			\draw (\i,0.6)--(\i,.5);
+		}
+		\draw (-1,1)--(-1,1.1);
+		\draw (-0.6,1)--(-0.6,1.1);
+		\draw[-] (-1,1)--(-0.6,1);
+		\node at (-0.8,1.35){$20$N};
+	\end{tikzpicture}
+	\caption{图中的虚线表示力的作用线}
+\end{figure}
 
 
 
 \section{附录测试}
 
-\end{Appendix}
+%\end{Appendix}
 
 
 
 
-\begin{Appendix}
+%\begin{Appendix}
 	
 \section{附录测试}
 
 
 
-\begin{Topic}
+%\begin{Topic}
 \section{附录测试}
 
 \subsubsection{看目录}
@@ -109,7 +184,7 @@
 
 
 
-\end{Topic}
+%\end{Topic}
 
 \section{附录测试}
 
@@ -119,20 +194,20 @@
 {\FontSizeSet[1.2]{14pt}\zhlipsum[1]}
 
 	
-\end{Appendix}
+%\end{Appendix}
 
 
 
 
-\begin{Appendix}
+%\begin{Appendix}
 	
 \section{附录测试}
 	
-\end{Appendix}
+%\end{Appendix}
 
 
 
-\begin{Appendix*}
+%\begin{Appendix*}
 
 %\begin{Topic}
 \section{测量物体，包含长度测量}
@@ -179,12 +254,12 @@
 
 
 
-\end{Appendix*}
+%\end{Appendix*}
 
 
 
 
-\begin{Project}
+%\begin{Project}
 
 \section{测量物体，包含长度测量}
 
@@ -563,7 +638,35 @@ import pandas as pd
 
 
 
-\end{Project}
+
+\begin{figure}
+	\centering
+\begin{tikzpicture}[>=stealth, thick]
+	\draw (0,0)--(2,0)--(2,1)--(0,1)--(0,0);
+	\fill [pattern = north east lines] (-1,-.75) rectangle (3,-.5);
+	\draw(-1,-.5)--(3,-.5);
+	\draw (.5,-.25) circle (.225);
+	\draw (1.5,-.25) circle (.225);
+	\draw (.5,-.25) circle (.1);
+	\draw (1.5,-.25) circle (.1);
+	\draw[->, dashed](3,0.5)--(-2,0.5);
+	\draw[very thick](0,.5)--(-2,0.5);
+	\foreach \i in {-.4,-.8,-1.2,-1.6,-2}
+	{
+		\draw (\i,0.6)--(\i,.5);
+	}
+	\draw (-1,1)--(-1,1.1);
+	\draw (-0.6,1)--(-0.6,1.1);
+	\draw[-] (-1,1)--(-0.6,1);
+	\node at (-0.8,1.35){$20$N};
+\end{tikzpicture}
+\caption{图中的虚线表示力的作用线}
+\end{figure}
+
+
+
+
+%\end{Project}
 
 
 
@@ -630,38 +733,80 @@ import pandas as pd
 
 
 
-\section{测试文字}
-
-\section{测试文字}
+%\section{测试文字}
+%
+%\section{测试文字}
 
 
 \chapter{测试文字}
 
 \zhlipsum
 
-\section{测试文字}
+%\section{测试文字}
+%
+%\section{测试文字}
 
-\section{测试文字}
 
-
-
-\begin{Appendix}
+\begin{Appendix*}
 	
 \chapter{测试计数器}
 	
 \section{附录测试}
+
+\section{附录测试}
+
+\end{Appendix*}
+
+
+\begin{Appendix*}
 	
-\end{Appendix}
+	\chapter{测试计数器}
+	
+	\section{附录测试}
+	
+	\section{附录测试}
+	
+\end{Appendix*}
+
+
+
 
 \chapter{中间}
 
-\begin{Appendix}
+%\begin{Appendix}
 
 \chapter{测试}
 	
-\section{附录测试}
+%\section{附录测试}
+
+
+\begin{figure}
+	\centering
+	\begin{tikzpicture}[>=stealth, thick]
+		\draw (0,0)--(2,0)--(2,1)--(0,1)--(0,0);
+		\fill [pattern = north east lines] (-1,-.75) rectangle (3,-.5);
+		\draw(-1,-.5)--(3,-.5);
+		\draw (.5,-.25) circle (.225);
+		\draw (1.5,-.25) circle (.225);
+		\draw (.5,-.25) circle (.1);
+		\draw (1.5,-.25) circle (.1);
+		\draw[->, dashed](3,0.5)--(-2,0.5);
+		\draw[very thick](0,.5)--(-2,0.5);
+		\foreach \i in {-.4,-.8,-1.2,-1.6,-2}
+		{
+			\draw (\i,0.6)--(\i,.5);
+		}
+		\draw (-1,1)--(-1,1.1);
+		\draw (-0.6,1)--(-0.6,1.1);
+		\draw[-] (-1,1)--(-0.6,1);
+		\node at (-0.8,1.35){$20$N};
+	\end{tikzpicture}
+	\caption{图中的虚线表示力的作用线}
+\end{figure}
+
+
 	
-\end{Appendix}
+%\end{Appendix}
 
 
 
