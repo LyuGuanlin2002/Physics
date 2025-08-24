@@ -49,12 +49,93 @@
 %% 内容提要
 \include{main/F01-Abstract}
 \lipsum[1-6]
+
+
+
+
+\begin{figure}
+	\centering
+	\begin{tikzpicture}[>=stealth, thick]
+		\draw (0,0)--(2,0)--(2,1)--(0,1)--(0,0);
+		\fill [pattern = north east lines] (-1,-.75) rectangle (3,-.5);
+		\draw(-1,-.5)--(3,-.5);
+		\draw (.5,-.25) circle (.225);
+		\draw (1.5,-.25) circle (.225);
+		\draw (.5,-.25) circle (.1);
+		\draw (1.5,-.25) circle (.1);
+		\draw[->, dashed](3,0.5)--(-2,0.5);
+		\draw[very thick](0,.5)--(-2,0.5);
+		\foreach \i in {-.4,-.8,-1.2,-1.6,-2}
+		{
+			\draw (\i,0.6)--(\i,.5);
+		}
+		\draw (-1,1)--(-1,1.1);
+		\draw (-0.6,1)--(-0.6,1.1);
+		\draw[-] (-1,1)--(-0.6,1);
+		\node at (-0.8,1.35){$20$N};
+	\end{tikzpicture}
+	\caption{图中的虚线表示力的作用线}
+\end{figure}
+
+
+
+
+
+
+
+
+
+
+
+
 %
 %
 %
 \frontmatter
 \lipsum
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 \chapter{测试文字}
+
+\begin{figure}
+	\centering
+	\begin{tikzpicture}[>=stealth, thick]
+		\draw (0,0)--(2,0)--(2,1)--(0,1)--(0,0);
+		\fill [pattern = north east lines] (-1,-.75) rectangle (3,-.5);
+		\draw(-1,-.5)--(3,-.5);
+		\draw (.5,-.25) circle (.225);
+		\draw (1.5,-.25) circle (.225);
+		\draw (.5,-.25) circle (.1);
+		\draw (1.5,-.25) circle (.1);
+		\draw[->, dashed](3,0.5)--(-2,0.5);
+		\draw[very thick](0,.5)--(-2,0.5);
+		\foreach \i in {-.4,-.8,-1.2,-1.6,-2}
+		{
+			\draw (\i,0.6)--(\i,.5);
+		}
+		\draw (-1,1)--(-1,1.1);
+		\draw (-0.6,1)--(-0.6,1.1);
+		\draw[-] (-1,1)--(-0.6,1);
+		\node at (-0.8,1.35){$20$N};
+	\end{tikzpicture}
+	\caption{图中的虚线表示力的作用线}
+\end{figure}
+
+
+
 %%\lipsum[1-4]
 %% 序言
 \include{main/F02-Foreword}
@@ -81,6 +162,7 @@
 \cleardoublepage
 %
 \lipsum[2]
+
 %
 %
 %
@@ -90,6 +172,37 @@
 \partintro{\lipsum[2]}
 \part[短标题]{力学}
 \lipsum
+
+
+\begin{figure}
+	\centering
+	\begin{tikzpicture}[>=stealth, thick]
+		\draw (0,0)--(2,0)--(2,1)--(0,1)--(0,0);
+		\fill [pattern = north east lines] (-1,-.75) rectangle (3,-.5);
+		\draw(-1,-.5)--(3,-.5);
+		\draw (.5,-.25) circle (.225);
+		\draw (1.5,-.25) circle (.225);
+		\draw (.5,-.25) circle (.1);
+		\draw (1.5,-.25) circle (.1);
+		\draw[->, dashed](3,0.5)--(-2,0.5);
+		\draw[very thick](0,.5)--(-2,0.5);
+		\foreach \i in {-.4,-.8,-1.2,-1.6,-2}
+		{
+			\draw (\i,0.6)--(\i,.5);
+		}
+		\draw (-1,1)--(-1,1.1);
+		\draw (-0.6,1)--(-0.6,1.1);
+		\draw[-] (-1,1)--(-0.6,1);
+		\node at (-0.8,1.35){$20$N};
+	\end{tikzpicture}
+	\caption{图中的虚线表示力的作用线}
+\end{figure}
+
+
+
+
+
+
 %%% 第一章
 \include{main/M01.00-li.tex}
 %
@@ -121,7 +234,7 @@
 %%\include{body/M010.00-xueshengshiyan}
 \chapter{测试测试测试测试测试测试}
 
-{\FontSizeSet[2.0]{14pt}
+{\FontSizeSet[3.0]{14pt}
 \zhlipsum[1]
 
 }
@@ -158,10 +271,10 @@
 
 
 
-\chapter{哈哈哈}
+%\chapter{哈哈哈}
 
 {
-\FontSizeSet[0.8]{14pt}
+\FontSizeSet[1.0]{14pt}
 \zhlipsum[2]
 }
 

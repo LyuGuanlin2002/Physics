@@ -465,11 +465,11 @@ BoldFont=FZCukai.ttf]
 \makeatletter
 %%重定义\tableofcontents%%
 \RenewDocumentCommand{\tableofcontents}{s O{1} +O{}}{%
-\chapter*{\contentsname}
+\chapter*{\contentsname}%
 \begingroup%确保计数器值只在局部生效
 \c@tocdepth=1%预设目录深度为1
 \IfBooleanTF{#1}{%
-\ifnum#2=2
+\ifnum#2=2%
 \begin{paracol}{2}%
 \@starttoc{toc}%
 \switchcolumn%
@@ -488,9 +488,11 @@ BoldFont=FZCukai.ttf]
 \fi%
 }
 \endgroup}
+%%清除跟随在\chapter命令后在lof和lot文件中插入的垂直间距%%
+\def\ttl@tocsep{}
 %%重定义\listoffigures%%
 \RenewDocumentCommand{\listoffigures}{O{1}}{%
-\chapter*{\listfigurename}
+\chapter*{\listfigurename}%
 \ifnum#1=1%
 \@starttoc{lof}%
 \else%
@@ -2819,11 +2821,11 @@ BoldFont=FZCukai.ttf]
 %%不编号部分目录样式%%
 \NewDocumentCommand{\@Toc@Part@Unnumbered}{+m}{\contentslabel[\@PartTocStyle{#1}{\hfill\sffamily\thecontentspage}]{1.25cm}}
 %%
-%%部分目录样式%%
-\titlecontents{part}[1.25cm]
-{\addvspace{20.0pt}}
+%%部分目录样式%%\addvspace{15.0pt}
+\titlecontents{part}[1.25cm]{}
 {\@Toc@Part@Numbered}
 {\@Toc@Part@Unnumbered}{}
+[\addvspace{5.0pt}]
 %%%%
 %%章目录样式%%
 \newlength{\@Toc@ChapterContents@XSep}
@@ -2832,10 +2834,11 @@ BoldFont=FZCukai.ttf]
 \setlength{\@Toc@ChapterLabelName@XSep}{2.0cm}
 %%
 \titlecontents{chapter}[\@Toc@ChapterContents@XSep]
-{\addvspace{5.0pt}\TocChapterFont\color{ColorA}}
+{\TocChapterFont\color{ColorA}}
 {\color{ColorA}\contentslabel[\chapterlabelfront{\sffamily\thecontentslabel}\chapterlabelback]{\@Toc@ChapterLabelName@XSep}}
 {\color{ColorA}\hspace*{-\@Toc@ChapterLabelName@XSep}}%不编号章节
 {\titlerule*[6pt]{ }\color{ColorA}\ContentPageNumFont\thecontentspage}
+[\addvspace{5.0pt}]
 %%%%
 %%节目录样式%%
 \newlength{\@Toc@SectionContents@XSep}
@@ -2844,10 +2847,11 @@ BoldFont=FZCukai.ttf]
 \setlength{\@Toc@SectionLabelName@XSep}{2.0cm}
 %%
 \titlecontents{section}[\@Toc@SectionContents@XSep]
-{\addvspace{5.0pt}\TocSectionFont}
+{\TocSectionFont}
 {\contentslabel[\sectionlabelfront{\sffamily\thecontentslabel}\sectionlabelback]{\@Toc@SectionLabelName@XSep}}
 {\hspace*{-\@Toc@SectionLabelName@XSep}}%不编号章节
 {\titlerule*[6pt]{ }\ContentPageNumFont\thecontentspage}
+[\addvspace{5.0pt}]
 %%%%
 %%小节目录样式%%
 \newlength{\@Toc@SubsecContents@XSep}
@@ -2856,10 +2860,11 @@ BoldFont=FZCukai.ttf]
 \setlength{\@Toc@SubsecLabelName@XSep}{2.0cm}
 %%
 \titlecontents{subsection}[\@Toc@SubsecContents@XSep]
-{\addvspace{5.0pt}\TocSubsectionFont}
+{\TocSubsectionFont}
 {\contentslabel[\subsectionlabelfront{\sffamily\thecontentslabel}\subsectionlabelback]{\@Toc@SubsecLabelName@XSep}}
 {\hspace*{-\@Toc@SubsecLabelName@XSep}}%不编号章节
 {\titlerule*[6pt]{ }\ContentPageNumFont\thecontentspage}
+[\addvspace{5.0pt}]
 %%%%
 %%小小节目录样式%%
 \newlength{\@Toc@SubsubsecContents@XSep}
@@ -2868,10 +2873,11 @@ BoldFont=FZCukai.ttf]
 \setlength{\@Toc@SubsubsecLabelName@XSep}{2.0cm}
 %%
 \titlecontents{subsubsection}[\@Toc@SubsubsecContents@XSep]
-{\addvspace{5.0pt}\TocSubsubsectionFont}
+{\TocSubsubsectionFont}
 {\contentslabel[\subsubsectionlabelfront{\sffamily\thecontentslabel}\subsubsectionlabelback]{\@Toc@SubsubsecLabelName@XSep}}
 {\hspace*{-\@Toc@SubsubsecLabelName@XSep}}%不编号章节
 {\titlerule*[6pt]{ }\ContentPageNumFont\thecontentspage}
+[\addvspace{5.0pt}]
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%图片目录样式%%
 \newlength{\@Toc@FTListContents@XSep}
@@ -2880,42 +2886,44 @@ BoldFont=FZCukai.ttf]
 \setlength{\@Toc@FTListLabelName@XSep}{2.25cm}
 %%
 \titlecontents{figure}[\@Toc@FTListContents@XSep]
-{\addvspace{5.0pt}\LofFont}
+{\LofFont}
 {\contentslabel[\figurename{\sffamily \environmentmark\thecontentslabel}]{\@Toc@FTListLabelName@XSep}}
 {\hspace*{-\@Toc@SectionLabelName@XSep}}%不编号图表
 {\titlerule*[6pt]{ }\ContentPageNumFont\thecontentspage}
+[\addvspace{5.0pt}]
 %%%%
 %%表格目录样式%%
 \titlecontents{table}[\@Toc@FTListContents@XSep]
-{\addvspace{5.0pt}\LotFont}
+{\LotFont}
 {\contentslabel[\tablename{\sffamily \environmentmark\thecontentslabel}]{\@Toc@FTListLabelName@XSep}}
 {\hspace*{-\@Toc@SectionLabelName@XSep}}%不编号图表
 {\titlerule*[6pt]{ }\ContentPageNumFont\thecontentspage}
+[\addvspace{5.0pt}]
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%部分页上的小目录章样式%%
 \titlecontents{lchapter}[0.75cm]
-{\addvspace{5.0pt}\TocLChapterFont\color{ColorB}}
+{\TocLChapterFont\color{ColorB}}
 {\color{ColorB}\contentslabel[\TocLChapterFont\faGenderless]{0.6cm}}
 {\color{ColorB}\contentslabel[\TocLChapterFont\faGenderless]{0.6cm}}%不编号章节
-{}
+{}[\addvspace{5.0pt}]
 %%部分页上的小目录节样式%%
 \titlecontents{lsection}[0.9cm]
-{\addvspace{5.0pt}\TocLSectionFont\color{ColorB}}
+{\TocLSectionFont\color{ColorB}}
 {\contentslabel[\TocLSectionFont\faGenderless]{0.5cm}}
 {\contentslabel[\TocLSectionFont\faGenderless]{0.5cm}}%不编号章节
-{}
+{}[\addvspace{5.0pt}]
 %%部分页上的小目录小节样式%%
 \titlecontents{lsubsection}[1.05cm]
-{\addvspace{5.0pt}\TocLSubsectionFont\color{ColorB}}
+{\TocLSubsectionFont\color{ColorB}}
 {\contentslabel[\TocLSubsectionFont\faGenderless]{0.5cm}}
 {\contentslabel[\TocLSubsectionFont\faGenderless]{0.5cm}}%不编号章节
-{}
+{}[\addvspace{5.0pt}]
 %%部分页上的小目录小小节样式%%
 \titlecontents{lsubsubsection}[1.2cm]
-{\addvspace{5.0pt}\TocLSubsubsectionFont\color{ColorB}}
+{\TocLSubsubsectionFont\color{ColorB}}
 {\contentslabel[\TocLSubsectionFont\faGenderless]{0.5cm}}
 {\contentslabel[\TocLSubsectionFont\faGenderless]{0.5cm}}%不编号章节
-{}
+{}[\addvspace{5.0pt}]
 \makeatother
 
 %%%%%%%%%%%%%%%%%% 例题与盒子定义 %%%%%%%%%%%%%%%%%%%%%%%%
