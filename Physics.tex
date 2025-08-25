@@ -51,61 +51,14 @@
 \maketitle
 %% 内容提要
 \include{main/F01-Abstract}
+
+
+%\chapter{Before Frontmatter}
 \lipsum[1-6]
 
 
-
-
-\begin{figure}
-	\centering
-	\begin{tikzpicture}[>=stealth, thick]
-		\draw (0,0)--(2,0)--(2,1)--(0,1)--(0,0);
-		\fill [pattern = north east lines] (-1,-.75) rectangle (3,-.5);
-		\draw(-1,-.5)--(3,-.5);
-		\draw (.5,-.25) circle (.225);
-		\draw (1.5,-.25) circle (.225);
-		\draw (.5,-.25) circle (.1);
-		\draw (1.5,-.25) circle (.1);
-		\draw[->, dashed](3,0.5)--(-2,0.5);
-		\draw[very thick](0,.5)--(-2,0.5);
-		\foreach \i in {-.4,-.8,-1.2,-1.6,-2}
-		{
-			\draw (\i,0.6)--(\i,.5);
-		}
-		\draw (-1,1)--(-1,1.1);
-		\draw (-0.6,1)--(-0.6,1.1);
-		\draw[-] (-1,1)--(-0.6,1);
-		\node at (-0.8,1.35){$20$N};
-	\end{tikzpicture}
-	\caption{图中的虚线表示力的作用线}
-\end{figure}
-
-
-
-
-
-
-
-
-
-
-
-
-%
-%
-%
 \frontmatter
 \lipsum
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -152,30 +105,29 @@
 \vspace*{3.0mm}\\
 \cutimage{1.5\linewidth}{3.0mm}{0}{starry.jpg}
 \vspace*{3.0mm}\\
-\includegraphics[width=\linewidth]{vineyard.jpg}\\
+\cutimage{1.5\linewidth}{0}{0}{vineyard.jpg}
 \vspace*{3.0mm}\\
-\includegraphics[width=\linewidth]{olive.jpg}\\
+\cutimage{1.5\linewidth}{0}{0}{olive.jpg}
 \vspace*{3.0mm}\\
-\includegraphics[width=\linewidth]{rhone.jpg}\\
+\cutimage{1.5\linewidth}{0}{0}{rhone.jpg}
 \vspace*{3.0mm}\\
-\includegraphics[width=\linewidth]{harvest.jpg}\\
+\cutimage{1.5\linewidth}{0}{0}{harvest.jpg}
 \vspace*{3.0mm}\\
-\includegraphics[width=\linewidth]{sunflower.jpg}\\
+\cutimage{\linewidth}{0}{0}{sunflower.jpg}
 \vspace*{3.0mm}\\
-\includegraphics[width=\linewidth]{iris1.jpg}\\
+\cutimage{\linewidth}{0}{0}{iris1.jpg}
 \vspace*{3.0mm}\\
 \cutimage{\linewidth}{0}{-5.0mm}{cypresses.jpg}
 \vspace*{3.0mm}\\
-\includegraphics[width=\linewidth]{thunderclouds.jpg}\\
+\cutimage{2.5\linewidth}{28.0mm}{0}{thunderclouds.jpg}
 \vspace*{3.0mm}\\
-\includegraphics[width=\linewidth]{poppies.jpg}\\
+\cutimage{1.5\linewidth}{0}{0}{poppies.jpg}
 \vspace*{3.0mm}\\
-\includegraphics[width=\linewidth]{clifftop.jpg}\\
+\cutimage{1.5\linewidth}{0}{0}{clifftop.jpg}
 \vspace*{3.0mm}\\
-\includegraphics[width=\linewidth]{garden.jpg}\\
+\cutimage{1.5\linewidth}{0}{0}{garden.jpg}
 \vspace*{3.0mm}\\
-\includegraphics[width=\linewidth]{parasol.jpg}\\
-%\lipsum[1]
+\cutimage{\linewidth}{0}{-4.0mm}{parasol.jpg}
 ]
 %
 \lipsum[1-3]
@@ -193,8 +145,8 @@
 \mainmatter
 %
 %
-\partintro{\lipsum[2]}
-\partimage{\includegraphics[height=\paperheight]{garden.jpg}}
+\partintro{\lipsum[2][1-5]}
+\partimage{\includegraphics[height=\paperheight]{clifftop.jpg}}
 \part[短标题]{力学}
 \lipsum
 

@@ -591,6 +591,10 @@ BoldFont=FZCukai.ttf]
 \setbox\strutbox\hbox{%
 \vrule height #1\ht\strutbox depth #1\dp\strutbox width\z@
 }}
+%%定义改进的\llap，使其能够指定其中内容向左偏移的距离%%
+\DeclareRobustCommand{\xllap}[2]{\hb@xt@\z@{\hskip-#1 #2}}
+%%定义改进的\rlap，使其能够指定其中内容向右偏移的距离%%
+\DeclareRobustCommand{\xrlap}[2]{\hb@xt@\z@{#2\hskip-#1}}
 %%测量节点node尺寸%%
 \def\pgfgetnodeheight(#1)#2{
 \begin{pgfinterruptboundingbox}
@@ -1555,7 +1559,7 @@ BoldFont=FZCukai.ttf]
 %%章节图片%%
 \node[anchor=north west,outer sep=0mm,inner sep=0mm](U)at(A){\@chapterimage};
 %%白色半透明蒙版%%
-\draw[white,fill=white,opacity=0.65](J)[rounded corners=5.0mm]--(I)[rounded corners=5.0mm]--(H)[rounded corners=2.5mm]--(G)[in=0,out=180]to(F)[sharp corners]--(E)--cycle;
+\draw[white,fill=white,opacity=0.75](J)[rounded corners=5.0mm]--(I)[rounded corners=5.0mm]--(H)[rounded corners=2.5mm]--(G)[in=0,out=180]to(F)[sharp corners]--(E)--cycle;
 \end{pgfonlayer}
 %%
 \begin{pgfonlayer}{@Chapter@Top}
@@ -1616,7 +1620,7 @@ BoldFont=FZCukai.ttf]
 %%章节图片%%
 \node[anchor=north east,outer sep=0mm,inner sep=0mm](U)at(A){\@chapterimage};
 %%白色半透明蒙版%%
-\draw[white,fill=white,opacity=0.65](J)[rounded corners=5.0mm]--(I)[rounded corners=5.0mm]--(H)[rounded corners=2.5mm]--(G)[in=180,out=0]to(F)[sharp corners]--(E)--cycle;
+\draw[white,fill=white,opacity=0.75](J)[rounded corners=5.0mm]--(I)[rounded corners=5.0mm]--(H)[rounded corners=2.5mm]--(G)[in=180,out=0]to(F)[sharp corners]--(E)--cycle;
 \end{pgfonlayer}
 %%
 \begin{pgfonlayer}{@Chapter@Top}
@@ -1704,7 +1708,7 @@ BoldFont=FZCukai.ttf]
 %%章节图片%%
 \node[anchor=north west,outer sep=0mm,inner sep=0mm](U)at(A){\@chapterimage};
 %%白色半透明蒙版%%
-\draw[white,fill=white,opacity=0.65](J)[rounded corners=5.0mm]--(I)[rounded corners=5.0mm]--(H)[rounded corners=2.5mm]--(G)[in=0,out=180]to(F)[sharp corners]--(E)--cycle;
+\draw[white,fill=white,opacity=0.75](J)[rounded corners=5.0mm]--(I)[rounded corners=5.0mm]--(H)[rounded corners=2.5mm]--(G)[in=0,out=180]to(F)[sharp corners]--(E)--cycle;
 \end{pgfonlayer}
 %%
 \begin{pgfonlayer}{@Chapter@Star@Top}
@@ -1779,7 +1783,7 @@ BoldFont=FZCukai.ttf]
 %%章节图片%%
 \node[anchor=north east,outer sep=0mm,inner sep=0mm](U)at(A){\@chapterimage};
 %%白色半透明蒙版%%
-\draw[white,fill=white,opacity=0.65](J)[rounded corners=5.0mm]--(I)[rounded corners=5.0mm]--(H)[rounded corners=2.5mm]--(G)[in=180,out=0]to(F)[sharp corners]--(E)--cycle;
+\draw[white,fill=white,opacity=0.75](J)[rounded corners=5.0mm]--(I)[rounded corners=5.0mm]--(H)[rounded corners=2.5mm]--(G)[in=180,out=0]to(F)[sharp corners]--(E)--cycle;
 \end{pgfonlayer}
 %%
 \begin{pgfonlayer}{@Chapter@Star@Top}
@@ -1970,10 +1974,12 @@ BoldFont=FZCukai.ttf]
 \NewDocumentCommand{\@SubsectionStarStyle}{ +m +m }{%
 \begingroup%
 \raggedright%
+\def\@left@white@line@width{4.5pt}%
+\xllap{\@left@white@line@width}{%
 \begin{tikzpicture}%
 \SubsectionFont%
 \def\@Subsection@Star@Radius{\dimexpr\baselineskip/2\relax}%0.9
-\def\@Subsection@Star@BRadius{\dimexpr\baselineskip/2+6.5pt\relax}
+\def\@Subsection@Star@BRadius{\dimexpr\baselineskip/2+\@left@white@line@width+2.0pt\relax}
 \def\@Subsection@Star@SRadius{\dimexpr\baselineskip/2+2.0pt\relax}
 %%%%
 \pgfdeclarelayer{@Subsection@Star@Bottom}%
@@ -2010,11 +2016,12 @@ BoldFont=FZCukai.ttf]
 \fi
 %%
 \coordinate(CC)at([yshift=-\@Subsection@Star@Radius]L.north west);
-\draw[white,fill=white,sharp corners](CC)--([yshift=\@Subsection@Star@BRadius]CC)arc(90:-90:\@Subsection@Star@BRadius)--cycle;
+%\draw[white,fill=white,sharp corners](CC)--([yshift=\@Subsection@Star@BRadius]CC)arc(90:-90:\@Subsection@Star@BRadius)--cycle;
+\draw[white,fill=white,sharp corners](CC)circle(\@Subsection@Star@BRadius);
 \draw[ColorA,fill=ColorA](CC)circle(\@Subsection@Star@SRadius);
 \draw[white,line width=4.0pt,fill=ColorA](CC)circle(2*\@Subsection@Star@Radius/3);
 \end{pgfonlayer}
-\end{tikzpicture}%
+\end{tikzpicture}}%
 \endgroup}
 
 %%%%
@@ -2917,9 +2924,9 @@ BoldFont=FZCukai.ttf]
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%图片目录样式%%
 \newlength{\@Toc@FTListContents@XSep}
-\setlength{\@Toc@FTListContents@XSep}{2.45cm}
+\setlength{\@Toc@FTListContents@XSep}{3.0cm}
 \newlength{\@Toc@FTListLabelName@XSep}
-\setlength{\@Toc@FTListLabelName@XSep}{2.25cm}
+\setlength{\@Toc@FTListLabelName@XSep}{2.7cm}
 %%
 \titlecontents{figure}[\@Toc@FTListContents@XSep]
 {\LofFont}
